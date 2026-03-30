@@ -35,6 +35,7 @@ stripe.api_key = STRIPE_SECRET_KEY
 
 # Initialize OpenAI client
 client = openai.OpenAI(api_key=OPENAI_APIKEY)
+async_client = openai.AsyncOpenAI(api_key=OPENAI_APIKEY)
 
 # Pydantic models for structured output
 class AspectScore(BaseModel):
@@ -3924,7 +3925,7 @@ Return the analysis in the following JSON structure:
         
         # Call OpenAI with structured output
         try:
-            response = client.beta.chat.completions.parse(
+            response = await async_client.beta.chat.completions.parse(
                 model="gpt-4o-mini",
                 messages=[
                     {"role": "system", "content": "You are a professional career analyst. Provide detailed, actionable analysis and advice."},
@@ -3932,7 +3933,7 @@ Return the analysis in the following JSON structure:
                 ],
                 response_format=PersonalCapabilityAnalysis
             )
-            
+
             analysis_result = response.choices[0].message.parsed
             if not analysis_result:
                 # Fallback: parse from JSON if parsed is None
@@ -3941,7 +3942,7 @@ Return the analysis in the following JSON structure:
         except Exception as e:
             logger.error(f"OpenAI API error: {str(e)}")
             # Fallback: use regular chat completion and parse JSON
-            response = client.chat.completions.create(
+            response = await async_client.chat.completions.create(
                 model="gpt-4o-mini",
                 messages=[
                     {"role": "system", "content": "You are a professional career analyst. Provide detailed, actionable analysis and advice. Return only valid JSON."},
@@ -3998,7 +3999,7 @@ Return structured JSON with all extracted information.
         
         # First extraction to get structured data
         try:
-            extraction_response = client.beta.chat.completions.parse(
+            extraction_response = await async_client.beta.chat.completions.parse(
                 model="gpt-4o-mini",
                 messages=[
                     {"role": "system", "content": "You are a resume parser. Extract structured information from resumes accurately."},
@@ -4006,7 +4007,7 @@ Return structured JSON with all extracted information.
                 ],
                 response_format=ResumeParsedData
             )
-            
+
             parsed_resume = extraction_response.choices[0].message.parsed
             if not parsed_resume:
                 # Fallback: parse from JSON if parsed is None
@@ -4015,7 +4016,7 @@ Return structured JSON with all extracted information.
         except Exception as e:
             logger.error(f"OpenAI extraction API error: {str(e)}")
             # Fallback: use regular chat completion and parse JSON
-            extraction_response = client.chat.completions.create(
+            extraction_response = await async_client.chat.completions.create(
                 model="gpt-4o-mini",
                 messages=[
                     {"role": "system", "content": "You are a resume parser. Extract structured information from resumes accurately. Return only valid JSON."},
@@ -4081,7 +4082,7 @@ Return the analysis in the following JSON structure:
         
         # Call OpenAI for analysis
         try:
-            analysis_response = client.beta.chat.completions.parse(
+            analysis_response = await async_client.beta.chat.completions.parse(
                 model="gpt-4o-mini",
                 messages=[
                     {"role": "system", "content": "You are a professional resume analyst. Provide detailed, actionable analysis and improvement advice."},
@@ -4089,7 +4090,7 @@ Return the analysis in the following JSON structure:
                 ],
                 response_format=ResumePowerAnalysis
             )
-            
+
             analysis_result = analysis_response.choices[0].message.parsed
             if not analysis_result:
                 # Fallback: parse from JSON if parsed is None
@@ -4098,7 +4099,7 @@ Return the analysis in the following JSON structure:
         except Exception as e:
             logger.error(f"OpenAI analysis API error: {str(e)}")
             # Fallback: use regular chat completion and parse JSON
-            analysis_response = client.chat.completions.create(
+            analysis_response = await async_client.chat.completions.create(
                 model="gpt-4o-mini",
                 messages=[
                     {"role": "system", "content": "You are a professional resume analyst. Provide detailed, actionable analysis and improvement advice. Return only valid JSON."},
