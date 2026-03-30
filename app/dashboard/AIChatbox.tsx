@@ -47,7 +47,9 @@ interface Message {
       | 'ask_project_meta'
       | 'show_pricing'
       | 'sanity_check_sequence'
-      | 'navigate_to_career_focus';
+      | 'navigate_to_career_focus'
+      | 'navigate_to_job_analysis'
+      | 'navigate_to_resume_analysis';
     data?: ProjectAnalysisData;
     choices?: string[];
     cardDismissed?: boolean;
@@ -83,6 +85,7 @@ interface AIChatboxProps {
   onUpdateProjectIndustry?: (projectType: string, industry: string) => void;
   onNavigateToProfessionalStep?: () => void;
   onNavigateToCareerFocus?: () => void;
+  onNavigateToJobAnalysis?: () => void;
   onShowPricing?: () => void;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   injectMessage?: { text: string; seq: number; action?: any } | null;
@@ -112,6 +115,7 @@ export default function AIChatbox({
   onUpdateProjectIndustry,
   onNavigateToProfessionalStep,
   onNavigateToCareerFocus,
+  onNavigateToJobAnalysis,
   onShowPricing,
   injectMessage,
   cognitoSub,
@@ -903,6 +907,48 @@ export default function AIChatbox({
                       </div>
                     );
 
+                  // ── Navigate: Job Analysis ──
+                  } else if (msg.action.type === 'navigate_to_job_analysis') {
+                    cardElements.push(
+                      <div key={`${msg.id}-card`} className={styles.chatboxCardRow}>
+                        <button
+                          className={`${styles.chatboxCard}${isClicked ? ` ${styles.chatboxCardInactive}` : ''}`}
+                          disabled={isClicked}
+                          onClick={() => {
+                            dismissCard(msg.id);
+                            onNavigateToJobAnalysis?.();
+                          }}
+                        >
+                          <div className={styles.chatboxCardContent}>
+                            <span className={styles.chatboxCardTitle}>Analyze target job</span>
+                            <span className={styles.chatboxCardDesc}>Job Analysis · Recommended roles</span>
+                          </div>
+                          <div className={styles.chatboxCardArrow}><ArrowUp /></div>
+                        </button>
+                      </div>
+                    );
+
+                  // ── Navigate: Resume Analysis ──
+                  } else if (msg.action.type === 'navigate_to_resume_analysis') {
+                    cardElements.push(
+                      <div key={`${msg.id}-card`} className={styles.chatboxCardRow}>
+                        <button
+                          className={`${styles.chatboxCard}${isClicked ? ` ${styles.chatboxCardInactive}` : ''}`}
+                          disabled={isClicked}
+                          onClick={() => {
+                            dismissCard(msg.id);
+                            onNavigateToJobAnalysis?.();
+                          }}
+                        >
+                          <div className={styles.chatboxCardContent}>
+                            <span className={styles.chatboxCardTitle}>Analyze resume for target role</span>
+                            <span className={styles.chatboxCardDesc}>Job Analysis · Target job position</span>
+                          </div>
+                          <div className={styles.chatboxCardArrow}><ArrowUp /></div>
+                        </button>
+                      </div>
+                    );
+
                   // ── Show Pricing Modal ──
                   } else if (msg.action.type === 'show_pricing') {
                     cardElements.push(
@@ -1215,10 +1261,7 @@ export default function AIChatbox({
               <button
                 key={i}
                 className={styles.chatboxSuggestionBtn}
-                onClick={() => {
-                  setInput(q);
-                  setTimeout(() => inputRef.current?.focus(), 0);
-                }}
+                onClick={() => sendChoiceMessage(q)}
               >
                 {q}
               </button>

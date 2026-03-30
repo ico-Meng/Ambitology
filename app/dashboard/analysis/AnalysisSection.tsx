@@ -34,6 +34,7 @@ interface AnalysisSectionProps {
   onAnalysisLimitExceeded?: () => void;
   careerFocus?: string;
   onInjectChatMessage?: (message: string, action?: { type: string }) => void;
+  focusJobInputTrigger?: number;
 }
 
 // Job input type detection
@@ -80,6 +81,7 @@ export default function AnalysisSection({
   onAnalysisLimitExceeded,
   careerFocus,
   onInjectChatMessage,
+  focusJobInputTrigger,
 }: AnalysisSectionProps) {
   const [analysisKnowledgeScope, setAnalysisKnowledgeScope] = useState<{
     establishedExpertise: boolean;
@@ -137,6 +139,7 @@ export default function AnalysisSection({
   const [showJobRecommendPanel, setShowJobRecommendPanel] = useState(false);
   const [pendingAutoFetch, setPendingAutoFetch] = useState(false);
   const panelWrapperRefAnalysis = useRef<HTMLDivElement>(null);
+  const jobPositionInputRef = useRef<HTMLInputElement>(null);
   // Stores title+company+url from a panel selection so the fetch can use them as fallback
   const panelJobMetaRef = useRef<{ title: string; company: string; url: string } | null>(null);
 
@@ -865,6 +868,16 @@ export default function AnalysisSection({
     return () => document.removeEventListener('mousedown', handleOutsideClick);
   }, [showJobRecommendPanel]);
 
+  // Focus the target job input and open the recommend panel when triggered externally
+  useEffect(() => {
+    if (!focusJobInputTrigger) return;
+    setTimeout(() => {
+      jobPositionInputRef.current?.focus();
+      if (!jobPosition) setShowJobRecommendPanel(true);
+    }, 120);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [focusJobInputTrigger]);
+
   const handleAnalysisButtonInactiveClick = () => {
     const jobPosError = fetchedJobData === null;
     const knowledgeScopeError = !fromExistingResume && !analysisKnowledgeScope.establishedExpertise && !analysisKnowledgeScope.expandingKnowledgeBase;
@@ -1043,6 +1056,7 @@ export default function AnalysisSection({
                   }}
                 >
                   <input
+                    ref={jobPositionInputRef}
                     type="text"
                     className={styles.formInput}
                     value={jobPosition}

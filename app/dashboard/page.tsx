@@ -368,6 +368,7 @@ export default function DashboardPage() {
   const settingsContainerRef = useRef<HTMLDivElement>(null);
 
   const [activeSection, setActiveSection] = useState<'profile' | 'knowledge' | 'resume' | 'analyzer' | 'account'>('profile');
+  const [analysisFocusTrigger, setAnalysisFocusTrigger] = useState(0);
   const [showProfileIntro, setShowProfileIntro] = useState<boolean>(true);
   const [resumeFile, setResumeFile] = useState<File | null>(null);
   
@@ -16257,6 +16258,7 @@ onClick={() => {
                   }}
                   careerFocus={careerFocus}
                   onInjectChatMessage={(message, action) => setChatboxInject(prev => ({ text: message, seq: (prev?.seq ?? 0) + 1, ...(action ? { action: action as Record<string, unknown> } : {}) }))}
+                  focusJobInputTrigger={analysisFocusTrigger}
                 />
               )}
             </div>
@@ -16616,6 +16618,10 @@ onClick={() => {
           setActiveSection('profile');
           setShowProfileIntro(false);
           setActiveProfileStep('Career Focus');
+        }}
+        onNavigateToJobAnalysis={() => {
+          setActiveSection('analyzer');
+          setAnalysisFocusTrigger(prev => prev + 1);
         }}
         onShowPricing={() => setIsUpgradeModalOpen(true)}
         injectMessage={chatboxInject}

@@ -5690,6 +5690,63 @@ RESUME_TOOLS = [
     {
         "type": "function",
         "function": {
+            "name": "navigate_to_job_analysis",
+            "description": (
+                "Use this when the user asks about job recommendations, finding job roles that fit their background, "
+                "discovering suitable job titles, exploring careers that match their skills, or any variation of "
+                "'what jobs should I apply for', 'find jobs for me', 'what roles fit my background', "
+                "'recommend me a job', 'find job opportunities', 'what career should I pursue', "
+                "'find job roles that fit my background', 'job roles that suit me', 'job match'. "
+                "Always call this tool — never answer with a plain list of job titles."
+            ),
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "reply": {
+                        "type": "string",
+                        "description": (
+                            "A warm 2-3 sentence reply that: "
+                            "① encourages the user to fill out their Profile and Knowledge Base so we can build a richer picture of their background, "
+                            "② explains that a complete profile leads to much better job matches, "
+                            "③ invites them to click the card below to open the Job Analysis tab where the recommended job list will appear."
+                        )
+                    }
+                },
+                "required": ["reply"]
+            }
+        }
+    },
+    {
+        "type": "function",
+        "function": {
+            "name": "navigate_to_resume_analysis",
+            "description": (
+                "Use this when the user asks to analyze their resume against a target role, "
+                "check how well their resume fits a job, run a resume analysis, assess their resume for a target position, "
+                "or any variation of 'analyze my resume', 'check my resume for a job', 'how does my resume match', "
+                "'resume fit for target role', 'analyze my resume for my target role', 'evaluate my resume'. "
+                "Always call this tool — never answer in plain text."
+            ),
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "reply": {
+                        "type": "string",
+                        "description": (
+                            "A warm 2-3 sentence reply that: "
+                            "① encourages the user to fill out their Profile and Knowledge Base for a richer analysis, "
+                            "② explains that a complete profile and uploaded resume leads to much better analysis results, "
+                            "③ invites them to click the card below to open the Job Analysis tab and enter their target role."
+                        )
+                    }
+                },
+                "required": ["reply"]
+            }
+        }
+    },
+    {
+        "type": "function",
+        "function": {
             "name": "analyze_project",
             "description": (
                 "Use this when the user has provided project details (a URL or text description) "
@@ -6043,6 +6100,12 @@ async def ai_chat(request: Request):
                     "PLAN PRICING:\n"
                     "- User asks about plans, pricing, cost, subscription, upgrade, feature access, usage limits, or how to unblock a feature → use show_pricing.\n"
                     "- Never answer pricing questions in plain text — always use the show_pricing tool.\n\n"
+                    "JOB RECOMMENDATIONS:\n"
+                    "- User asks about job recommendations, finding job roles that fit them, job matches, career paths, or suitable roles → use navigate_to_job_analysis.\n"
+                    "- Never answer with a plain list of job titles — always use the navigate_to_job_analysis tool.\n\n"
+                    "RESUME ANALYSIS:\n"
+                    "- User asks to analyze their resume for a target role, check resume fit, evaluate how well their resume matches a job → use navigate_to_resume_analysis.\n"
+                    "- Never answer resume analysis requests in plain text — always use the navigate_to_resume_analysis tool.\n\n"
                     "PROJECT ANALYSIS FLOW (follow steps in order, never skip):\n"
                     "Trigger this flow when the user asks about ANY of the following:\n"
                     "• How to write project bullet points or project descriptions\n"
