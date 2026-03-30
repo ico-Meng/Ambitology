@@ -30,7 +30,7 @@
 }
 
 /* Override global CSS to prevent interference with dashboard, but allow fully custom-styled buttons */
-.dashboardContainer button:not(.submitButton):not(.customDropdownTrigger):not(.dropdownOption):not(.nextButton):not(.backButton):not(.technologyItem):not(.sectionClearButton):not(.modalDoneButton):not(.industryButton):not(.interviewReadyButton):not(.knowledgeButton):not(.constructResumeButton):not(.resumeSaveButton):not(.resumeAddJobButton):not(.resumeBulletAddButton):not(.resumeDeleteFieldButton):not(.analysisSwitchButton):not(.getStartedButton):not(.settingsButton):not(.upgradePlanButton):not(.logoutButton):not(.buildProfileButton):not(.buildKnowledgeButton):not(.lookUpButton):not(.descriptionModeBtn):not(.bulletPointRemoveBtn):not(.bulletPointAddBtn):not(.chatboxBarSendBtn):not(.chatboxBarSendBtnActive):not(.chatboxCloseBtn):not(.chatboxHistoryPill):not(.chatboxTrigger):not(.chatboxBarCloseBtn):not(.chatboxCard):not(.sidebarToggleBtn):not(.addProjectLoadBackBtn):not(.addProjectLoadItem):not(.jobRecommendPositionBtn):not(.jobRecommendBackBtn):not(.jobRecommendLinkBtn) {
+.dashboardContainer button:not(.submitButton):not(.customDropdownTrigger):not(.dropdownOption):not(.nextButton):not(.backButton):not(.technologyItem):not(.sectionClearButton):not(.modalDoneButton):not(.industryButton):not(.interviewReadyButton):not(.knowledgeButton):not(.constructResumeButton):not(.resumeSaveButton):not(.resumeAddJobButton):not(.resumeBulletAddButton):not(.resumeDeleteFieldButton):not(.analysisSwitchButton):not(.getStartedButton):not(.settingsButton):not(.upgradePlanButton):not(.logoutButton):not(.buildProfileButton):not(.buildKnowledgeButton):not(.lookUpButton):not(.descriptionModeBtn):not(.bulletPointRemoveBtn):not(.bulletPointAddBtn):not(.chatboxBarSendBtn):not(.chatboxBarSendBtnActive):not(.chatboxCloseBtn):not(.chatboxHistoryPill):not(.chatboxTrigger):not(.chatboxBarCloseBtn):not(.chatboxCard):not(.sidebarToggleBtn):not(.addProjectLoadBackBtn):not(.addProjectLoadItem):not(.jobRecommendPositionBtn):not(.jobRecommendBackBtn):not(.jobRecommendLinkBtn):not(.chatboxSuggestionBtn) {
   background-color: transparent !important;
   background: transparent !important;
   border: none !important;
@@ -95,8 +95,8 @@
 
 /* Sidebar Navigation */
 .sidebar {
-  width: 320px;
-  min-width: 320px;
+  width: 300px;
+  min-width: 300px;
   height: 100vh;
   background: linear-gradient(180deg, #e8e4db 0%, #e0dbd1 100%);
   border-right: 1px solid rgba(155, 106, 16, 0.15);
@@ -4562,6 +4562,68 @@
   color: #9a9490 !important;
   cursor: not-allowed !important;
   box-shadow: none !important;
+}
+
+/* Inactive (disabled but clickable) state for Craft / Analysis buttons */
+.nextButtonInactive {
+  opacity: 0.5 !important;
+  background: linear-gradient(135deg, rgba(180, 180, 180, 0.1) 0%, rgba(160, 160, 160, 0.12) 100%) !important;
+  border-color: rgba(180, 180, 180, 0.3) !important;
+  color: #9a9490 !important;
+  cursor: pointer !important;
+  box-shadow: none !important;
+}
+
+.nextButtonInactive:hover {
+  transform: none !important;
+  box-shadow: none !important;
+  background: linear-gradient(135deg, rgba(180, 180, 180, 0.14) 0%, rgba(160, 160, 160, 0.16) 100%) !important;
+}
+
+.nextButtonInactive::before {
+  display: none !important;
+}
+
+/* Highlight class for fields that need attention */
+.fieldHighlighted .formInput,
+.fieldHighlighted .formTextarea {
+  border-color: rgba(220, 80, 80, 0.6) !important;
+  box-shadow: 0 0 0 2px rgba(220, 80, 80, 0.15) !important;
+  animation: fieldShake 0.35s ease !important;
+}
+
+.fieldHighlighted .resumeUploadLabel {
+  border-color: rgba(220, 80, 80, 0.6) !important;
+  box-shadow: 0 0 0 2px rgba(220, 80, 80, 0.15) !important;
+  animation: fieldShake 0.35s ease !important;
+}
+
+.fieldHighlighted .customDropdownTrigger {
+  border-color: rgba(220, 80, 80, 0.6) !important;
+  box-shadow: 0 0 0 2px rgba(220, 80, 80, 0.15) !important;
+  animation: fieldShake 0.35s ease !important;
+}
+
+.fieldHighlighted .knowledgeScopeCheckboxes .presentCheckboxLabel {
+  border-color: rgba(220, 80, 80, 0.5) !important;
+  box-shadow: 0 0 0 2px rgba(220, 80, 80, 0.12) !important;
+}
+
+.fieldRequiredNote {
+  font-size: 0.78rem;
+  color: #d9534f;
+  margin-top: 6px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  animation: fadeInWarning 0.25s ease-out forwards;
+}
+
+@keyframes fieldShake {
+  0%, 100% { transform: translateX(0); }
+  20%       { transform: translateX(-4px); }
+  60%       { transform: translateX(4px); }
+  80%       { transform: translateX(-2px); }
 }
 
 .nextButton:focus {
@@ -11295,6 +11357,103 @@ textarea.resumeItemCompanyInput {
   margin-top: -0.125rem;
 }
 
+/* ── Suggested questions list (shown before first message) ── */
+.chatboxSuggestions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.42rem;
+  width: 100%;
+  padding: 0 0 0.5rem;
+}
+
+@keyframes chatboxSuggestIn {
+  from { opacity: 0; transform: translateY(8px) scale(0.97); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.chatboxSuggestionBtn {
+  display: flex !important;
+  align-items: center !important;
+  width: 100% !important;
+  padding: 1.05rem 1.1rem !important;
+  text-align: left !important;
+  border-radius: 1.25rem !important;
+  cursor: pointer !important;
+  transition: transform 0.18s ease, box-shadow 0.18s ease, filter 0.18s ease !important;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  font-size: 1rem !important;
+  font-weight: 600 !important;
+  line-height: 1.4;
+  letter-spacing: 0.01em;
+  opacity: 0;
+  animation: chatboxSuggestIn 0.28s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+/* Staggered entry */
+.chatboxSuggestionBtn:nth-child(1) { animation-delay: 0.04s; }
+.chatboxSuggestionBtn:nth-child(2) { animation-delay: 0.09s; }
+.chatboxSuggestionBtn:nth-child(3) { animation-delay: 0.14s; }
+.chatboxSuggestionBtn:nth-child(4) { animation-delay: 0.19s; }
+.chatboxSuggestionBtn:nth-child(5) { animation-delay: 0.24s; }
+.chatboxSuggestionBtn:nth-child(6) { animation-delay: 0.29s; }
+
+/* Per-card unique gradients */
+.chatboxSuggestionBtn:nth-child(1) {
+  background: linear-gradient(135deg, rgba(251, 113, 133, 0.32) 0%, rgba(244, 63, 94, 0.18) 100%) !important;
+  border: 1.5px solid rgba(244, 63, 94, 0.32) !important;
+  color: #7f1d1d !important;
+  box-shadow: 0 2px 10px rgba(244, 63, 94, 0.12) !important;
+}
+.chatboxSuggestionBtn:nth-child(2) {
+  background: linear-gradient(135deg, rgba(56, 189, 248, 0.32) 0%, rgba(14, 165, 233, 0.18) 100%) !important;
+  border: 1.5px solid rgba(14, 165, 233, 0.32) !important;
+  color: #0c4a6e !important;
+  box-shadow: 0 2px 10px rgba(14, 165, 233, 0.12) !important;
+}
+.chatboxSuggestionBtn:nth-child(3) {
+  background: linear-gradient(135deg, rgba(52, 211, 153, 0.32) 0%, rgba(16, 185, 129, 0.18) 100%) !important;
+  border: 1.5px solid rgba(16, 185, 129, 0.32) !important;
+  color: #064e3b !important;
+  box-shadow: 0 2px 10px rgba(16, 185, 129, 0.12) !important;
+}
+.chatboxSuggestionBtn:nth-child(4) {
+  background: linear-gradient(135deg, rgba(167, 139, 250, 0.38) 0%, rgba(139, 92, 246, 0.22) 100%) !important;
+  border: 1.5px solid rgba(139, 92, 246, 0.36) !important;
+  color: #3b0764 !important;
+  box-shadow: 0 2px 10px rgba(139, 92, 246, 0.14) !important;
+}
+.chatboxSuggestionBtn:nth-child(5) {
+  background: linear-gradient(135deg, rgba(251, 191, 36, 0.32) 0%, rgba(245, 158, 11, 0.18) 100%) !important;
+  border: 1.5px solid rgba(245, 158, 11, 0.32) !important;
+  color: #78350f !important;
+  box-shadow: 0 2px 10px rgba(245, 158, 11, 0.12) !important;
+}
+.chatboxSuggestionBtn:nth-child(6) {
+  background: linear-gradient(135deg, rgba(232, 121, 249, 0.32) 0%, rgba(192, 38, 211, 0.18) 100%) !important;
+  border: 1.5px solid rgba(192, 38, 211, 0.32) !important;
+  color: #4a044e !important;
+  box-shadow: 0 2px 10px rgba(192, 38, 211, 0.12) !important;
+}
+
+/* Hover — brighten + lift + stronger glow */
+.chatboxSuggestionBtn:hover {
+  transform: translateY(-2px) !important;
+  filter: brightness(1.06);
+}
+.chatboxSuggestionBtn:nth-child(1):hover { box-shadow: 0 6px 18px rgba(244, 63, 94, 0.28) !important; }
+.chatboxSuggestionBtn:nth-child(2):hover { box-shadow: 0 6px 18px rgba(14, 165, 233, 0.28) !important; }
+.chatboxSuggestionBtn:nth-child(3):hover { box-shadow: 0 6px 18px rgba(16, 185, 129, 0.28) !important; }
+.chatboxSuggestionBtn:nth-child(4):hover { box-shadow: 0 6px 18px rgba(139, 92, 246, 0.30) !important; }
+.chatboxSuggestionBtn:nth-child(5):hover { box-shadow: 0 6px 18px rgba(245, 158, 11, 0.28) !important; }
+.chatboxSuggestionBtn:nth-child(6):hover { box-shadow: 0 6px 18px rgba(192, 38, 211, 0.28) !important; }
+
+.chatboxSuggestionBtn:active {
+  transform: translateY(0) !important;
+  filter: brightness(0.97);
+  transition-duration: 0.08s !important;
+}
+
 /* Empty state shown in docked panel when no messages yet */
 .chatboxDockedEmpty {
   flex: 1;
@@ -13348,6 +13507,11 @@ textarea.resumeItemCompanyInput {
   to   { opacity: 1; transform: translateX(0)   scale(1); }
 }
 
+@keyframes jobPositionSlideIn {
+  from { opacity: 0; transform: translateX(-28px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
 /* ---- Individual position cards — same style as jobRecommendJobItem ---- */
 .jobRecommendPositionBtn {
   display: flex !important;
@@ -13368,6 +13532,7 @@ textarea.resumeItemCompanyInput {
   transition: all 0.2s ease !important;
   backdrop-filter: blur(6px);
   -webkit-backdrop-filter: blur(6px);
+  animation: jobPositionSlideIn 0.22s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
 .jobRecommendPositionBtn:hover {
@@ -13447,7 +13612,7 @@ textarea.resumeItemCompanyInput {
   display: flex;
   flex-direction: column;
   gap: 8px;
-  max-height: calc(5 * 50px + 4 * 8px);
+  max-height: calc(5 * 52px + 4 * 8px);
   overflow-y: auto;
   scrollbar-width: none;
   width: 100%;
@@ -13486,6 +13651,7 @@ textarea.resumeItemCompanyInput {
   outline: none;
   gap: 0.5rem;
   box-sizing: border-box;
+  animation: jobPositionSlideIn 0.22s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 .jobRecommendJobItem:hover,
 .jobRecommendJobItem:focus {

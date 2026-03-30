@@ -336,6 +336,11 @@ export default function ResumeSection({
   const sanityTooltipHideTimerRef = useRef<NodeJS.Timeout | null>(null);
   const [craftingCardIndex, setCraftingCardIndex] = useState<number>(0);
   const craftButtonRef = useRef<HTMLButtonElement>(null);
+  // Field-level validation highlights for inactive craft button clicks
+  const [craftKBFieldErrors, setCraftKBFieldErrors] = useState<{ jobPosition: boolean; knowledgeScope: boolean }>({ jobPosition: false, knowledgeScope: false });
+  const [craftERFieldErrors, setCraftERFieldErrors] = useState<{ jobPosition: boolean; resumeFile: boolean }>({ jobPosition: false, resumeFile: false });
+  const craftKBErrorTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const craftERErrorTimerRef = useRef<NodeJS.Timeout | null>(null);
   const [isJobUrlBlockedFromExistingResume, setIsJobUrlBlockedFromExistingResume] = useState<boolean>(false);
   const [isJobUrlBlockedFromKnowledgeBase, setIsJobUrlBlockedFromKnowledgeBase] = useState<boolean>(false);
   const [jobInputTypeFromExistingResume, setJobInputTypeFromExistingResume] = useState<JobInputType>(null);
@@ -2253,6 +2258,26 @@ export default function ResumeSection({
     console.log('Constructing resume with:', { industrySector, targetJobPosition, knowledgeScope, resumeFile });
   };
 
+  const handleCraftKBInactiveClick = () => {
+    const jobPosError = !interestedCompanyType && (
+      jobUrlFetchFailed
+        ? !interestedJobPositionFromKnowledgeBase.trim()
+        : (!interestedJobPositionFromKnowledgeBase.trim() || !fetchedJobDataFromKnowledgeBase)
+    );
+    const knowledgeScopeError = !knowledgeScope.establishedExpertise && !knowledgeScope.expandingKnowledgeBase;
+    setCraftKBFieldErrors({ jobPosition: jobPosError, knowledgeScope: knowledgeScopeError });
+    if (craftKBErrorTimerRef.current) clearTimeout(craftKBErrorTimerRef.current);
+    craftKBErrorTimerRef.current = setTimeout(() => setCraftKBFieldErrors({ jobPosition: false, knowledgeScope: false }), 4000);
+  };
+
+  const handleCraftERInactiveClick = () => {
+    const resumeFileError = !resumeFile;
+    const jobPosError = !interestedCompanyType && !interestedJobPositionFromExistingResume.trim();
+    setCraftERFieldErrors({ resumeFile: resumeFileError, jobPosition: jobPosError });
+    if (craftERErrorTimerRef.current) clearTimeout(craftERErrorTimerRef.current);
+    craftERErrorTimerRef.current = setTimeout(() => setCraftERFieldErrors({ resumeFile: false, jobPosition: false }), 4000);
+  };
+
   const handleCompanyTypeNext = async () => {
     // Validate that we have the required data
     if (!interestedCompanyType && !interestedJobPositionFromKnowledgeBase) {
@@ -2881,11 +2906,6 @@ export default function ResumeSection({
     // Set valid state based on input type - all types are valid for lookup
     if (value.trim()) {
       setIsJobUrlValidFromExistingResume(true);
-      // Only clear industry sector when it's NOT a generic job title (keep it for job_title type)
-      if (inputType !== 'job_title') {
-        setInterestedCompanyType(''); // Clear industry sector when job position is entered (URL or description)
-        setIsCompanyTypeDropdownOpen(false);
-      }
 
       // Reset textarea mode if user enters a URL
       if (inputType === 'url' && jobUrlFetchFailed) {
@@ -4711,7 +4731,7 @@ export default function ResumeSection({
           </p>
 
           <div className={styles.companyTypeForm}>
-            <div className={styles.formField}>
+            <div className={`${styles.formField} ${craftERFieldErrors.jobPosition ? styles.fieldHighlighted : ''}`}>
               <label className={styles.formLabel} style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }} onMouseEnter={() => { if (jobPosHideTimer.current) clearTimeout(jobPosHideTimer.current); if (jobPosShowTimer.current) clearTimeout(jobPosShowTimer.current); jobPosShowTimer.current = setTimeout(() => setHoveredJobPosLabel('existing'), 600); }} onMouseLeave={() => { if (jobPosShowTimer.current) { clearTimeout(jobPosShowTimer.current); jobPosShowTimer.current = null; } setHoveredJobPosLabel(null); }}>
                 <span>Interested Job Position</span>
                 <button type="button" aria-label="Interested Job Position info" onClick={() => onInjectChatMessage?.("Your resume will be tailored to your target role. You can provide the job info in any of these ways:\n1. Paste the job posting URL;\n2. Enter a short job title (e.g., \"AI Engineer at Meta\");\n3. Paste the full job description.\n\nThen click Look Up to extract and structure the role details for more precise resume crafting.")} style={{ background: 'none', border: 'none', padding: 0, cursor: 'pointer', display: 'flex', alignItems: 'center', lineHeight: 1, opacity: hoveredJobPosLabel === 'existing' ? 1 : 0, transition: 'opacity 0.25s ease', pointerEvents: hoveredJobPosLabel === 'existing' ? 'auto' : 'none' }}><svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="20px" fill="#9B6A10"><path d="M440-280h80v-240h-80v240Zm68.5-331.5Q520-623 520-640t-11.5-28.5Q497-680 480-680t-28.5 11.5Q440-657 440-640t11.5 28.5Q463-600 480-600t28.5-11.5ZM480-80q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-80q134 0 227-93t93-227q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93Zm0-320Z"/></svg></button>
@@ -4924,9 +4944,15 @@ export default function ResumeSection({
                   <span className={styles.fieldWarningErrorText}>{jobUrlError}</span>
                 </div>
               )}
+              {craftERFieldErrors.jobPosition && (
+                <p className={styles.fieldRequiredNote}>
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
+                  Required — or select an industry sector below
+                </p>
+              )}
             </div>
 
-            <div className={styles.formField}>
+            <div className={`${styles.formField} ${craftERFieldErrors.jobPosition ? styles.fieldHighlighted : ''}`}>
               <label className={styles.formLabel} style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }} onMouseEnter={() => { if (industrySectorLabelHideTimer.current) clearTimeout(industrySectorLabelHideTimer.current); if (industrySectorLabelShowTimer.current) clearTimeout(industrySectorLabelShowTimer.current); industrySectorLabelShowTimer.current = setTimeout(() => setHoveredIndustrySectorLabelKey('existing-form'), 600); }} onMouseLeave={() => { if (industrySectorLabelShowTimer.current) { clearTimeout(industrySectorLabelShowTimer.current); industrySectorLabelShowTimer.current = null; } setHoveredIndustrySectorLabelKey(null); }}>
                 <span>Interested Industry Sector</span>
                 <button type="button" aria-label="Interested Industry Sector info" onClick={() => onInjectChatMessage?.("Enter the industry sector you're targeting, and we'll craft your resume using best practices tailored to that industry.")} style={{ background: 'none', border: 'none', padding: 0, cursor: 'pointer', display: 'flex', alignItems: 'center', lineHeight: 1, opacity: hoveredIndustrySectorLabelKey === 'existing-form' ? 1 : 0, transition: 'opacity 0.25s ease', pointerEvents: hoveredIndustrySectorLabelKey === 'existing-form' ? 'auto' : 'none' }}><svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="20px" fill="#9B6A10"><path d="M440-280h80v-240h-80v240Zm68.5-331.5Q520-623 520-640t-11.5-28.5Q497-680 480-680t-28.5 11.5Q440-657 440-640t11.5 28.5Q463-600 480-600t28.5-11.5ZM480-80q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-80q134 0 227-93t93-227q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93Zm0-320Z"/></svg></button>
@@ -4935,13 +4961,10 @@ export default function ResumeSection({
                 <button
                   ref={companyTypeDropdownTriggerRef}
                   type="button"
-                  className={`${styles.customDropdownTrigger} ${(interestedJobPositionFromExistingResume && (jobInputTypeFromExistingResume === 'url' || jobInputTypeFromExistingResume === 'job_description')) ? styles.customDropdownTriggerDisabled : ''}`}
+                  className={`${styles.customDropdownTrigger}`}
                   onClick={() => {
-                    if (!(interestedJobPositionFromExistingResume && (jobInputTypeFromExistingResume === 'url' || jobInputTypeFromExistingResume === 'job_description'))) {
-                      setIsCompanyTypeDropdownOpen(!isCompanyTypeDropdownOpen);
-                    }
+                    setIsCompanyTypeDropdownOpen(!isCompanyTypeDropdownOpen);
                   }}
-                  disabled={!!(interestedJobPositionFromExistingResume && (jobInputTypeFromExistingResume === 'url' || jobInputTypeFromExistingResume === 'job_description'))}
                   aria-expanded={isCompanyTypeDropdownOpen}
                   aria-haspopup="listbox"
                 >
@@ -4999,7 +5022,7 @@ export default function ResumeSection({
               </div>
             </div>
 
-            <div className={styles.formField}>
+            <div className={`${styles.formField} ${craftERFieldErrors.resumeFile ? styles.fieldHighlighted : ''}`}>
               <div className={styles.resumeUploadContainer}>
                 <div className={styles.resumeUploadArea}>
                   <input
@@ -5118,6 +5141,12 @@ export default function ResumeSection({
                   </label>
                 </div>
               </div>
+              {craftERFieldErrors.resumeFile && (
+                <p className={styles.fieldRequiredNote}>
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
+                  Please upload your resume
+                </p>
+              )}
             </div>
           </div>
 
@@ -5125,13 +5154,9 @@ export default function ResumeSection({
             <button
               ref={existingResumeCraftButtonRef}
               type="button"
-              className={styles.nextButton}
-              onClick={handleExistingResumeNext}
-              disabled={
-                isExistingResumeCrafting ||
-                !resumeFile ||
-                (!interestedCompanyType && !interestedJobPositionFromExistingResume.trim())
-              }
+              className={`${styles.nextButton} ${!isExistingResumeCrafting && (!resumeFile || (!interestedCompanyType && !interestedJobPositionFromExistingResume.trim())) ? styles.nextButtonInactive : ''}`}
+              onClick={!isExistingResumeCrafting && (!resumeFile || (!interestedCompanyType && !interestedJobPositionFromExistingResume.trim())) ? handleCraftERInactiveClick : handleExistingResumeNext}
+              disabled={isExistingResumeCrafting}
               aria-label="Craft"
             >
               {isExistingResumeCrafting ? (
@@ -5271,7 +5296,7 @@ export default function ResumeSection({
           </p>
 
           <div className={styles.companyTypeForm}>
-            <div className={styles.formField}>
+            <div className={`${styles.formField} ${craftKBFieldErrors.jobPosition ? styles.fieldHighlighted : ''}`}>
               <label className={styles.formLabel} style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }} onMouseEnter={() => { if (jobPosHideTimer.current) clearTimeout(jobPosHideTimer.current); if (jobPosShowTimer.current) clearTimeout(jobPosShowTimer.current); jobPosShowTimer.current = setTimeout(() => setHoveredJobPosLabel('knowledge'), 600); }} onMouseLeave={() => { if (jobPosShowTimer.current) { clearTimeout(jobPosShowTimer.current); jobPosShowTimer.current = null; } setHoveredJobPosLabel(null); }}>
                 <span>Interested Job Position</span>
                 <button type="button" aria-label="Interested Job Position info" onClick={() => onInjectChatMessage?.("Your resume will be tailored to your target role. You can provide the job info in any of these ways:\n1. Paste the job posting URL;\n2. Enter a short job title (e.g., \"AI Engineer at Meta\");\n3. Paste the full job description.\n\nThen click Look Up to extract and structure the role details for more precise resume crafting.")} style={{ background: 'none', border: 'none', padding: 0, cursor: 'pointer', display: 'flex', alignItems: 'center', lineHeight: 1, opacity: hoveredJobPosLabel === 'knowledge' ? 1 : 0, transition: 'opacity 0.25s ease', pointerEvents: hoveredJobPosLabel === 'knowledge' ? 'auto' : 'none' }}><svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="20px" fill="#9B6A10"><path d="M440-280h80v-240h-80v240Zm68.5-331.5Q520-623 520-640t-11.5-28.5Q497-680 480-680t-28.5 11.5Q440-657 440-640t11.5 28.5Q463-600 480-600t28.5-11.5ZM480-80q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-80q134 0 227-93t93-227q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93Zm0-320Z"/></svg></button>
@@ -5488,9 +5513,17 @@ export default function ResumeSection({
                   <span className={styles.fieldWarningErrorText}>{jobUrlError}</span>
                 </div>
               )}
+              {craftKBFieldErrors.jobPosition && (
+                <p className={styles.fieldRequiredNote}>
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
+                  {interestedJobPositionFromKnowledgeBase.trim() && !fetchedJobDataFromKnowledgeBase
+                    ? "Click 'Look Up' to verify your job position"
+                    : 'Required — or select an industry sector below'}
+                </p>
+              )}
             </div>
 
-            <div className={styles.formField}>
+            <div className={`${styles.formField} ${craftKBFieldErrors.jobPosition ? styles.fieldHighlighted : ''}`}>
               <label className={styles.formLabel} style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }} onMouseEnter={() => { if (industrySectorLabelHideTimer.current) clearTimeout(industrySectorLabelHideTimer.current); if (industrySectorLabelShowTimer.current) clearTimeout(industrySectorLabelShowTimer.current); industrySectorLabelShowTimer.current = setTimeout(() => setHoveredIndustrySectorLabelKey('knowledge-form'), 600); }} onMouseLeave={() => { if (industrySectorLabelShowTimer.current) { clearTimeout(industrySectorLabelShowTimer.current); industrySectorLabelShowTimer.current = null; } setHoveredIndustrySectorLabelKey(null); }}>
                 <span>Interested Industry Sector</span>
                 <button type="button" aria-label="Interested Industry Sector info" onClick={() => onInjectChatMessage?.("Enter the industry sector you're targeting, and we'll craft your resume using best practices tailored to that industry.")} style={{ background: 'none', border: 'none', padding: 0, cursor: 'pointer', display: 'flex', alignItems: 'center', lineHeight: 1, opacity: hoveredIndustrySectorLabelKey === 'knowledge-form' ? 1 : 0, transition: 'opacity 0.25s ease', pointerEvents: hoveredIndustrySectorLabelKey === 'knowledge-form' ? 'auto' : 'none' }}><svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="20px" fill="#9B6A10"><path d="M440-280h80v-240h-80v240Zm68.5-331.5Q520-623 520-640t-11.5-28.5Q497-680 480-680t-28.5 11.5Q440-657 440-640t11.5 28.5Q463-600 480-600t28.5-11.5ZM480-80q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-80q134 0 227-93t93-227q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93Zm0-320Z"/></svg></button>
@@ -5563,7 +5596,7 @@ export default function ResumeSection({
               </div>
             </div>
 
-            <div className={styles.formField} style={{ position: 'relative', overflow: 'visible' }}>
+            <div className={`${styles.formField} ${craftKBFieldErrors.knowledgeScope ? styles.fieldHighlighted : ''}`} style={{ position: 'relative', overflow: 'visible' }}>
               <label className={styles.formLabel} style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }} onMouseEnter={() => { if (knowledgeScopeHideTimer.current) clearTimeout(knowledgeScopeHideTimer.current); if (knowledgeScopeShowTimer.current) clearTimeout(knowledgeScopeShowTimer.current); knowledgeScopeShowTimer.current = setTimeout(() => setHoveredKnowledgeScopeKey('form'), 600); }} onMouseLeave={() => { if (knowledgeScopeShowTimer.current) { clearTimeout(knowledgeScopeShowTimer.current); knowledgeScopeShowTimer.current = null; } setHoveredKnowledgeScopeKey(null); }}>
                 <span>Knowledge Scope</span>
                 <button type="button" aria-label="Knowledge Scope info" onClick={() => onInjectChatMessage?.("Tailor your resume using the items you've selected from your knowledge scope, including your projects and skills.")} style={{ background: 'none', border: 'none', padding: 0, cursor: 'pointer', display: 'flex', alignItems: 'center', lineHeight: 1, opacity: hoveredKnowledgeScopeKey === 'form' ? 1 : 0, transition: 'opacity 0.25s ease', pointerEvents: hoveredKnowledgeScopeKey === 'form' ? 'auto' : 'none' }}><svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="20px" fill="#9B6A10"><path d="M440-280h80v-240h-80v240Zm68.5-331.5Q520-623 520-640t-11.5-28.5Q497-680 480-680t-28.5 11.5Q440-657 440-640t11.5 28.5Q463-600 480-600t28.5-11.5ZM480-80q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-80q134 0 227-93t93-227q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93Zm0-320Z"/></svg></button>
@@ -5911,6 +5944,12 @@ export default function ResumeSection({
                 <div className={styles.careerFocusRequiredTooltip}>Please choose your Career Focus first.</div>
               )}
               </div>
+              {craftKBFieldErrors.knowledgeScope && (
+                <p className={styles.fieldRequiredNote}>
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
+                  Please select at least one knowledge scope
+                </p>
+              )}
             </div>
           </div>
 
@@ -5918,21 +5957,9 @@ export default function ResumeSection({
             <button
               ref={craftButtonRef}
               type="button"
-              className={styles.nextButton}
-              onClick={handleCompanyTypeNext}
-              disabled={
-                isCraftingResume ||
-                // Disable if no industry sector AND job position validation fails
-                (!interestedCompanyType && (
-                  // If fetch failed, only check if field is empty (user can paste description)
-                  jobUrlFetchFailed 
-                    ? !interestedJobPositionFromKnowledgeBase.trim()
-                    // If fetch didn't fail, check if field is empty OR no fetched data
-                    : (!interestedJobPositionFromKnowledgeBase.trim() || !fetchedJobDataFromKnowledgeBase)
-                )) ||
-                // Disable if knowledge scope has nothing checked
-                (!knowledgeScope.establishedExpertise && !knowledgeScope.expandingKnowledgeBase)
-              }
+              className={`${styles.nextButton} ${!isCraftingResume && ((!interestedCompanyType && (jobUrlFetchFailed ? !interestedJobPositionFromKnowledgeBase.trim() : (!interestedJobPositionFromKnowledgeBase.trim() || !fetchedJobDataFromKnowledgeBase))) || (!knowledgeScope.establishedExpertise && !knowledgeScope.expandingKnowledgeBase)) ? styles.nextButtonInactive : ''}`}
+              onClick={!isCraftingResume && ((!interestedCompanyType && (jobUrlFetchFailed ? !interestedJobPositionFromKnowledgeBase.trim() : (!interestedJobPositionFromKnowledgeBase.trim() || !fetchedJobDataFromKnowledgeBase))) || (!knowledgeScope.establishedExpertise && !knowledgeScope.expandingKnowledgeBase)) ? handleCraftKBInactiveClick : handleCompanyTypeNext}
+              disabled={isCraftingResume}
               aria-label="Craft"
             >
               {isCraftingResume ? (

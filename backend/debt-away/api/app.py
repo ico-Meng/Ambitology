@@ -3005,7 +3005,7 @@ async def get_job_recommendations(request: Request):
         # ------------------------------------------------------------------
         # 1. Load ALL items for this position from DynamoDB (paginated)
         # ------------------------------------------------------------------
-        job_cache_table = boto3.resource("dynamodb", region_name="us-east-1").Table("jobCache")
+        job_cache_table = boto3.resource("dynamodb").Table("jobCache")
         all_jobs = []
         query_kwargs = dict(
             IndexName="position-index",

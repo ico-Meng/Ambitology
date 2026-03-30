@@ -219,11 +219,12 @@ export default function JobRecommendPanel({
       {/* ---- Positions list ---- */}
       {mode === 'positions' && (
         <div className={styles.jobRecommendPositionsList}>
-          {positions.map((pos) => (
+          {positions.map((pos, idx) => (
             <button
               key={pos}
               type="button"
               className={styles.jobRecommendPositionBtn}
+              style={{ animationDelay: `${idx * 0.06}s` }}
               onClick={() => handlePositionClick(pos)}
             >
               <span className={styles.jobRecommendPositionName}>{pos}</span>
@@ -261,6 +262,7 @@ export default function JobRecommendPanel({
                 <div
                   key={i}
                   className={styles.jobRecommendJobItem}
+                  style={{ animationDelay: `${i * 0.06}s` }}
                   onClick={() => handleJobTextClick(job)}
                   role="button"
                   tabIndex={0}

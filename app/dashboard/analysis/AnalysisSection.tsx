@@ -100,6 +100,8 @@ export default function AnalysisSection({
   const [selectedAnalysisType, setSelectedAnalysisType] = useState<'personal' | 'resume'>('personal');
   const [isAnalyzing, setIsAnalyzing] = useState<boolean>(false);
   const [analysisError, setAnalysisError] = useState<string>('');
+  const [analysisFieldErrors, setAnalysisFieldErrors] = useState<{ jobPosition: boolean; knowledgeScope: boolean; resumeFile: boolean }>({ jobPosition: false, knowledgeScope: false, resumeFile: false });
+  const analysisFieldErrorTimerRef = useRef<NodeJS.Timeout | null>(null);
   const [selectedDimension, setSelectedDimension] = useState<string | null>(null); // Filter for analysis cards
   const [isAnalysisResultsFadingOut, setIsAnalysisResultsFadingOut] = useState<boolean>(false);
   // When coming from "From Existing Resume" and no DynamoDB established expertise data exists
@@ -863,6 +865,15 @@ export default function AnalysisSection({
     return () => document.removeEventListener('mousedown', handleOutsideClick);
   }, [showJobRecommendPanel]);
 
+  const handleAnalysisButtonInactiveClick = () => {
+    const jobPosError = fetchedJobData === null;
+    const knowledgeScopeError = !fromExistingResume && !analysisKnowledgeScope.establishedExpertise && !analysisKnowledgeScope.expandingKnowledgeBase;
+    const resumeFileError = analysisResumeFile === null && cachedResumeFileName === null;
+    setAnalysisFieldErrors({ jobPosition: jobPosError, knowledgeScope: knowledgeScopeError, resumeFile: resumeFileError });
+    if (analysisFieldErrorTimerRef.current) clearTimeout(analysisFieldErrorTimerRef.current);
+    analysisFieldErrorTimerRef.current = setTimeout(() => setAnalysisFieldErrors({ jobPosition: false, knowledgeScope: false, resumeFile: false }), 4000);
+  };
+
   // Extract analysis logic into reusable function
   const runAnalysis = async () => {
     if (!fetchedJobData || !user?.profile?.sub) {
@@ -1003,7 +1014,7 @@ export default function AnalysisSection({
 
           <div className={styles.analysisLeftLower}>
             <div className={styles.basicInfoSubPanel}>
-              <div className={styles.formField}>
+              <div className={`${styles.formField} ${analysisFieldErrors.jobPosition ? styles.fieldHighlighted : ''}`}>
                 <label className={styles.formLabel} style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }} onMouseEnter={() => { if (targetJobLabelHideTimer.current) clearTimeout(targetJobLabelHideTimer.current); if (targetJobLabelShowTimer.current) clearTimeout(targetJobLabelShowTimer.current); targetJobLabelShowTimer.current = setTimeout(() => setIsTargetJobLabelHovered(true), 600); }} onMouseLeave={() => { if (targetJobLabelShowTimer.current) { clearTimeout(targetJobLabelShowTimer.current); targetJobLabelShowTimer.current = null; } setIsTargetJobLabelHovered(false); }}>
                   <span>Target Job Position</span>
                   <button type="button" aria-label="Target Job Position info" onClick={() => onInjectChatMessage?.("To begin your career fit analysis, share your target role in one of the following ways:\n1. Paste the job posting URL;\n2. Enter a short job title (e.g., \"AI Engineer at Meta\");\n3. Paste the full job description.\n\nThen click Look Up to extract and structure the role details for a more accurate analysis.")} style={{ background: 'none', border: 'none', padding: 0, cursor: 'pointer', display: 'flex', alignItems: 'center', lineHeight: 1, opacity: isTargetJobLabelHovered ? 1 : 0, transition: 'opacity 0.25s ease', pointerEvents: isTargetJobLabelHovered ? 'auto' : 'none' }}><svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="20px" fill="#9B6A10"><path d="M440-280h80v-240h-80v240Zm68.5-331.5Q520-623 520-640t-11.5-28.5Q497-680 480-680t-28.5 11.5Q440-657 440-640t11.5 28.5Q463-600 480-600t28.5-11.5ZM480-80q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-80q134 0 227-93t93-227q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93Zm0-320Z"/></svg></button>
@@ -1188,9 +1199,17 @@ export default function AnalysisSection({
                     <span className={styles.fieldWarningErrorText}>{jobUrlError}</span>
                   </div>
                 )}
+                {analysisFieldErrors.jobPosition && (
+                  <p className={styles.fieldRequiredNote}>
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
+                    {jobPosition.trim() && !fetchedJobData
+                      ? "Click 'Look Up' to verify your job position"
+                      : 'Enter your target job position and click Look Up'}
+                  </p>
+                )}
               </div>
 
-              <div className={styles.formField}>
+              <div className={`${styles.formField} ${analysisFieldErrors.knowledgeScope ? styles.fieldHighlighted : ''}`}>
                 <label className={styles.formLabel} style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }} onMouseEnter={() => { if (knowledgeScopeLabelHideTimer.current) clearTimeout(knowledgeScopeLabelHideTimer.current); if (knowledgeScopeLabelShowTimer.current) clearTimeout(knowledgeScopeLabelShowTimer.current); knowledgeScopeLabelShowTimer.current = setTimeout(() => setIsKnowledgeScopeLabelHovered(true), 600); }} onMouseLeave={() => { if (knowledgeScopeLabelShowTimer.current) { clearTimeout(knowledgeScopeLabelShowTimer.current); knowledgeScopeLabelShowTimer.current = null; } setIsKnowledgeScopeLabelHovered(false); }}>
                   <span>Knowledge Scope</span>
                   <button type="button" aria-label="Knowledge Scope info" onClick={() => onInjectChatMessage?.("Start your career fit analysis using your selected knowledge scope to evaluate your personal capabilities.")} style={{ background: 'none', border: 'none', padding: 0, cursor: 'pointer', display: 'flex', alignItems: 'center', lineHeight: 1, opacity: isKnowledgeScopeLabelHovered ? 1 : 0, transition: 'opacity 0.25s ease', pointerEvents: isKnowledgeScopeLabelHovered ? 'auto' : 'none' }}><svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="20px" fill="#9B6A10"><path d="M440-280h80v-240h-80v240Zm68.5-331.5Q520-623 520-640t-11.5-28.5Q497-680 480-680t-28.5 11.5Q440-657 440-640t11.5 28.5Q463-600 480-600t28.5-11.5ZM480-80q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-80q134 0 227-93t93-227q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93Zm0-320Z"/></svg></button>
@@ -1252,9 +1271,15 @@ export default function AnalysisSection({
                   <div className={styles.careerFocusRequiredTooltip}>Please choose your Career Focus first.</div>
                 )}
                 </div>
+                {analysisFieldErrors.knowledgeScope && (
+                  <p className={styles.fieldRequiredNote}>
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
+                    Please select at least one knowledge scope
+                  </p>
+                )}
               </div>
 
-              <div className={styles.formField}>
+              <div className={`${styles.formField} ${analysisFieldErrors.resumeFile ? styles.fieldHighlighted : ''}`}>
                 <div className={styles.resumeUploadContainer}>
                   <div className={styles.resumeUploadArea}>
                     <input
@@ -1378,14 +1403,20 @@ export default function AnalysisSection({
                     </label>
                   </div>
                 </div>
+                {analysisFieldErrors.resumeFile && (
+                  <p className={styles.fieldRequiredNote}>
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
+                    Please upload your resume
+                  </p>
+                )}
               </div>
 
               <div className={styles.nextButtonContainer}>
                 <button
                   type="button"
-                  className={`${styles.nextButton} ${isAnalyzedState ? styles.nextButtonAnalyzed : ''}`}
-                  disabled={!isAnalysisButtonEnabled || isAnalyzing}
-                  onClick={runAnalysis}
+                  className={`${styles.nextButton} ${isAnalyzedState ? styles.nextButtonAnalyzed : ''} ${!isAnalysisButtonEnabled && !isAnalyzing && !isAnalyzedState ? styles.nextButtonInactive : ''}`}
+                  disabled={isAnalyzing}
+                  onClick={!isAnalysisButtonEnabled && !isAnalyzing ? handleAnalysisButtonInactiveClick : runAnalysis}
                   aria-label={isAnalyzedState ? 'Already analyzed — update a field to re-run' : 'Run Analysis'}
                   title={isAnalyzedState ? 'Update job position, knowledge scope, or resume to re-run analysis' : undefined}
                 >

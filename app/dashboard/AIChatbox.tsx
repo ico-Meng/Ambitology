@@ -1201,6 +1201,31 @@ export default function AIChatbox({
           </div>
         )}
 
+        {/* Suggested questions — shown when bar is open, no chat window visible, and input is empty */}
+        {isBarOpen && !input && !(isDocked || (historyOpen && messages.length > 0)) && (
+          <div className={styles.chatboxSuggestions}>
+            {[
+              'Help me improve my resume',
+              'Help me write strong project bullet points',
+              'Find the right technical keywords for my project',
+              'Tailor my resume for my target job',
+              'Analyze my resume for my target role',
+              'Find job roles that fit my background',
+            ].map((q, i) => (
+              <button
+                key={i}
+                className={styles.chatboxSuggestionBtn}
+                onClick={() => {
+                  setInput(q);
+                  setTimeout(() => inputRef.current?.focus(), 0);
+                }}
+              >
+                {q}
+              </button>
+            ))}
+          </div>
+        )}
+
         {/* Collapsed history indicator — hidden in docked mode */}
         {isBarOpen && !isDocked && !historyOpen && messages.length > 0 && (
           <button className={styles.chatboxHistoryPill} onClick={() => setHistoryOpen(true)}>

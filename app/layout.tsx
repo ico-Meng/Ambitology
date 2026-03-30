@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Inter, Comfortaa, Orbitron, Lato, Nunito, Plus_Jakarta_Sans } from "next/font/google";
 import Script from "next/script";
 import "./app.css";
+import AuthGuard from "@/app/components/AuthGuard";
 
 const inter = Inter({ subsets: ["latin"], weight: ["300", "400", "500", "600", "700"] });
 const comfortaa = Comfortaa({
@@ -260,7 +261,10 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(siteNavigationSchema) }}
         />
       </head>
-      <body className={`${inter.className} ${comfortaa.variable} ${orbitron.variable} ${lato.variable} ${nunito.variable} ${plusJakartaSans.variable}`}>{children}</body>
+      <body className={`${inter.className} ${comfortaa.variable} ${orbitron.variable} ${lato.variable} ${nunito.variable} ${plusJakartaSans.variable}`}>
+        <AuthGuard />
+        {children}
+      </body>
     </html>
   );
 }
