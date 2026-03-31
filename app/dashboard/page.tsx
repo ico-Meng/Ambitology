@@ -369,6 +369,13 @@ export default function DashboardPage() {
 
   const [activeSection, setActiveSection] = useState<'profile' | 'knowledge' | 'resume' | 'analyzer' | 'account'>('profile');
   const [analysisFocusTrigger, setAnalysisFocusTrigger] = useState(0);
+  const [analysisContextData, setAnalysisContextData] = useState<{
+    personalCapabilityScores: Record<string, number> | null;
+    resumePowerScores: Record<string, number> | null;
+    knowledgeScope: { establishedExpertise: boolean; expandingKnowledgeBase: boolean };
+    targetJobTitle: string;
+    fetchedJobData: Record<string, unknown> | null;
+  } | null>(null);
   const [showProfileIntro, setShowProfileIntro] = useState<boolean>(true);
   const [resumeFile, setResumeFile] = useState<File | null>(null);
   
@@ -2707,6 +2714,12 @@ export default function DashboardPage() {
       if (resumeSnapshot) data.resumeContent = resumeSnapshot;
     } else if (activeSection === 'analyzer') {
       data.targetJobTitle = analysisJobPosition;
+      if (analysisContextData) {
+        if (analysisContextData.personalCapabilityScores) data.personalCapabilityScores = analysisContextData.personalCapabilityScores;
+        if (analysisContextData.resumePowerScores) data.resumePowerScores = analysisContextData.resumePowerScores;
+        data.knowledgeScope = analysisContextData.knowledgeScope;
+        if (analysisContextData.fetchedJobData) data.fetchedJobData = analysisContextData.fetchedJobData;
+      }
     } else if (activeSection === 'knowledge') {
       data.knowledgeType = showEstablishedExpertise
         ? 'established'
@@ -2722,6 +2735,7 @@ export default function DashboardPage() {
     resumeInterestedJobPositionFromKnowledgeBase,
     resumeSnapshot,
     analysisJobPosition,
+    analysisContextData,
     showEstablishedExpertise,
     showExpandingKnowledgeBase,
   ]);
@@ -16259,6 +16273,13 @@ onClick={() => {
                   careerFocus={careerFocus}
                   onInjectChatMessage={(message, action) => setChatboxInject(prev => ({ text: message, seq: (prev?.seq ?? 0) + 1, ...(action ? { action: action as Record<string, unknown> } : {}) }))}
                   focusJobInputTrigger={analysisFocusTrigger}
+                  onAnalysisDataChange={(data) => setAnalysisContextData(data as {
+                    personalCapabilityScores: Record<string, number> | null;
+                    resumePowerScores: Record<string, number> | null;
+                    knowledgeScope: { establishedExpertise: boolean; expandingKnowledgeBase: boolean };
+                    targetJobTitle: string;
+                    fetchedJobData: Record<string, unknown> | null;
+                  })}
                 />
               )}
             </div>

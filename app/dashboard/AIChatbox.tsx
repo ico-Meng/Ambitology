@@ -182,9 +182,12 @@ export default function AIChatbox({
     return () => clearTimeout(t);
   }, [isLoading]);
 
-  // Inject an assistant message from outside (e.g. info icon click)
+  // Inject an assistant message from outside (e.g. info icon click).
+  // Suppressed when docked — the right-side panel view must only change via the
+  // move-to-left or close buttons, not through external navigation/section events.
   useEffect(() => {
     if (!injectMessage) return;
+    if (isDocked) return;
     const msg: Message = { id: Date.now().toString(), role: 'assistant', content: injectMessage.text, ...(injectMessage.action ? { action: injectMessage.action } : {}) };
     setMessages(prev => [...prev, msg]);
     setIsBarOpen(true);

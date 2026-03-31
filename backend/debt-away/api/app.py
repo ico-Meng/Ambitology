@@ -6050,6 +6050,40 @@ async def ai_chat(request: Request):
             job_title = pdata.get("targetJobTitle", "")
             if job_title:
                 context_lines.append(f"Target role being analyzed: {job_title}")
+            fetched_job = pdata.get("fetchedJobData") or {}
+            if fetched_job:
+                if fetched_job.get("target_job_company"):
+                    context_lines.append(f"Company: {fetched_job['target_job_company']}")
+                if fetched_job.get("target_job_description"):
+                    context_lines.append(f"Job description summary: {str(fetched_job['target_job_description'])[:600]}")
+                skills = fetched_job.get("target_job_skill_keywords") or []
+                if skills:
+                    context_lines.append(f"Required skills: {', '.join(skills[:20])}")
+            knowledge_scope = pdata.get("knowledgeScope") or {}
+            if knowledge_scope:
+                scope_parts = []
+                if knowledge_scope.get("establishedExpertise"):
+                    scope_parts.append("Established Expertise")
+                if knowledge_scope.get("expandingKnowledgeBase"):
+                    scope_parts.append("Expanding Knowledge Base")
+                if scope_parts:
+                    context_lines.append(f"Knowledge scope selected: {', '.join(scope_parts)}")
+            dim_labels = {
+                "background": "Background",
+                "education": "Education",
+                "professional": "Professional Experience",
+                "techSkills": "Tech Skills",
+                "teamwork": "Teamwork",
+                "jobMatch": "Job Match",
+            }
+            personal_scores = pdata.get("personalCapabilityScores") or {}
+            if personal_scores:
+                score_strs = [f"{dim_labels.get(k, k)}: {v}/5" for k, v in personal_scores.items()]
+                context_lines.append(f"Personal Capability scores — {', '.join(score_strs)}")
+            resume_scores = pdata.get("resumePowerScores") or {}
+            if resume_scores:
+                score_strs = [f"{dim_labels.get(k, k)}: {v}/5" for k, v in resume_scores.items()]
+                context_lines.append(f"Resume Power scores — {', '.join(score_strs)}")
         elif section == "knowledge":
             kt = pdata.get("knowledgeType", "")
             if kt:

@@ -16,6 +16,14 @@ interface FetchedJobData {
   target_job_url?: string;
 }
 
+interface AnalysisContextData {
+  personalCapabilityScores: { background: number; education: number; professional: number; techSkills: number; teamwork: number; jobMatch: number } | null;
+  resumePowerScores: { background: number; education: number; professional: number; techSkills: number; teamwork: number; jobMatch: number } | null;
+  knowledgeScope: { establishedExpertise: boolean; expandingKnowledgeBase: boolean };
+  targetJobTitle: string;
+  fetchedJobData: FetchedJobData | null;
+}
+
 interface AnalysisSectionProps {
   jobPosition: string;
   setJobPosition: (value: string) => void;
@@ -35,6 +43,7 @@ interface AnalysisSectionProps {
   careerFocus?: string;
   onInjectChatMessage?: (message: string, action?: { type: string }) => void;
   focusJobInputTrigger?: number;
+  onAnalysisDataChange?: (data: AnalysisContextData) => void;
 }
 
 // Job input type detection
@@ -82,6 +91,7 @@ export default function AnalysisSection({
   careerFocus,
   onInjectChatMessage,
   focusJobInputTrigger,
+  onAnalysisDataChange,
 }: AnalysisSectionProps) {
   const [analysisKnowledgeScope, setAnalysisKnowledgeScope] = useState<{
     establishedExpertise: boolean;
@@ -202,6 +212,18 @@ export default function AnalysisSection({
     
     return false;
   };
+
+  // Notify parent whenever analysis data changes so the AI chatbox can use it
+  useEffect(() => {
+    if (!onAnalysisDataChange) return;
+    onAnalysisDataChange({
+      personalCapabilityScores: personalCapabilityAnalysis,
+      resumePowerScores: resumePowerAnalysis,
+      knowledgeScope: analysisKnowledgeScope,
+      targetJobTitle: jobPosition,
+      fetchedJobData,
+    });
+  }, [personalCapabilityAnalysis, resumePowerAnalysis, analysisKnowledgeScope, jobPosition, fetchedJobData, onAnalysisDataChange]);
 
   // Function to clear analysis results with fade-out animation
   const clearAnalysisResultsWithFade = () => {
