@@ -177,6 +177,7 @@ interface ResumeSectionProps {
   setShowCompanyTypePage: (value: boolean) => void;
   showExistingResumePage: boolean;
   setShowExistingResumePage: (value: boolean) => void;
+  focusExistingResumeJobTrigger?: number;
   // Projects from Knowledge section
   personalProjects: PersonalProject[];
   professionalProjects: ProfessionalProject[];
@@ -267,6 +268,7 @@ export default function ResumeSection({
   setShowCompanyTypePage,
   showExistingResumePage,
   setShowExistingResumePage,
+  focusExistingResumeJobTrigger,
   personalProjects,
   professionalProjects,
   futurePersonalProjects,
@@ -327,6 +329,7 @@ export default function ResumeSection({
   const [showDownloadFormatPopup, setShowDownloadFormatPopup] = useState<boolean>(false);
   const [showDownloadTooltip, setShowDownloadTooltip] = useState<boolean>(false);
   const [showAnalysisTooltip, setShowAnalysisTooltip] = useState<boolean>(false);
+  const [isNavigatingToAnalysis, setIsNavigatingToAnalysis] = useState<boolean>(false);
   const [showSanityTooltip, setShowSanityTooltip] = useState<boolean>(false);
   const downloadTooltipTimerRef = useRef<NodeJS.Timeout | null>(null);
   const downloadTooltipHideTimerRef = useRef<NodeJS.Timeout | null>(null);
@@ -435,6 +438,7 @@ export default function ResumeSection({
   const [pendingAutoFetchER, setPendingAutoFetchER] = useState(false);
   const panelWrapperRefER = useRef<HTMLDivElement>(null);
   const panelJobMetaRefER = useRef<{ title: string; company: string; url: string } | null>(null);
+  const existingResumeJobInputRef = useRef<HTMLInputElement>(null);
   // Persisted fetched job data for display on refresh
   const [persistedFetchedJobData, setPersistedFetchedJobData] = useState<FetchedJobData | null>(null);
   
@@ -820,6 +824,16 @@ export default function ResumeSection({
     document.addEventListener('mousedown', handleOutsideClick);
     return () => document.removeEventListener('mousedown', handleOutsideClick);
   }, [showJobRecommendPanelER]);
+
+  // Focus the existing-resume job position input and open the recommendation panel when triggered externally
+  useEffect(() => {
+    if (!focusExistingResumeJobTrigger) return;
+    setTimeout(() => {
+      existingResumeJobInputRef.current?.focus();
+      if (!interestedJobPositionFromExistingResume) setShowJobRecommendPanelER(true);
+    }, 200);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [focusExistingResumeJobTrigger]);
 
   // Load state on component mount
   useEffect(() => {
@@ -4525,6 +4539,8 @@ export default function ResumeSection({
       return;
     }
 
+    setIsNavigatingToAnalysis(true);
+
     // Determine which job position data to use based on resumeMode
     let jobPosition: string;
     let fetchedJobData: FetchedJobData | null;
@@ -4577,6 +4593,7 @@ export default function ResumeSection({
       // Generate PDF
       const pdfResult = await generateResumePDF();
       if (pdfResult === 'DOWNLOAD_LIMIT_EXCEEDED') {
+        setIsNavigatingToAnalysis(false);
         onDownloadLimitExceeded?.();
         return;
       }
@@ -4618,6 +4635,8 @@ export default function ResumeSection({
           knowledgeScope: currentKnowledgeScope,
           fromExistingResume: isExistingResumeMode,
         });
+      } else {
+        setIsNavigatingToAnalysis(false);
       }
     }
   };
@@ -4769,6 +4788,7 @@ export default function ResumeSection({
                   }}
                 >
                   <input
+                    ref={existingResumeJobInputRef}
                     type="text"
                     className={styles.formInput}
                     value={interestedJobPositionFromExistingResume}
@@ -4991,7 +5011,7 @@ export default function ResumeSection({
                     />
                   </svg>
                 </button>
-                {isCompanyTypeDropdownOpen && !(interestedJobPositionFromExistingResume && (jobInputTypeFromExistingResume === 'url' || jobInputTypeFromExistingResume === 'job_description')) && (
+                {isCompanyTypeDropdownOpen && (
                   <div className={styles.customDropdownMenu}>
                     <button
                       key="select-default"
@@ -5532,13 +5552,10 @@ export default function ResumeSection({
                 <button
                   ref={companyTypeDropdownTriggerRef}
                   type="button"
-                  className={`${styles.customDropdownTrigger} ${(interestedJobPositionFromKnowledgeBase && (jobInputType === 'url' || jobInputType === 'job_description')) ? styles.customDropdownTriggerDisabled : ''}`}
+                  className={`${styles.customDropdownTrigger}`}
                   onClick={() => {
-                    if (!(interestedJobPositionFromKnowledgeBase && (jobInputType === 'url' || jobInputType === 'job_description'))) {
-                      setIsCompanyTypeDropdownOpen(!isCompanyTypeDropdownOpen);
-                    }
+                    setIsCompanyTypeDropdownOpen(!isCompanyTypeDropdownOpen);
                   }}
-                  disabled={!!(interestedJobPositionFromKnowledgeBase && (jobInputType === 'url' || jobInputType === 'job_description'))}
                   aria-expanded={isCompanyTypeDropdownOpen}
                   aria-haspopup="listbox"
                 >
@@ -5565,7 +5582,7 @@ export default function ResumeSection({
                     />
                   </svg>
                 </button>
-                {isCompanyTypeDropdownOpen && !(interestedJobPositionFromKnowledgeBase && (jobInputType === 'url' || jobInputType === 'job_description')) && (
+                {isCompanyTypeDropdownOpen && (
                   <div className={styles.customDropdownMenu}>
                     <button
                       key="select-default"
@@ -6138,19 +6155,20 @@ export default function ResumeSection({
             )}
             <button
               type="button"
-              className={`${styles.resumeAnalysisButton} ${showAnalysisTooltip ? styles.tooltipVisible : ''}`}
+              className={`${styles.resumeAnalysisButton} ${showAnalysisTooltip && !isNavigatingToAnalysis ? styles.tooltipVisible : ''} ${isNavigatingToAnalysis ? styles.resumeAnalysisButtonLoading : ''}`}
               onClick={handleNavigateToAnalysisWithData}
               onMouseEnter={handleAnalysisButtonMouseEnter}
               onMouseLeave={handleAnalysisButtonMouseLeave}
               aria-label="Go to Analysis"
-              data-tooltip="Analysis"
+              data-tooltip={isNavigatingToAnalysis ? 'Loading...' : 'Analysis'}
+              disabled={isNavigatingToAnalysis}
             >
               <Image
                 src="/images/bubble-chart.svg"
                 alt="Analysis"
                 width={32}
                 height={32}
-                className={styles.resumeAnalysisIcon}
+                className={`${styles.resumeAnalysisIcon} ${isNavigatingToAnalysis ? styles.resumeAnalysisIconSpinning : ''}`}
               />
             </button>
           </div>

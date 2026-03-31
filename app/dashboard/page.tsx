@@ -338,6 +338,21 @@ async function loadResumeFromIDB(): Promise<File | null> {
   });
 }
 
+async function clearResumeFromIDB(): Promise<void> {
+  return new Promise((resolve) => {
+    const req = indexedDB.open(RESUME_IDB_DB, 1);
+    req.onupgradeneeded = (e) => (e.target as IDBOpenDBRequest).result.createObjectStore(RESUME_IDB_STORE);
+    req.onsuccess = (e) => {
+      const db = (e.target as IDBOpenDBRequest).result;
+      const tx = db.transaction(RESUME_IDB_STORE, 'readwrite');
+      tx.objectStore(RESUME_IDB_STORE).delete('current');
+      tx.oncomplete = () => { db.close(); resolve(); };
+      tx.onerror = () => { db.close(); resolve(); };
+    };
+    req.onerror = () => resolve();
+  });
+}
+
 type AutoFillApiResponse = {
   career_focus: string;
   firstName: string; middleName: string; lastName: string;
@@ -369,6 +384,7 @@ export default function DashboardPage() {
 
   const [activeSection, setActiveSection] = useState<'profile' | 'knowledge' | 'resume' | 'analyzer' | 'account'>('profile');
   const [analysisFocusTrigger, setAnalysisFocusTrigger] = useState(0);
+  const [resumeExistingJobFocusTrigger, setResumeExistingJobFocusTrigger] = useState(0);
   const [analysisContextData, setAnalysisContextData] = useState<{
     personalCapabilityScores: Record<string, number> | null;
     resumePowerScores: Record<string, number> | null;
@@ -4960,6 +4976,7 @@ export default function DashboardPage() {
                               setResumeFile(null);
                               const input = document.getElementById('resume-upload') as HTMLInputElement;
                               if (input) input.value = '';
+                              clearResumeFromIDB().catch(console.error);
                             }}
                             aria-label="Remove file"
                           >
@@ -16179,6 +16196,7 @@ onClick={() => {
                   setShowCompanyTypePage={setResumeShowCompanyTypePage}
                   showExistingResumePage={resumeShowExistingResumePage}
                   setShowExistingResumePage={setResumeShowExistingResumePage}
+                  focusExistingResumeJobTrigger={resumeExistingJobFocusTrigger}
                   personalProjects={personalProjects}
                   professionalProjects={professionalProjects}
                   futurePersonalProjects={futurePersonalProjects}
@@ -16617,6 +16635,11 @@ onClick={() => {
         onNavigateToExistingResume={() => {
           setActiveSection('resume');
           setResumeShowExistingResumePage(true);
+        }}
+        onNavigateToExistingResumeAndFocusJob={() => {
+          setActiveSection('resume');
+          setResumeShowExistingResumePage(true);
+          setResumeExistingJobFocusTrigger(prev => prev + 1);
         }}
         onNavigateToKnowledgeBaseResume={() => {
           setActiveSection('resume');

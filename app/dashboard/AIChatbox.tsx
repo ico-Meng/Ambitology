@@ -34,6 +34,7 @@ interface Message {
     type:
       | 'ask_resume_intent'
       | 'navigate_to_existing_resume'
+      | 'navigate_to_existing_resume_focus_job'
       | 'navigate_to_knowledge_base_resume'
       | 'navigate_to_established_personal_project'
       | 'navigate_to_expanding_personal_project'
@@ -73,6 +74,7 @@ interface AIChatboxProps {
   apiEndpoint: string;
   careerFocus?: string;
   onNavigateToExistingResume?: () => void;
+  onNavigateToExistingResumeAndFocusJob?: () => void;
   onNavigateToKnowledgeBaseResume?: () => void;
   onNavigateToEstablishedPersonalProject?: () => void;
   onNavigateToExpandingPersonalProject?: () => void;
@@ -103,6 +105,7 @@ export default function AIChatbox({
   apiEndpoint,
   careerFocus,
   onNavigateToExistingResume,
+  onNavigateToExistingResumeAndFocusJob,
   onNavigateToKnowledgeBaseResume,
   onNavigateToEstablishedPersonalProject,
   onNavigateToExpandingPersonalProject,
@@ -382,6 +385,25 @@ export default function AIChatbox({
     }
   }, [isLoading, apiEndpoint, userEmail, userName, careerFocus, cognitoSub, pageContext, messages]);
 
+  // Handle "tailor/improve resume" suggestions — show a descriptive AI response + navigation card
+  const handleTailorResumeChoice = useCallback((text: string) => {
+    const userMsg: Message = { id: Date.now().toString(), role: 'user', content: text };
+    const assistantMsg: Message = {
+      id: (Date.now() + 1).toString(),
+      role: 'assistant',
+      content:
+        "Ambitology can match you with the most relevant job roles based on your background and help you craft a tailored resume from your existing one.\n\n" +
+        "Here's how it works:\n\n" +
+        "① Upload your current resume — we'll use it as the foundation\n" +
+        "② Enter your target job position — paste a job URL, job title, or full job description\n" +
+        "③ Optionally pick an industry sector — to align your resume with a specific field\n\n" +
+        "Once those are set, hit Craft and we'll generate a resume tailored to your target role.",
+      action: { type: 'navigate_to_existing_resume_focus_job' },
+    };
+    setMessages(prev => [...prev, userMsg, assistantMsg]);
+    setHistoryOpen(true);
+  }, []);
+
   // Mark a choice card as selected and auto-send the choice text
   const selectChoice = useCallback((msgId: string, choiceLabel: string) => {
     setMessages(prev =>
@@ -470,7 +492,7 @@ export default function AIChatbox({
                 <div className={styles.chatboxAvatarDot} />
                 <div>
                   <span className={styles.chatboxTitle}>AI Assistant</span>
-                  <span className={styles.chatboxSubtitle}>Career Coach</span>
+                  <span className={styles.chatboxSubtitle}>Career Agent</span>
                 </div>
               </div>
               <div className={styles.chatboxHeaderActions}>
@@ -674,6 +696,37 @@ export default function AIChatbox({
                                 },
                               ]);
                             }, 900);
+                          }}
+                        >
+                          <div className={styles.chatboxCardContent}>
+                            <span className={styles.chatboxCardTitle}>Craft from Existing Resume</span>
+                          </div>
+                          <div className={styles.chatboxCardArrow}><ArrowUp /></div>
+                        </button>
+                      </div>
+                    );
+
+                  // ── Navigate: Craft from Existing Resume (with job field focus) ──
+                  } else if (msg.action.type === 'navigate_to_existing_resume_focus_job') {
+                    cardElements.push(
+                      <div key={`${msg.id}-card`} className={styles.chatboxCardRow}>
+                        <button
+                          className={`${styles.chatboxCard}${isClicked ? ` ${styles.chatboxCardInactive}` : ''}`}
+                          disabled={isClicked}
+                          onClick={() => {
+                            dismissCard(msg.id);
+                            onNavigateToExistingResumeAndFocusJob?.();
+                            const w = encourage();
+                            setTimeout(() => {
+                              setMessages(prev => [
+                                ...prev,
+                                {
+                                  id: Date.now().toString(),
+                                  role: 'assistant',
+                                  content: `${w} Opening the Craft from Existing Resume page — the job position field is ready for you.`,
+                                },
+                              ]);
+                            }, 400);
                           }}
                         >
                           <div className={styles.chatboxCardContent}>
@@ -1264,7 +1317,14 @@ export default function AIChatbox({
               <button
                 key={i}
                 className={styles.chatboxSuggestionBtn}
-                onClick={() => sendChoiceMessage(q)}
+                onClick={() => {
+                  const tailorIntents = ['Tailor my resume for my target job', 'Help me improve my resume'];
+                  if (tailorIntents.includes(q)) {
+                    handleTailorResumeChoice(q);
+                  } else {
+                    sendChoiceMessage(q);
+                  }
+                }}
               >
                 {q}
               </button>
