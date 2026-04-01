@@ -2091,10 +2091,15 @@
   color: #9a90b8 !important;
 }
 
+:global(html.dark) .carouselSlide {
+  filter: invert(1) hue-rotate(180deg) !important;
+}
+
 :global(html.dark) .featureImg {
   box-shadow:
     0 20px 60px rgba(0, 0, 0, 0.35),
     0 8px 24px rgba(0, 0, 0, 0.2) !important;
+  filter: invert(1) hue-rotate(180deg) !important;
 }
 
 /* Showcase section */
@@ -2127,6 +2132,7 @@
   box-shadow:
     0 20px 60px rgba(0, 0, 0, 0.4),
     0 8px 24px rgba(0, 0, 0, 0.25) !important;
+  filter: invert(1) hue-rotate(180deg) !important;
 }
 
 /* Stats section */
