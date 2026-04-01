@@ -1,0 +1,157 @@
+/* ================================================
+   Theme Toggle — Sun/Moon pill-track toggle
+   ================================================ */
+
+.toggle {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  cursor: pointer;
+  background: none !important;
+  background-color: transparent !important;
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+  padding: 3px !important;
+  margin: 0 !important;
+  flex-shrink: 0;
+  -webkit-appearance: none;
+  appearance: none;
+  border-radius: 0 !important;
+  transition: none !important;
+}
+
+/* ---- Track (pill background) ---- */
+.track {
+  position: relative;
+  width: 58px;
+  height: 30px;
+  border-radius: 15px;
+  overflow: visible;
+  display: flex;
+  align-items: center;
+  background: linear-gradient(135deg, #f5a623 0%, #f07c00 100%);
+  box-shadow:
+    0 2px 8px rgba(240, 124, 0, 0.45),
+    inset 0 1px 0 rgba(255, 255, 255, 0.25),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.1);
+  transition:
+    background 0.45s cubic-bezier(0.4, 0, 0.2, 1),
+    box-shadow 0.45s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Dark mode track */
+.toggleDark .track {
+  background: linear-gradient(135deg, #312e81 0%, #1e1b4b 100%);
+  box-shadow:
+    0 2px 10px rgba(49, 46, 129, 0.6),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.2);
+}
+
+/* ---- Decorative background elements in the track ---- */
+/* Stars (visible in dark mode) */
+.track::before {
+  content: '';
+  position: absolute;
+  right: 7px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 5px;
+  height: 5px;
+  background: radial-gradient(circle, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0) 80%);
+  border-radius: 50%;
+  box-shadow:
+    0 0 0 0.5px rgba(255,255,255,0.5),
+    -8px -4px 0 0 rgba(255,255,255,0.4),
+    -5px 4px 0 -1px rgba(255,255,255,0.35);
+  opacity: 0;
+  transition: opacity 0.3s ease 0.1s;
+}
+
+.toggleDark .track::before {
+  opacity: 1;
+}
+
+/* Sun rays glow (visible in light mode, right edge) */
+.track::after {
+  content: '';
+  position: absolute;
+  right: 6px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 8px;
+  height: 8px;
+  background: rgba(255, 220, 140, 0.6);
+  border-radius: 50%;
+  box-shadow: 0 0 8px 3px rgba(255, 200, 80, 0.45);
+  opacity: 1;
+  transition: opacity 0.3s ease;
+}
+
+.toggleDark .track::after {
+  opacity: 0;
+}
+
+/* ---- Knob (sliding circle) ---- */
+.knob {
+  position: absolute;
+  left: 3px;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: #ffffff;
+  box-shadow:
+    0 1px 3px rgba(0, 0, 0, 0.2),
+    0 2px 8px rgba(0, 0, 0, 0.15),
+    0 0 0 0.5px rgba(0, 0, 0, 0.05);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform: translateX(0);
+  transition: transform 0.45s cubic-bezier(0.34, 1.4, 0.64, 1);
+  z-index: 2;
+}
+
+.toggleDark .knob {
+  transform: translateX(28px);
+  background: #1e2035;
+  box-shadow:
+    0 1px 3px rgba(0, 0, 0, 0.4),
+    0 2px 10px rgba(0, 0, 0, 0.3),
+    0 0 0 0.5px rgba(255, 255, 255, 0.06);
+}
+
+/* ---- Sun icon ---- */
+.sunIcon {
+  position: absolute;
+  color: #f5a623;
+  transition: opacity 0.25s ease, transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+  opacity: 1;
+  transform: scale(1) rotate(0deg);
+}
+
+.toggleDark .sunIcon {
+  opacity: 0;
+  transform: scale(0.4) rotate(90deg);
+}
+
+/* ---- Moon icon ---- */
+.moonIcon {
+  position: absolute;
+  color: #818cf8;
+  transition: opacity 0.25s ease, transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+  opacity: 0;
+  transform: scale(0.4) rotate(-90deg);
+}
+
+.toggleDark .moonIcon {
+  opacity: 1;
+  transform: scale(1) rotate(0deg);
+}
+
+/* ---- Focus ring ---- */
+.toggle:focus-visible .track {
+  outline: 2px solid #6366f1;
+  outline-offset: 2px;
+}

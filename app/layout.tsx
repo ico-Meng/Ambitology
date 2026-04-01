@@ -3,6 +3,7 @@ import { Inter, Comfortaa, Orbitron, Lato, Nunito, Plus_Jakarta_Sans } from "nex
 import Script from "next/script";
 import "./app.css";
 import AuthGuard from "@/app/components/AuthGuard";
+import ThemeProvider from "@/app/components/ThemeProvider";
 
 const inter = Inter({ subsets: ["latin"], weight: ["300", "400", "500", "600", "700"] });
 const comfortaa = Comfortaa({
@@ -225,8 +226,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <head>
+        {/* Prevent flash of wrong theme on load */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){try{var t=localStorage.getItem('theme');var d=window.matchMedia('(prefers-color-scheme: dark)').matches;if(t==='dark'||(t===null&&d)){document.documentElement.classList.add('dark');}}catch(e){}})();`,
+          }}
+        />
         {/* Google Analytics */}
         <Script
           src="https://www.googletagmanager.com/gtag/js?id=G-2HVK989RQD"
@@ -262,8 +269,10 @@ export default function RootLayout({
         />
       </head>
       <body className={`${inter.className} ${comfortaa.variable} ${orbitron.variable} ${lato.variable} ${nunito.variable} ${plusJakartaSans.variable}`}>
-        <AuthGuard />
-        {children}
+        <ThemeProvider>
+          <AuthGuard />
+          {children}
+        </ThemeProvider>
       </body>
     </html>
   );

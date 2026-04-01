@@ -44,6 +44,7 @@ body {
   scroll-behavior: smooth;
   color: #333;
   background-color: #f5f7fa;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 body {
@@ -51,10 +52,37 @@ body {
   background: #f5f7fa;
 }
 
+/* Dark mode — body */
+html.dark body,
+html.dark {
+  background-color: #0e0f18 !important;
+  background: #0e0f18 !important;
+  color: #e2e8f0;
+}
+
 /* Form-specific overrides */
 input, select, textarea, button:not(.submitButton):not(.resumeAddJobButton):not(.analysisSwitchButton):not([class*="projectTag"]):not([class*="buildProfileButton"]):not([class*="buildKnowledgeButton"]):not([class*="chatbox"]) {
   background-color: #ffffff;
   color: #333;
+}
+
+/* Dark mode — form elements */
+html.dark input:not([class*="chatbox"]):not([class*="resumeLeftInput"]):not([class*="formInput"]),
+html.dark select:not([class*="formSelect"]),
+html.dark textarea:not([class*="chatbox"]):not([class*="resumeLeftInput"]) {
+  background-color: #1e2035;
+  color: #e2e8f0;
+  border-color: rgba(255, 255, 255, 0.12);
+}
+
+html.dark form {
+  background-color: #161620;
+  color: #e2e8f0;
+}
+
+html.dark .formSection {
+  background-color: #161620;
+  color: #e2e8f0;
 }
 
 /* Radio buttons and labels */

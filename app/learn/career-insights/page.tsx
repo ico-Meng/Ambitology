@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import styles from "./career-insights.module.css";
+import ThemeToggle from "@/app/components/ThemeToggle";
 
 const globalReset = `
   html, body {
@@ -174,11 +175,14 @@ export default function CareerInsightsPage() {
               <img src="/images/atg-logo.svg" alt="Ambitology" className={styles.logoIcon} />
               Ambitology
             </Link>
-            <nav className={styles.breadcrumb}>
-              <Link href="/" className={styles.breadcrumbLink}>Home</Link>
-              <span className={styles.breadcrumbSep}>/</span>
-              <Link href="/learn/career-insights" className={styles.breadcrumbCurrent}>Career Insights</Link>
-            </nav>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+              <nav className={styles.breadcrumb}>
+                <Link href="/" className={styles.breadcrumbLink}>Home</Link>
+                <span className={styles.breadcrumbSep}>/</span>
+                <Link href="/learn/career-insights" className={styles.breadcrumbCurrent}>Career Insights</Link>
+              </nav>
+              <ThemeToggle />
+            </div>
           </div>
         </header>
 

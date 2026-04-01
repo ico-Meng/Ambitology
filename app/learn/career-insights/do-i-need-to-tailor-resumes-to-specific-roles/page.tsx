@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import styles from "../shared-article.module.css";
+import ThemeToggle from "@/app/components/ThemeToggle";
 
 const globalReset = `
   html, body {
@@ -32,13 +33,16 @@ export default function ArticlePage() {
               <img src="/images/atg-logo.svg" alt="Ambitology" className={styles.logoIcon} />
               Ambitology
             </Link>
-            <nav className={styles.breadcrumb}>
-              <Link href="/" className={styles.breadcrumbLink}>Home</Link>
-              <span className={styles.breadcrumbSep}>/</span>
-              <Link href="/learn/career-insights" className={styles.breadcrumbLink}>Career Insights</Link>
-              <span className={styles.breadcrumbSep}>/</span>
-              <span className={styles.breadcrumbCurrent}>Resume Tailoring Strategy</span>
-            </nav>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+              <nav className={styles.breadcrumb}>
+                <Link href="/" className={styles.breadcrumbLink}>Home</Link>
+                <span className={styles.breadcrumbSep}>/</span>
+                <Link href="/learn/career-insights" className={styles.breadcrumbLink}>Career Insights</Link>
+                <span className={styles.breadcrumbSep}>/</span>
+                <span className={styles.breadcrumbCurrent}>Article</span>
+              </nav>
+              <ThemeToggle />
+            </div>
           </div>
         </header>
 

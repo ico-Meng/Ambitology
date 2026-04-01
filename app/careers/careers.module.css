@@ -437,3 +437,63 @@
     padding: 2rem 1rem 3rem;
   }
 }
+
+/* ============================================================
+   DARK MODE OVERRIDES — Careers Page
+   ============================================================ */
+
+:global(html.dark) .page {
+  background: #0e0f18 !important;
+  color: #e2e8f0 !important;
+}
+
+:global(html.dark) .header {
+  background: rgba(14, 15, 24, 0.88) !important;
+  border-bottom-color: rgba(255, 255, 255, 0.06) !important;
+}
+
+:global(html.dark) .logo {
+  color: #e2d8f0 !important;
+}
+
+:global(html.dark) .backLink {
+  color: #9a90b8 !important;
+}
+
+:global(html.dark) .backLink:hover {
+  color: #C4A052 !important;
+}
+
+:global(html.dark) .hero {
+  background: transparent !important;
+}
+
+:global(html.dark) .heroHeading,
+:global(html.dark) .eyebrow {
+  color: #e2d8f0 !important;
+}
+
+:global(html.dark) .heroSub {
+  color: #9a90b8 !important;
+}
+
+:global(html.dark) .jobCard,
+:global(html.dark) .roleCard {
+  background: #1e2035 !important;
+  border-color: rgba(255, 255, 255, 0.06) !important;
+}
+
+:global(html.dark) .jobTitle,
+:global(html.dark) .roleTitle {
+  color: #e2d8f0 !important;
+}
+
+:global(html.dark) .jobDesc,
+:global(html.dark) .roleDesc {
+  color: #9a90b8 !important;
+}
+
+:global(html.dark) .footer {
+  background: #0a0b14 !important;
+  border-top-color: rgba(255, 255, 255, 0.06) !important;
+}

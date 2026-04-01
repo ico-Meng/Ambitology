@@ -1853,3 +1853,469 @@
     font-size: 1.5rem;
   }
 }
+
+/* ============================================================
+   DARK MODE OVERRIDES — Landing Page
+   ============================================================ */
+
+:global(html.dark) .container {
+  background-color: #0e0f18 !important;
+}
+
+:global(html.dark) .loadingContainer {
+  background-color: #0e0f18 !important;
+}
+
+:global(html.dark) .spinner {
+  border-color: rgba(255, 255, 255, 0.08) !important;
+  border-top-color: #C4A052 !important;
+}
+
+/* Header */
+:global(html.dark) .header {
+  background-color: rgba(14, 15, 24, 0.88) !important;
+  border-bottom-color: rgba(255, 255, 255, 0.06) !important;
+}
+
+/* Nav links */
+:global(html.dark) .navLink {
+  color: #b8b0cc !important;
+}
+
+:global(html.dark) .navLink:hover,
+:global(html.dark) .navLinkActive {
+  color: #e2d8f0 !important;
+}
+
+/* Dropdowns */
+:global(html.dark) .servicesDropdown,
+:global(html.dark) .learnDropdown,
+:global(html.dark) .aboutDropdown {
+  background: #1e2035 !important;
+  border-color: rgba(255, 255, 255, 0.08) !important;
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.5) !important;
+}
+
+:global(html.dark) .servicesSectionTitle {
+  color: #7d75a0 !important;
+}
+
+:global(html.dark) .servicesItem,
+:global(html.dark) .learnItem,
+:global(html.dark) .aboutItem {
+  color: #c8c0dc !important;
+}
+
+:global(html.dark) .servicesItem:hover,
+:global(html.dark) .learnItem:hover,
+:global(html.dark) .aboutItem:hover {
+  background: rgba(196, 160, 82, 0.1) !important;
+}
+
+:global(html.dark) .servicesItemLabel,
+:global(html.dark) .learnItemLabel,
+:global(html.dark) .aboutItemLabel {
+  color: #e2d8f0 !important;
+}
+
+:global(html.dark) .servicesItemDesc,
+:global(html.dark) .learnItemDesc,
+:global(html.dark) .aboutItemDesc {
+  color: #7d75a0 !important;
+}
+
+/* Sign-in button */
+:global(html.dark) .signInButton {
+  background: rgba(196, 160, 82, 0.15) !important;
+  color: #C4A052 !important;
+  border-color: rgba(196, 160, 82, 0.35) !important;
+}
+
+:global(html.dark) .signInButton:hover {
+  background: rgba(196, 160, 82, 0.25) !important;
+}
+
+/* Profile button/avatar */
+:global(html.dark) .profileButton {
+  background: rgba(196, 160, 82, 0.15) !important;
+  color: #C4A052 !important;
+}
+
+:global(html.dark) .profileDropdown {
+  background: #1e2035 !important;
+  border-color: rgba(255, 255, 255, 0.08) !important;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5) !important;
+}
+
+:global(html.dark) .dropdownHeader {
+  border-bottom-color: rgba(255, 255, 255, 0.08) !important;
+}
+
+:global(html.dark) .dropdownEmail {
+  color: #e2d8f0 !important;
+}
+
+:global(html.dark) .dropdownPlan {
+  color: #7d75a0 !important;
+}
+
+:global(html.dark) .dropdownDivider {
+  background: rgba(255, 255, 255, 0.06) !important;
+}
+
+:global(html.dark) .dropdownLogout {
+  color: #9a8fb0 !important;
+}
+
+:global(html.dark) .dropdownLogout:hover {
+  background: rgba(239, 68, 68, 0.1) !important;
+  color: #f87171 !important;
+}
+
+/* Hero section */
+:global(html.dark) .hero {
+  background: transparent !important;
+}
+
+:global(html.dark) .heroHeading {
+  color: #e2d8f0 !important;
+}
+
+:global(html.dark) .heroSubheading {
+  color: #9a90b8 !important;
+}
+
+/* Feature/info cards */
+:global(html.dark) .featureCard,
+:global(html.dark) .infoCard,
+:global(html.dark) .statCard,
+:global(html.dark) .card {
+  background: #1e2035 !important;
+  border-color: rgba(255, 255, 255, 0.06) !important;
+}
+
+:global(html.dark) .featureTitle,
+:global(html.dark) .cardTitle {
+  color: #e2d8f0 !important;
+}
+
+:global(html.dark) .featureDesc,
+:global(html.dark) .cardDesc {
+  color: #7d75a0 !important;
+}
+
+/* Sections */
+:global(html.dark) .featuresSection,
+:global(html.dark) .testimonialsSection,
+:global(html.dark) .differentiatorSection,
+:global(html.dark) .pricingSection {
+  background: transparent !important;
+}
+
+:global(html.dark) .sectionHeading,
+:global(html.dark) .featuresHeading,
+:global(html.dark) .testimonialsHeading,
+:global(html.dark) .differentiatorHeading {
+  color: #e2d8f0 !important;
+}
+
+:global(html.dark) .sectionSubheading {
+  color: #7d75a0 !important;
+}
+
+/* Testimonial cards */
+:global(html.dark) .testimonialCard {
+  background: #1e2035 !important;
+  border-color: rgba(255, 255, 255, 0.06) !important;
+}
+
+:global(html.dark) .testimonialText {
+  color: #b8b0cc !important;
+}
+
+:global(html.dark) .testimonialAuthor {
+  color: #9a90b8 !important;
+}
+
+/* Differentiator cards */
+:global(html.dark) .differentiatorCard {
+  background: #1e2035 !important;
+  border-color: rgba(255, 255, 255, 0.06) !important;
+}
+
+:global(html.dark) .differentiatorCardTitle {
+  color: #e2d8f0 !important;
+}
+
+:global(html.dark) .differentiatorCardDesc {
+  color: #7d75a0 !important;
+}
+
+/* Footer */
+:global(html.dark) .footer {
+  background: #0a0b14 !important;
+  border-top-color: rgba(255, 255, 255, 0.06) !important;
+}
+
+:global(html.dark) .footerText,
+:global(html.dark) .footerLink {
+  color: #7d75a0 !important;
+}
+
+:global(html.dark) .footerLink:hover {
+  color: #C4A052 !important;
+}
+
+/* ============================================================
+   DARK MODE — Feature Sections
+   ============================================================ */
+
+:global(html.dark) .featureSection {
+  background: #13141f !important;
+}
+
+:global(html.dark) .featureSectionAlt {
+  background: linear-gradient(180deg, #0e0f18 0%, #13141f 100%) !important;
+}
+
+:global(html.dark) .featureBadge {
+  color: #C4A052 !important;
+  background: rgba(196, 160, 82, 0.14) !important;
+}
+
+:global(html.dark) .featureHeading {
+  color: #e2d8f0 !important;
+}
+
+:global(html.dark) .featureDescription {
+  color: #9a90b8 !important;
+}
+
+:global(html.dark) .featureImg {
+  box-shadow:
+    0 20px 60px rgba(0, 0, 0, 0.35),
+    0 8px 24px rgba(0, 0, 0, 0.2) !important;
+}
+
+/* Showcase section */
+:global(html.dark) .showcaseSection {
+  background: #13141f !important;
+}
+
+:global(html.dark) .showcaseBadge {
+  color: #C4A052 !important;
+  background: rgba(196, 160, 82, 0.14) !important;
+}
+
+:global(html.dark) .showcaseHeading {
+  color: #e2d8f0 !important;
+}
+
+:global(html.dark) .showcaseDesc {
+  color: #9a90b8 !important;
+}
+
+:global(html.dark) .showcaseListItem {
+  color: #b8b0cc !important;
+}
+
+:global(html.dark) .showcaseCheckIcon {
+  color: #C4A052 !important;
+}
+
+:global(html.dark) .showcaseImg {
+  box-shadow:
+    0 20px 60px rgba(0, 0, 0, 0.4),
+    0 8px 24px rgba(0, 0, 0, 0.25) !important;
+}
+
+/* Stats section */
+:global(html.dark) .statsSection {
+  background: #0e0f18 !important;
+}
+
+:global(html.dark) .statNumber {
+  color: #C4A052 !important;
+}
+
+:global(html.dark) .statLabel {
+  color: #9a90b8 !important;
+}
+
+/* CTA / free trial section */
+:global(html.dark) .ctaSection {
+  background: linear-gradient(135deg, #1e2035 0%, #191b29 100%) !important;
+  border-color: rgba(196, 160, 82, 0.15) !important;
+}
+
+:global(html.dark) .ctaBadge {
+  color: #C4A052 !important;
+  background: rgba(196, 160, 82, 0.14) !important;
+}
+
+:global(html.dark) .ctaHeading {
+  color: #e2d8f0 !important;
+}
+
+:global(html.dark) .ctaText,
+:global(html.dark) .ctaDesc {
+  color: #9a90b8 !important;
+}
+
+/* ============================================================
+   DARK MODE — Testimonial Section
+   ============================================================ */
+
+:global(html.dark) .testimonialSection {
+  background: #0e0f18 !important;
+}
+
+:global(html.dark) .testimonialBadge {
+  color: #C4A052 !important;
+  background: rgba(196, 160, 82, 0.14) !important;
+}
+
+:global(html.dark) .testimonialHeading {
+  color: #e2d8f0 !important;
+}
+
+:global(html.dark) .testimonialSubheading {
+  color: #9a90b8 !important;
+}
+
+:global(html.dark) .testimonialCard {
+  background: #1e2035 !important;
+  border-color: rgba(255, 255, 255, 0.06) !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3) !important;
+}
+
+:global(html.dark) .testimonialCard:hover {
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5), 0 2px 8px rgba(196, 160, 82, 0.1) !important;
+  border-color: rgba(196, 160, 82, 0.15) !important;
+}
+
+:global(html.dark) .testimonialText {
+  color: #c8c0dc !important;
+}
+
+:global(html.dark) .testimonialName {
+  color: #e2d8f0 !important;
+}
+
+:global(html.dark) .testimonialRole {
+  color: #7d75a0 !important;
+}
+
+:global(html.dark) .testimonialAuthorRow {
+  border-top-color: rgba(255, 255, 255, 0.06) !important;
+}
+
+:global(html.dark) .testimonialAvatar {
+  border-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+:global(html.dark) .testimonialDot {
+  background: rgba(196, 160, 82, 0.2) !important;
+}
+
+:global(html.dark) .testimonialDot:hover {
+  background: rgba(196, 160, 82, 0.45) !important;
+}
+
+:global(html.dark) .testimonialDotActive {
+  background: #C4A052 !important;
+}
+
+/* ============================================================
+   DARK MODE — Differentiator Section
+   (Already dark by design; subtle tweaks for dark theme)
+   ============================================================ */
+
+:global(html.dark) .differentiatorSection {
+  background: #080910 !important;
+}
+
+:global(html.dark) .diffCard {
+  background: #1a1c2e !important;
+  border-color: rgba(255, 255, 255, 0.08) !important;
+}
+
+:global(html.dark) .diffCard:hover {
+  border-color: rgba(196, 160, 82, 0.4) !important;
+}
+
+/* ============================================================
+   DARK MODE — Company Logo Section
+   ============================================================ */
+
+:global(html.dark) .logoSection {
+  background: #13141f !important;
+}
+
+:global(html.dark) .logoSectionLabel {
+  color: #5a5570 !important;
+}
+
+:global(html.dark) .logoTrackWrapper::before {
+  background: linear-gradient(to right, #13141f, transparent) !important;
+}
+
+:global(html.dark) .logoTrackWrapper::after {
+  background: linear-gradient(to left, #13141f, transparent) !important;
+}
+
+:global(html.dark) .logoImg {
+  filter: brightness(0) invert(1) opacity(0.25) !important;
+}
+
+:global(html.dark) .logoItem:hover .logoImg {
+  filter: brightness(0) invert(1) opacity(0.5) !important;
+}
+
+:global(html.dark) .logoName {
+  color: #4a4560 !important;
+}
+
+:global(html.dark) .logoItem:hover .logoName {
+  color: #8070a0 !important;
+}
+
+/* ============================================================
+   DARK MODE — Hero Stats / Numbers
+   ============================================================ */
+
+:global(html.dark) .heroStats {
+  border-top-color: rgba(255, 255, 255, 0.06) !important;
+}
+
+:global(html.dark) .heroStatNumber {
+  color: #C4A052 !important;
+}
+
+:global(html.dark) .heroStatLabel {
+  color: #7d75a0 !important;
+}
+
+:global(html.dark) .heroStatDivider {
+  background: rgba(255, 255, 255, 0.08) !important;
+}
+
+/* Pricing modal */
+:global(html.dark) .pricingModal,
+:global(html.dark) .pricingCard {
+  background: #1e2035 !important;
+  border-color: rgba(255, 255, 255, 0.08) !important;
+}
+
+:global(html.dark) .pricingTitle,
+:global(html.dark) .pricingHeading {
+  color: #e2d8f0 !important;
+}
+
+:global(html.dark) .pricingPrice {
+  color: #C4A052 !important;
+}
+
+:global(html.dark) .pricingDesc {
+  color: #9a90b8 !important;
+}

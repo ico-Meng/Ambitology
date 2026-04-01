@@ -9,6 +9,7 @@ import { Orbitron, Comfortaa, Plus_Jakarta_Sans } from "next/font/google";
 import styles from "./landing.module.css";
 import { API_ENDPOINT } from "@/app/components/config";
 import PricingModal from "@/app/components/PricingModal";
+import ThemeToggle from "@/app/components/ThemeToggle";
 
 const orbitron = Orbitron({
   subsets: ["latin"],
@@ -450,6 +451,8 @@ export default function LandingPage() {
               )}
             </div>
           </nav>
+
+          <ThemeToggle />
 
           {user ? (
             <div className={styles.profileWrapper} ref={profileRef}>

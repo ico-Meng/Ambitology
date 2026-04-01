@@ -8,6 +8,7 @@ import styles from './JobsForm.module.css';
 import '../globals.css';
 import './global-override.css';
 import { API_ENDPOINT } from "@/app/components/config";
+import ThemeToggle from "@/app/components/ThemeToggle";
 
 // Force dynamic rendering to prevent prerendering issues
 export const dynamic = 'force-dynamic';
@@ -444,9 +445,12 @@ function JobsFormContent({ defaultPosition }: { defaultPosition: string }) {
                         <img src="/images/atg-logo.svg" alt="Ambitology" className={styles.pageLogoIcon} />
                         Ambitology
                     </Link>
-                    <Link href="/careers" className={styles.pageBackLink}>
-                        ← Back to Careers
-                    </Link>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                        <ThemeToggle />
+                        <Link href="/careers" className={styles.pageBackLink}>
+                            ← Back to Careers
+                        </Link>
+                    </div>
                 </div>
             </header>
 

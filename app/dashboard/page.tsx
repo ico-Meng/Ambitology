@@ -13,6 +13,7 @@ import type { User } from 'oidc-client-ts';
 import { API_ENDPOINT } from '@/app/components/config';
 import PricingModal from '@/app/components/PricingModal';
 import AIChatbox from './AIChatbox';
+import ThemeToggle from '@/app/components/ThemeToggle';
 import AccountSection from './account/AccountSection';
 
 const orbitron = Orbitron({
@@ -4805,6 +4806,10 @@ export default function DashboardPage() {
                   <div className={styles.userEmailSection}>
                     <div className={styles.planBadge} onClick={() => setIsUpgradeModalOpen(true)} style={{ cursor: 'pointer' }}>{getPlanLabel(userPlan)}</div>
                     <div className={styles.userEmail}>{user?.profile?.email}</div>
+                  </div>
+                  <div className={styles.themeToggleRow}>
+                    <span className={styles.themeToggleLabel}>Appearance</span>
+                    <ThemeToggle />
                   </div>
                   <button
                     className={styles.upgradePlanButton}

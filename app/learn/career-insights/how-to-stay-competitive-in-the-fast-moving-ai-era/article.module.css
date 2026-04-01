@@ -524,3 +524,105 @@
     display: none;
   }
 }
+
+/* ============================================================
+   DARK MODE OVERRIDES
+   ============================================================ */
+
+:global(html.dark) .page {
+  background: #0e0f18 !important;
+  color: #e2e8f0 !important;
+}
+
+:global(html.dark) .header {
+  background: rgba(14, 15, 24, 0.92) !important;
+  border-bottom-color: rgba(255, 255, 255, 0.06) !important;
+}
+
+:global(html.dark) .logo {
+  color: #e2d8f0 !important;
+}
+
+:global(html.dark) .breadcrumbLink {
+  color: #9a90b8 !important;
+}
+
+:global(html.dark) .breadcrumbLink:hover {
+  color: #C4A052 !important;
+}
+
+:global(html.dark) .breadcrumbSep {
+  color: #4a4560 !important;
+}
+
+:global(html.dark) .breadcrumbCurrent {
+  color: #b8b0cc !important;
+}
+
+:global(html.dark) .article {
+  color: #e2e8f0 !important;
+}
+
+:global(html.dark) .category {
+  background: rgba(196, 160, 82, 0.15) !important;
+  color: #C4A052 !important;
+}
+
+:global(html.dark) .metaText {
+  color: #7d75a0 !important;
+}
+
+:global(html.dark) .tipCard,
+:global(html.dark) .callout,
+:global(html.dark) .ambitologyBox {
+  background: #1e2035 !important;
+  border-color: rgba(196, 160, 82, 0.2) !important;
+}
+
+:global(html.dark) .tipNum {
+  color: #C4A052 !important;
+}
+
+:global(html.dark) .tipTitle {
+  color: #e2d8f0 !important;
+}
+
+:global(html.dark) .tipDesc {
+  color: #9a90b8 !important;
+}
+
+:global(html.dark) .footer {
+  background: #0a0b14 !important;
+  border-top-color: rgba(255, 255, 255, 0.06) !important;
+}
+
+/* ---- Article content text ---- */
+:global(html.dark) .title { color: #e2d8f0 !important; }
+:global(html.dark) .lead { color: #b8b0cc !important; }
+:global(html.dark) .h2 { color: #e2d8f0 !important; }
+:global(html.dark) .p { color: #b8b0cc !important; }
+:global(html.dark) .ul li { color: #b8b0cc !important; }
+:global(html.dark) .blockquote { background: #1a1c2e !important; border-left-color: #C4A052 !important; color: #b8b0cc !important; }
+:global(html.dark) .imageCaption { color: #7d75a0 !important; }
+
+:global(html.dark) .highlightBox { background: #1a1c2e !important; border-color: rgba(196, 160, 82, 0.25) !important; }
+:global(html.dark) .highlightBoxIcon { color: #C4A052 !important; }
+:global(html.dark) .highlightBoxText { color: #b8b0cc !important; }
+
+/* ---- Pillars ---- */
+:global(html.dark) .pillar { background: #1e2035 !important; border-color: rgba(255, 255, 255, 0.06) !important; }
+:global(html.dark) .pillarIcon { color: #C4A052 !important; }
+:global(html.dark) .pillarTitle { color: #e2d8f0 !important; }
+:global(html.dark) .pillarDesc { color: #9a90b8 !important; }
+
+/* ---- Ambitology box / CTA / Footer ---- */
+:global(html.dark) .ambitologyBox { background: #1e2035 !important; border-color: rgba(196, 160, 82, 0.2) !important; }
+:global(html.dark) .ambitologyBoxLabel { color: #e2d8f0 !important; }
+:global(html.dark) .ambitologyBoxText { color: #9a90b8 !important; }
+:global(html.dark) .ambitologyLink { color: #C4A052 !important; }
+:global(html.dark) .ctaSection { background: #1e2035 !important; border-color: rgba(196, 160, 82, 0.2) !important; }
+:global(html.dark) .ctaTitle { color: #e2d8f0 !important; }
+:global(html.dark) .ctaDesc { color: #9a90b8 !important; }
+:global(html.dark) .footerLogo { color: #e2d8f0 !important; }
+:global(html.dark) .footerLink { color: #7d75a0 !important; }
+:global(html.dark) .footerCopy { color: #4a4560 !important; }

@@ -320,3 +320,116 @@
     padding: 2.5rem 1.25rem;
   }
 }
+
+/* ============================================================
+   DARK MODE OVERRIDES — Career Insights Page
+   ============================================================ */
+
+:global(html.dark) .page {
+  background: #0e0f18 !important;
+  color: #e2e8f0 !important;
+}
+
+:global(html.dark) .header {
+  background: rgba(14, 15, 24, 0.92) !important;
+  border-bottom-color: rgba(255, 255, 255, 0.06) !important;
+}
+
+:global(html.dark) .hero {
+  background: linear-gradient(135deg, #131420 0%, #0e0f18 60%, #12131e 100%) !important;
+  border-bottom-color: rgba(255, 255, 255, 0.04) !important;
+}
+
+:global(html.dark) .heroEyebrow {
+  color: #C4A052 !important;
+  background: rgba(196, 160, 82, 0.12) !important;
+  border-color: rgba(196, 160, 82, 0.25) !important;
+}
+
+:global(html.dark) .heroTitle {
+  color: #e2d8f0 !important;
+}
+
+:global(html.dark) .heroDesc {
+  color: #9a90b8 !important;
+}
+
+:global(html.dark) .main {
+  background: transparent !important;
+}
+
+/* Cards */
+:global(html.dark) .card {
+  background: #1e2035 !important;
+  border-color: rgba(255, 255, 255, 0.06) !important;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.3) !important;
+}
+
+:global(html.dark) .card:hover {
+  box-shadow: 0 8px 36px rgba(0, 0, 0, 0.5) !important;
+  border-color: rgba(196, 160, 82, 0.15) !important;
+}
+
+:global(html.dark) .cardImage {
+  background: #252840 !important;
+}
+
+:global(html.dark) .cardCategory {
+  background: rgba(30, 32, 53, 0.92) !important;
+  color: #C4A052 !important;
+}
+
+:global(html.dark) .cardMeta {
+  color: #5a5570 !important;
+}
+
+:global(html.dark) .cardDot {
+  background: #3a3550 !important;
+}
+
+:global(html.dark) .cardTitle {
+  color: #e2d8f0 !important;
+}
+
+:global(html.dark) .cardExcerpt {
+  color: #9a90b8 !important;
+}
+
+:global(html.dark) .cardCta {
+  color: #C4A052 !important;
+}
+
+:global(html.dark) .cardBody {
+  background: transparent !important;
+}
+
+/* Breadcrumbs */
+:global(html.dark) .logo {
+  color: #e2d8f0;
+}
+
+:global(html.dark) .breadcrumbLink {
+  color: #7d75a0 !important;
+}
+
+:global(html.dark) .breadcrumbLink:hover {
+  color: #C4A052 !important;
+}
+
+:global(html.dark) .breadcrumbSep {
+  color: #3a3550 !important;
+}
+
+:global(html.dark) .breadcrumbCurrent {
+  color: #b8b0cc !important;
+}
+
+/* Footer */
+:global(html.dark) .footer {
+  border-top-color: rgba(255, 255, 255, 0.06) !important;
+  background: #0a0b14 !important;
+}
+
+:global(html.dark) .footerCopy {
+  color: #5a5570 !important;
+}

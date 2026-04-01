@@ -250,3 +250,71 @@
     height: 240px;
   }
 }
+
+/* ============================================================
+   DARK MODE OVERRIDES — Contact Page
+   ============================================================ */
+
+:global(html.dark) .page {
+  background: #0e0f18 !important;
+  color: #e2e8f0 !important;
+}
+
+:global(html.dark) .header {
+  background: rgba(14, 15, 24, 0.88) !important;
+  border-bottom-color: rgba(255, 255, 255, 0.06) !important;
+}
+
+:global(html.dark) .logo {
+  color: #e2d8f0 !important;
+}
+
+:global(html.dark) .backLink {
+  color: #9a90b8 !important;
+}
+
+:global(html.dark) .backLink:hover {
+  color: #C4A052 !important;
+}
+
+:global(html.dark) .main {
+  background: transparent !important;
+}
+
+:global(html.dark) .heading {
+  color: #e2d8f0 !important;
+}
+
+:global(html.dark) .eyebrow {
+  color: #C4A052 !important;
+}
+
+:global(html.dark) .subtext {
+  color: #9a90b8 !important;
+}
+
+:global(html.dark) .formCard,
+:global(html.dark) .infoCard {
+  background: #1e2035 !important;
+  border-color: rgba(255, 255, 255, 0.06) !important;
+}
+
+:global(html.dark) .formInput,
+:global(html.dark) .formTextarea {
+  background: #252840 !important;
+  border-color: rgba(255, 255, 255, 0.1) !important;
+  color: #e2e8f0 !important;
+}
+
+:global(html.dark) .formLabel {
+  color: #9a90b8 !important;
+}
+
+:global(html.dark) .mapWrapper {
+  filter: invert(0.85) hue-rotate(180deg);
+}
+
+:global(html.dark) .footer {
+  background: #0a0b14 !important;
+  border-top-color: rgba(255, 255, 255, 0.06) !important;
+}

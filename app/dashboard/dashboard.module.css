@@ -13798,3 +13798,1007 @@ textarea.resumeItemCompanyInput {
   color: #a09080;
   text-align: center;
 }
+
+/* ============================================================
+   Theme Toggle Row (in settings panel)
+   ============================================================ */
+.themeToggleRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid rgba(155, 106, 16, 0.15);
+}
+
+.themeToggleLabel {
+  font-size: 1.0625rem;
+  font-weight: 600;
+  color: #8b7355;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+/* ============================================================
+   DARK MODE OVERRIDES
+   Uses :global(html.dark) to match the class applied to <html>
+   ============================================================ */
+
+/* --- Main container --- */
+:global(html.dark) .dashboardContainer {
+  background: linear-gradient(135deg, #0e0f18 0%, #13141f 50%, #0e0f18 100%) !important;
+}
+
+/* --- Sidebar --- */
+:global(html.dark) .sidebar {
+  background: linear-gradient(180deg, #191b29 0%, #13141f 100%) !important;
+  border-right-color: rgba(196, 160, 82, 0.12) !important;
+  box-shadow: 4px 0 24px rgba(0, 0, 0, 0.4) !important;
+}
+
+:global(html.dark) .sidebar::before {
+  background: linear-gradient(180deg, rgba(196, 160, 82, 0.06) 0%, transparent 100%) !important;
+}
+
+/* --- Sidebar header --- */
+:global(html.dark) .sidebarHeader {
+  background: linear-gradient(135deg, #1e2035 0%, #191b29 100%) !important;
+  border-bottom-color: rgba(196, 160, 82, 0.15) !important;
+}
+
+/* --- Sidebar toggle button --- */
+:global(html.dark) .sidebarToggleBtn {
+  opacity: 0.6;
+}
+
+:global(html.dark) .sidebarToggleBtn:hover {
+  background: rgba(196, 160, 82, 0.12) !important;
+  opacity: 1;
+}
+
+/* --- Sidebar toggle icon color (SVG filter trick) --- */
+:global(html.dark) .sidebarToggleBtn img {
+  filter: invert(1) brightness(0.8);
+}
+
+/* --- Nav items --- */
+:global(html.dark) .navItem {
+  background: #1e2035 !important;
+  background-color: #1e2035 !important;
+  color: #b8b0cc !important;
+}
+
+:global(html.dark) .navItem:hover {
+  background: linear-gradient(90deg, rgba(196, 160, 82, 0.15) 0%, rgba(196, 160, 82, 0.08) 100%) !important;
+  color: #e2d8f0 !important;
+}
+
+:global(html.dark) .navItemActive {
+  background: linear-gradient(90deg, rgba(196, 160, 82, 0.22) 0%, rgba(196, 160, 82, 0.12) 100%) !important;
+  background-color: transparent !important;
+  color: #C4A052 !important;
+  box-shadow: 0 2px 12px rgba(196, 160, 82, 0.2) !important;
+}
+
+:global(html.dark) .navIcon {
+  background: rgba(196, 160, 82, 0.1) !important;
+}
+
+:global(html.dark) .navItemActive .navIcon {
+  background: linear-gradient(135deg, rgba(196, 160, 82, 0.25) 0%, rgba(196, 160, 82, 0.15) 100%) !important;
+}
+
+/* --- Sidebar footer --- */
+:global(html.dark) .sidebarFooter {
+  border-top-color: rgba(196, 160, 82, 0.15) !important;
+  background: linear-gradient(180deg, transparent 0%, rgba(196, 160, 82, 0.04) 100%) !important;
+}
+
+:global(html.dark) .footerDecorator {
+  background: linear-gradient(90deg, transparent 0%, rgba(196, 160, 82, 0.18) 50%, transparent 100%) !important;
+}
+
+/* --- Settings button --- */
+:global(html.dark) .settingsButton {
+  color: #b8b0cc !important;
+}
+
+:global(html.dark) .settingsButton:hover {
+  background: rgba(196, 160, 82, 0.15) !important;
+  color: #e2d8f0 !important;
+}
+
+:global(html.dark) .settingsButtonActive {
+  background: rgba(196, 160, 82, 0.12) !important;
+  color: #c8c0dc !important;
+}
+
+/* --- Settings panel --- */
+:global(html.dark) .settingsPanel {
+  background: linear-gradient(180deg, #1e2035 0%, #191b29 100%) !important;
+  border-color: rgba(196, 160, 82, 0.15) !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4) !important;
+}
+
+:global(html.dark) .userEmailSection {
+  border-bottom-color: rgba(196, 160, 82, 0.12) !important;
+}
+
+:global(html.dark) .userEmailLabel {
+  color: #7d75a0 !important;
+}
+
+:global(html.dark) .planBadge {
+  color: #C4A052 !important;
+  background: linear-gradient(135deg, rgba(196, 160, 82, 0.2), rgba(196, 160, 82, 0.1)) !important;
+  border-color: rgba(196, 160, 82, 0.35) !important;
+}
+
+:global(html.dark) .userEmail {
+  color: #c8c0dc !important;
+}
+
+:global(html.dark) .upgradePlanButton {
+  background: rgba(196, 160, 82, 0.07) !important;
+  border-color: rgba(196, 160, 82, 0.25) !important;
+  color: #b8a878 !important;
+}
+
+:global(html.dark) .upgradePlanButton:hover {
+  background: rgba(196, 160, 82, 0.15) !important;
+  color: #C4A052 !important;
+  border-color: rgba(196, 160, 82, 0.45) !important;
+}
+
+:global(html.dark) .logoutButton {
+  color: #9a8fb0 !important;
+}
+
+:global(html.dark) .logoutButton:hover {
+  background: rgba(239, 68, 68, 0.12) !important;
+  color: #f87171 !important;
+}
+
+/* --- Theme toggle row (dark mode) --- */
+:global(html.dark) .themeToggleRow {
+  border-bottom-color: rgba(196, 160, 82, 0.12) !important;
+}
+
+:global(html.dark) .themeToggleLabel {
+  color: #9a90b8 !important;
+}
+
+/* --- Main content scrollbar --- */
+:global(html.dark) .mainContent::-webkit-scrollbar-track {
+  background: #13141f !important;
+}
+
+:global(html.dark) .mainContent::-webkit-scrollbar-thumb {
+  background: #2a2d42 !important;
+  border-color: #13141f !important;
+}
+
+:global(html.dark) .mainContent::-webkit-scrollbar-thumb:hover {
+  background: #363a56 !important;
+}
+
+/* --- Section headers / titles --- */
+:global(html.dark) .sectionHeader {
+  border-bottom-color: rgba(196, 160, 82, 0.12) !important;
+}
+
+:global(html.dark) .sectionTitle {
+  color: #e2d8f0 !important;
+}
+
+/* --- Cards and panels --- */
+:global(html.dark) .profileCard,
+:global(html.dark) .projectCard,
+:global(html.dark) .analysisCard,
+:global(html.dark) .knowledgeCard {
+  background: #1e2035 !important;
+  border-color: rgba(255, 255, 255, 0.06) !important;
+}
+
+/* --- Form inputs inside dashboard --- */
+:global(html.dark) .formInput,
+:global(html.dark) .resumeLeftInput {
+  background-color: #1e2035 !important;
+  color: #e2e8f0 !important;
+  border-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+/* --- Modal overlays --- */
+:global(html.dark) .modalOverlay {
+  background: rgba(0, 0, 0, 0.7) !important;
+}
+
+:global(html.dark) .modal,
+:global(html.dark) .modalContent {
+  background: #1e2035 !important;
+  border-color: rgba(255, 255, 255, 0.08) !important;
+}
+
+/* --- Dropdown menus --- */
+:global(html.dark) .customDropdown .dropdownMenu,
+:global(html.dark) .dropdownMenu {
+  background: #1e2035 !important;
+  border-color: rgba(255, 255, 255, 0.08) !important;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5) !important;
+}
+
+:global(html.dark) .dropdownOption {
+  color: #c8c0dc !important;
+}
+
+:global(html.dark) .dropdownOption:hover {
+  background: rgba(196, 160, 82, 0.12) !important;
+}
+
+/* --- Chatbox --- */
+:global(html.dark) .chatboxContainer,
+:global(html.dark) .chatboxDocked {
+  background: #161620 !important;
+  border-color: rgba(255, 255, 255, 0.08) !important;
+}
+
+/* ============================================================
+   DARK MODE — Panel Text, Cards, and Form Elements
+   ============================================================ */
+
+/* Section description text */
+:global(html.dark) .sectionText {
+  color: #9a90b8 !important;
+}
+
+/* Section icon */
+:global(html.dark) .sectionIcon {
+  background: linear-gradient(135deg, rgba(196, 160, 82, 0.12) 0%, rgba(196, 160, 82, 0.08) 100%) !important;
+  box-shadow: 0 4px 16px rgba(196, 160, 82, 0.12) !important;
+}
+
+:global(html.dark) .sectionIconImage {
+  color: #c8c0dc !important;
+  filter: brightness(0.9) !important;
+}
+
+/* Placeholder card */
+:global(html.dark) .placeholderCard {
+  background: linear-gradient(135deg, #1a1c2e 0%, #1e2035 100%) !important;
+  border-color: rgba(196, 160, 82, 0.12) !important;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25) !important;
+}
+
+/* Knowledge button */
+:global(html.dark) .knowledgeButton {
+  background: linear-gradient(135deg, #1e2035 0%, #252840 100%) !important;
+  color: #c8c0dc !important;
+  border-color: rgba(196, 160, 82, 0.2) !important;
+  box-shadow:
+    0 4px 16px rgba(0, 0, 0, 0.2),
+    inset 0 1px 2px rgba(255, 255, 255, 0.04) !important;
+}
+
+:global(html.dark) .knowledgeButton:hover {
+  background: linear-gradient(135deg, #252840 0%, #2e3248 100%) !important;
+  border-color: rgba(196, 160, 82, 0.35) !important;
+  color: #e2d8f0 !important;
+}
+
+/* Profile step circles */
+:global(html.dark) .profileStepIndex {
+  background: linear-gradient(135deg, #252840 0%, #1e2035 40%, #191b29 100%) !important;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.35), inset 0 2px 4px rgba(255, 255, 255, 0.06) !important;
+  color: #b8b0cc !important;
+}
+
+:global(html.dark) .profileStepActive .profileStepIndex {
+  background: linear-gradient(135deg,
+    rgba(50, 46, 70, 1) 0%,
+    rgba(45, 42, 65, 0.98) 20%,
+    rgba(40, 38, 60, 0.96) 50%,
+    rgba(35, 33, 55, 0.98) 80%,
+    rgba(30, 28, 50, 1) 100%
+  ) !important;
+  box-shadow:
+    0 16px 40px rgba(196, 160, 82, 0.2),
+    0 8px 20px rgba(0, 0, 0, 0.4),
+    inset 0 4px 10px rgba(255, 255, 255, 0.06),
+    0 0 24px rgba(196, 160, 82, 0.12) !important;
+  color: #e2d8f0 !important;
+}
+
+:global(html.dark) .profileStepActive .profileStepLabel {
+  color: #e2d8f0 !important;
+  text-shadow:
+    0 2px 8px rgba(0, 0, 0, 0.8),
+    0 0 12px rgba(196, 160, 82, 0.3) !important;
+}
+
+:global(html.dark) .profileStepCompleted .profileStepIndex {
+  background: linear-gradient(135deg, #252840 0%, #1e2035 100%) !important;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3) !important;
+}
+
+:global(html.dark) .profileStepCompleted .profileStepLabel {
+  color: #9a90b8 !important;
+}
+
+:global(html.dark) .profileStepButton {
+  color: #9a90b8 !important;
+}
+
+/* Sub panel dots */
+:global(html.dark) .subPanelDot {
+  border-color: rgba(196, 160, 82, 0.25) !important;
+  background: rgba(196, 160, 82, 0.1) !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3) !important;
+}
+
+/* Form labels */
+:global(html.dark) .formLabel {
+  color: #9a90b8 !important;
+}
+
+:global(html.dark) .requiredIndicator {
+  color: #f87171 !important;
+}
+
+/* Form inputs — expand existing rule */
+:global(html.dark) .formInput {
+  background: linear-gradient(135deg, #1e2035 0%, #252840 50%, #1e2035 100%) !important;
+  color: #e2e8f0 !important;
+  border-color: rgba(196, 160, 82, 0.25) !important;
+  box-shadow:
+    0 4px 12px rgba(0, 0, 0, 0.2),
+    inset 0 2px 4px rgba(0, 0, 0, 0.15) !important;
+}
+
+:global(html.dark) .formInput::placeholder {
+  color: rgba(154, 144, 184, 0.5) !important;
+}
+
+:global(html.dark) .formInput:focus {
+  border-color: rgba(196, 160, 82, 0.5) !important;
+  box-shadow:
+    0 6px 16px rgba(0, 0, 0, 0.3),
+    inset 0 2px 4px rgba(0, 0, 0, 0.15),
+    0 0 0 3px rgba(196, 160, 82, 0.12) !important;
+}
+
+/* Custom dropdown trigger */
+:global(html.dark) .customDropdownTrigger {
+  color: #c8c0dc !important;
+  background: linear-gradient(135deg, #1e2035 0%, #252840 50%, #1e2035 100%) !important;
+  border-color: rgba(196, 160, 82, 0.25) !important;
+  box-shadow:
+    0 4px 16px rgba(0, 0, 0, 0.2),
+    inset 0 2px 4px rgba(0, 0, 0, 0.1) !important;
+}
+
+:global(html.dark) .customDropdownTrigger:hover {
+  border-color: rgba(196, 160, 82, 0.45) !important;
+  background: linear-gradient(135deg, #252840 0%, #2e3248 50%, #252840 100%) !important;
+  box-shadow:
+    0 8px 24px rgba(0, 0, 0, 0.3),
+    inset 0 2px 4px rgba(0, 0, 0, 0.1) !important;
+}
+
+:global(html.dark) .dropdownValue {
+  color: #c8c0dc !important;
+}
+
+:global(html.dark) .customDropdownMenu {
+  background: #1e2035 !important;
+  border-color: rgba(196, 160, 82, 0.15) !important;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5) !important;
+}
+
+/* Industry button */
+:global(html.dark) .industryButton {
+  background: linear-gradient(135deg, rgba(196, 160, 82, 0.1) 0%, rgba(196, 160, 82, 0.08) 100%) !important;
+  color: #c8c0dc !important;
+  border-color: rgba(196, 160, 82, 0.2) !important;
+  box-shadow:
+    0 4px 16px rgba(0, 0, 0, 0.2),
+    inset 0 2px 4px rgba(0, 0, 0, 0.1) !important;
+}
+
+:global(html.dark) .industryButton:hover {
+  background: linear-gradient(135deg, rgba(196, 160, 82, 0.18) 0%, rgba(196, 160, 82, 0.14) 100%) !important;
+  border-color: rgba(196, 160, 82, 0.4) !important;
+  color: #e2d8f0 !important;
+}
+
+/* Technology tags */
+:global(html.dark) .technologyItem {
+  background: linear-gradient(135deg, #1e2035 0%, #252840 100%) !important;
+  border-color: rgba(196, 160, 82, 0.2) !important;
+  box-shadow:
+    0 2px 8px rgba(0, 0, 0, 0.2),
+    inset 0 1px 2px rgba(255, 255, 255, 0.03) !important;
+}
+
+:global(html.dark) .technologyItem:hover {
+  border-color: rgba(196, 160, 82, 0.45) !important;
+  box-shadow:
+    0 8px 20px rgba(0, 0, 0, 0.3),
+    0 4px 12px rgba(196, 160, 82, 0.1) !important;
+}
+
+:global(html.dark) .technologyItemSelected {
+  background: linear-gradient(135deg, rgba(196, 160, 82, 0.2) 0%, rgba(196, 160, 82, 0.15) 50%, rgba(196, 160, 82, 0.18) 100%) !important;
+  border-color: rgba(196, 160, 82, 0.5) !important;
+  box-shadow:
+    0 4px 16px rgba(196, 160, 82, 0.15),
+    0 2px 8px rgba(0, 0, 0, 0.25) !important;
+}
+
+:global(html.dark) .technologyItemText {
+  color: #c8c0dc !important;
+}
+
+:global(html.dark) .technologyItemSelected .technologyItemText {
+  color: #C4A052 !important;
+}
+
+:global(html.dark) .technologyItemFuture {
+  border-color: rgba(99, 102, 241, 0.35) !important;
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(99, 102, 241, 0.08) 100%) !important;
+}
+
+/* Resume section */
+:global(html.dark) .resumeLeftColumn {
+  background: linear-gradient(135deg, #1a1c2e 0%, #1e2035 100%) !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.35) !important;
+}
+
+:global(html.dark) .scrollIndicatorUp,
+:global(html.dark) .scrollIndicatorDown {
+  color: rgba(154, 144, 184, 0.5) !important;
+  background: linear-gradient(to bottom, rgba(26, 28, 46, 0.95) 0%, transparent 100%) !important;
+}
+
+:global(html.dark) .resumeSectionTitle {
+  color: #c8c0dc !important;
+  border-bottom-color: rgba(255, 255, 255, 0.08) !important;
+}
+
+:global(html.dark) .resumeInfoRow:hover {
+  background: rgba(196, 160, 82, 0.08) !important;
+  box-shadow: 0 2px 8px rgba(196, 160, 82, 0.08) !important;
+}
+
+/* Bullet point inputs */
+:global(html.dark) .bulletPointInput {
+  color: #c8c0dc !important;
+  background: transparent !important;
+  border-bottom-color: rgba(196, 160, 82, 0.2) !important;
+}
+
+:global(html.dark) .bulletPointInput::placeholder {
+  color: rgba(154, 144, 184, 0.4) !important;
+}
+
+:global(html.dark) .bulletPointNumber {
+  color: #7d75a0 !important;
+}
+
+/* Company separator */
+:global(html.dark) .companySeparator {
+  background: linear-gradient(180deg, rgba(196, 160, 82, 0.15) 0%, rgba(196, 160, 82, 0.08) 100%) !important;
+  border-color: rgba(196, 160, 82, 0.2) !important;
+}
+
+/* Analysis switch button */
+:global(html.dark) .analysisSwitchButton {
+  background: rgba(196, 160, 82, 0.08) !important;
+  color: #c8c0dc !important;
+  border-color: rgba(196, 160, 82, 0.2) !important;
+}
+
+:global(html.dark) .analysisSwitchButtonText {
+  color: #c8c0dc !important;
+}
+
+/* Analysis cards */
+:global(html.dark) .analysisCardsContainer {
+  background: transparent !important;
+}
+
+/* Delete college / company buttons */
+:global(html.dark) .deleteCollegeButton {
+  background: linear-gradient(135deg, #2e1a2e 0%, #3d2035 100%) !important;
+  color: #f87171 !important;
+  border-color: rgba(248, 113, 113, 0.2) !important;
+}
+
+:global(html.dark) .deleteCollegeButton:hover {
+  background: linear-gradient(135deg, #3d2035 0%, #4d2840 100%) !important;
+  border-color: rgba(248, 113, 113, 0.4) !important;
+}
+
+/* Date row dropdowns */
+:global(html.dark) .dateRow .customDropdownTrigger {
+  background: linear-gradient(135deg, #1e2035 0%, #252840 100%) !important;
+  color: #c8c0dc !important;
+  border-color: rgba(196, 160, 82, 0.2) !important;
+}
+
+/* Analysis section - left panel */
+:global(html.dark) .analysisLeftLower .formLabel {
+  color: #9a90b8 !important;
+}
+
+:global(html.dark) .analysisLeftLower .formInput {
+  background: linear-gradient(135deg, #1e2035 0%, #252840 100%) !important;
+  color: #c8c0dc !important;
+  border-color: rgba(196, 160, 82, 0.2) !important;
+}
+
+/* ============================================================
+   DARK MODE — Technology section, Resume upload, Job popup,
+   Checkboxes, Hex graph, Analysis cards, Start chat button
+   ============================================================ */
+
+/* ---- Technology section containers ---- */
+:global(html.dark) .technologySection {
+  background: linear-gradient(135deg, #1a1c2e 0%, #1e2035 100%) !important;
+  border-color: rgba(196, 160, 82, 0.2) !important;
+  box-shadow:
+    0 4px 16px rgba(0, 0, 0, 0.25),
+    inset 0 1px 0 rgba(255, 255, 255, 0.03) !important;
+}
+
+:global(html.dark) .technologySection:hover {
+  border-color: rgba(196, 160, 82, 0.4) !important;
+  box-shadow:
+    0 8px 24px rgba(0, 0, 0, 0.35),
+    0 4px 12px rgba(196, 160, 82, 0.08) !important;
+}
+
+:global(html.dark) .sectionHeader {
+  border-bottom-color: rgba(255, 255, 255, 0.06) !important;
+}
+
+:global(html.dark) .sectionCount {
+  color: #C4A052 !important;
+  background: linear-gradient(135deg, rgba(196, 160, 82, 0.12) 0%, rgba(196, 160, 82, 0.08) 100%) !important;
+  border-color: rgba(196, 160, 82, 0.25) !important;
+}
+
+:global(html.dark) .sectionClearButton {
+  background: linear-gradient(135deg, rgba(196, 160, 82, 0.1) 0%, rgba(196, 160, 82, 0.07) 100%) !important;
+  border-color: rgba(196, 160, 82, 0.25) !important;
+  color: #C4A052 !important;
+  box-shadow: none !important;
+}
+
+:global(html.dark) .sectionClearButton:hover {
+  background: linear-gradient(135deg, rgba(196, 160, 82, 0.2) 0%, rgba(196, 160, 82, 0.15) 100%) !important;
+  border-color: rgba(196, 160, 82, 0.45) !important;
+}
+
+:global(html.dark) .customKeywordsContainer {
+  border-top-color: rgba(255, 255, 255, 0.06) !important;
+}
+
+:global(html.dark) .customKeywordsInput {
+  background: linear-gradient(135deg, #1e2035 0%, #252840 100%) !important;
+  border-color: rgba(196, 160, 82, 0.2) !important;
+  color: #c8c0dc !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2), inset 0 1px 2px rgba(0, 0, 0, 0.1) !important;
+}
+
+:global(html.dark) .customKeywordsInput::placeholder {
+  color: rgba(154, 144, 184, 0.4) !important;
+}
+
+:global(html.dark) .customKeywordsInput:focus {
+  border-color: rgba(196, 160, 82, 0.45) !important;
+  box-shadow:
+    0 4px 16px rgba(0, 0, 0, 0.25),
+    0 0 0 3px rgba(196, 160, 82, 0.12),
+    inset 0 1px 2px rgba(0, 0, 0, 0.1) !important;
+}
+
+/* ---- Resume upload area ---- */
+:global(html.dark) .resumeUploadLabel {
+  background: linear-gradient(135deg, #1a1c2e 0%, #1e2035 100%) !important;
+  border-color: rgba(196, 160, 82, 0.3) !important;
+  box-shadow:
+    0 4px 16px rgba(0, 0, 0, 0.2),
+    inset 0 1px 2px rgba(255, 255, 255, 0.02) !important;
+}
+
+:global(html.dark) .resumeUploadLabel:hover {
+  border-color: rgba(196, 160, 82, 0.55) !important;
+  background: linear-gradient(135deg, #1e2035 0%, #252840 100%) !important;
+  box-shadow:
+    0 8px 24px rgba(0, 0, 0, 0.3),
+    inset 0 1px 2px rgba(255, 255, 255, 0.03) !important;
+}
+
+:global(html.dark) .resumeUploadIcon {
+  background: linear-gradient(135deg, rgba(196, 160, 82, 0.12) 0%, rgba(196, 160, 82, 0.08) 100%) !important;
+  color: #C4A052 !important;
+}
+
+:global(html.dark) .resumeUploadTitle {
+  color: #c8c0dc !important;
+}
+
+:global(html.dark) .resumeUploadSubtitle {
+  color: #7d75a0 !important;
+}
+
+/* ---- Job position lookup popup ---- */
+:global(html.dark) .jobRecommendPositionBtn {
+  background: linear-gradient(135deg,
+    rgba(124, 58, 237, 0.4) 0%,
+    rgba(109, 40, 217, 0.32) 50%,
+    rgba(91, 22, 193, 0.26) 100%) !important;
+  border-color: rgba(139, 92, 246, 0.45) !important;
+}
+
+:global(html.dark) .jobRecommendPositionBtn:hover {
+  background: linear-gradient(135deg,
+    rgba(139, 92, 246, 0.58) 0%,
+    rgba(124, 58, 237, 0.5) 50%,
+    rgba(109, 40, 217, 0.42) 100%) !important;
+  border-color: rgba(167, 139, 250, 0.65) !important;
+}
+
+:global(html.dark) .jobRecommendPositionName {
+  color: #e2d8f0 !important;
+}
+
+:global(html.dark) .jobRecommendHeaderTitle {
+  color: #c8c0dc !important;
+}
+
+:global(html.dark) .jobRecommendBackBtn {
+  color: #a78bfa !important;
+}
+
+:global(html.dark) .jobRecommendJobItem {
+  background: linear-gradient(135deg,
+    rgba(124, 58, 237, 0.4) 0%,
+    rgba(109, 40, 217, 0.32) 50%,
+    rgba(91, 22, 193, 0.26) 100%) !important;
+  border-color: rgba(139, 92, 246, 0.45) !important;
+}
+
+:global(html.dark) .jobRecommendJobItem:hover,
+:global(html.dark) .jobRecommendJobItem:focus {
+  background: linear-gradient(135deg,
+    rgba(139, 92, 246, 0.58) 0%,
+    rgba(124, 58, 237, 0.5) 50%,
+    rgba(109, 40, 217, 0.42) 100%) !important;
+  border-color: rgba(167, 139, 250, 0.65) !important;
+}
+
+:global(html.dark) .jobRecommendJobTitle {
+  color: #e2d8f0 !important;
+}
+
+:global(html.dark) .jobRecommendCompany {
+  color: #9a90b8 !important;
+}
+
+/* ---- Knowledge scope checkboxes ---- */
+:global(html.dark) .knowledgeScopeCheckboxes .presentCheckboxLabel {
+  background: linear-gradient(135deg, #1e2035 0%, #252840 100%) !important;
+  border-color: rgba(196, 160, 82, 0.25) !important;
+  box-shadow:
+    0 4px 12px rgba(0, 0, 0, 0.2),
+    inset 0 1px 2px rgba(255, 255, 255, 0.03) !important;
+}
+
+:global(html.dark) .knowledgeScopeCheckboxes .presentCheckboxLabel:hover {
+  border-color: rgba(196, 160, 82, 0.5) !important;
+  background: linear-gradient(135deg, #252840 0%, #2a2d4a 100%) !important;
+  box-shadow:
+    0 6px 20px rgba(0, 0, 0, 0.28),
+    0 0 0 1px rgba(196, 160, 82, 0.2) !important;
+}
+
+:global(html.dark) .presentCheckboxText {
+  color: #c8c0dc !important;
+}
+
+:global(html.dark) .presentCheckboxLabel:hover .presentCheckboxText {
+  color: #e2d8f0 !important;
+}
+
+:global(html.dark) .presentCheckbox:checked ~ .presentCheckboxText {
+  color: #C4A052 !important;
+}
+
+:global(html.dark) .presentCheckbox {
+  background: linear-gradient(135deg, #1e2035 0%, #252840 100%) !important;
+  border-color: rgba(196, 160, 82, 0.3) !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2), inset 0 1px 2px rgba(255, 255, 255, 0.03) !important;
+}
+
+:global(html.dark) .presentCheckbox:hover {
+  border-color: rgba(196, 160, 82, 0.55) !important;
+  background: linear-gradient(135deg, #252840 0%, #2a2d4a 100%) !important;
+}
+
+:global(html.dark) .presentCheckbox:checked {
+  background: linear-gradient(135deg, #C4A052 0%, #a8893a 50%, #8f7230 100%) !important;
+  border-color: rgba(196, 160, 82, 0.9) !important;
+}
+
+/* ---- Hex graph layout ---- */
+:global(html.dark) .analysisLeftUpper {
+  background: transparent !important;
+}
+
+:global(html.dark) .analysisLeftLower {
+  background: linear-gradient(135deg, rgba(196, 160, 82, 0.06) 0%, rgba(196, 160, 82, 0.03) 100%) !important;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2) !important;
+}
+
+:global(html.dark) .analysisLeftLower .resumeUploadLabel {
+  background: linear-gradient(135deg, #1a1c2e 0%, #1e2035 100%) !important;
+  border-color: rgba(196, 160, 82, 0.3) !important;
+}
+
+:global(html.dark) .analysisLeftLower .knowledgeScopeCheckboxes .presentCheckboxLabel {
+  background: linear-gradient(135deg, #1e2035 0%, #252840 100%) !important;
+  border-color: rgba(196, 160, 82, 0.25) !important;
+}
+
+/* ---- Analysis info cards ---- */
+:global(html.dark) .analysisInfoCard {
+  background: linear-gradient(135deg, #1a1c2e 0%, #1e2035 100%) !important;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.3) !important;
+  border-color: rgba(255, 255, 255, 0.06) !important;
+}
+
+:global(html.dark) .analysisInfoCard:hover {
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4) !important;
+}
+
+:global(html.dark) .analysisInfoText {
+  color: #c8c0dc !important;
+}
+
+:global(html.dark) .analysisTypeLabel {
+  color: #9a90b8 !important;
+}
+
+:global(html.dark) .analysisInfoTextAnimated {
+  color: #c8c0dc !important;
+}
+
+:global(html.dark) .analysisInfoCardAnalyzing {
+  border-color: rgba(196, 160, 82, 0.3) !important;
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.35),
+    0 4px 16px rgba(196, 160, 82, 0.1) !important;
+}
+
+/* ---- Start chat / Get started button ---- */
+:global(html.dark) .getStartedButton {
+  background: linear-gradient(135deg, #C4A052 0%, #a8893a 100%) !important;
+  border-color: rgba(196, 160, 82, 0.6) !important;
+  color: #1a1c2e !important;
+  box-shadow:
+    0 14px 35px rgba(0, 0, 0, 0.45),
+    0 0 0 1px rgba(196, 160, 82, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.25) !important;
+  opacity: 1 !important;
+}
+
+:global(html.dark) .getStartedButton:not(:disabled) {
+  opacity: 1 !important;
+  cursor: pointer !important;
+}
+
+:global(html.dark) .getStartedButton:disabled {
+  opacity: 0.5 !important;
+}
+
+/* ============================================================
+   DARK MODE — Chat panel, suggestion buttons, input bar
+   ============================================================ */
+
+/* ---- Docked right-side chat panel ---- */
+:global(html.dark) .chatboxContainerDocked {
+  background: linear-gradient(180deg, rgba(14, 15, 24, 0.98) 0%, rgba(18, 19, 30, 0.98) 100%) !important;
+  border-left-color: rgba(196, 160, 82, 0.12) !important;
+  box-shadow: -8px 0 32px rgba(0, 0, 0, 0.4), -2px 0 8px rgba(0, 0, 0, 0.2) !important;
+}
+
+/* ---- Chat window (floating) ---- */
+:global(html.dark) .chatboxWindow {
+  background: rgba(14, 15, 24, 0.92) !important;
+  border-color: rgba(255, 255, 255, 0.08) !important;
+  border-bottom-color: rgba(196, 160, 82, 0.08) !important;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4) !important;
+}
+
+/* ---- Chat header ---- */
+:global(html.dark) .chatboxHeader {
+  border-bottom-color: rgba(255, 255, 255, 0.06) !important;
+}
+
+:global(html.dark) .chatboxTitle {
+  color: #e2d8f0 !important;
+}
+
+:global(html.dark) .chatboxSubtitle {
+  color: rgba(180, 170, 200, 0.55) !important;
+}
+
+:global(html.dark) .chatboxCloseBtn {
+  background: rgba(255, 255, 255, 0.06) !important;
+  border-color: rgba(255, 255, 255, 0.1) !important;
+  color: rgba(180, 170, 200, 0.6) !important;
+}
+
+:global(html.dark) .chatboxCloseBtn:hover {
+  background: rgba(255, 255, 255, 0.12) !important;
+  color: #e2d8f0 !important;
+}
+
+/* ---- Chat input bar ---- */
+:global(html.dark) .chatboxBar {
+  background: rgba(20, 21, 36, 0.85) !important;
+  border-color: rgba(255, 255, 255, 0.1) !important;
+  border-bottom-color: rgba(196, 160, 82, 0.12) !important;
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.25),
+    inset 0 1.5px 0 rgba(255, 255, 255, 0.06) !important;
+}
+
+:global(html.dark) .chatboxBarFocused {
+  background: rgba(24, 25, 42, 0.92) !important;
+  border-color: rgba(255, 255, 255, 0.15) !important;
+  border-bottom-color: rgba(196, 160, 82, 0.18) !important;
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.3),
+    0 0 0 3px rgba(196, 160, 82, 0.08),
+    inset 0 1.5px 0 rgba(255, 255, 255, 0.08) !important;
+}
+
+:global(html.dark) .chatboxBarDocked {
+  background: rgba(20, 21, 36, 0.9) !important;
+  border-color: rgba(196, 160, 82, 0.18) !important;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.3) !important;
+}
+
+:global(html.dark) .chatboxBarInput {
+  color: #e2d8f0 !important;
+}
+
+:global(html.dark) .chatboxBarInput::placeholder {
+  color: rgba(180, 170, 200, 0.35) !important;
+}
+
+:global(html.dark) .chatboxBarHint {
+  color: rgba(154, 144, 184, 0.3) !important;
+}
+
+/* ---- History pill ---- */
+:global(html.dark) .chatboxHistoryPill {
+  background: rgba(20, 21, 36, 0.55) !important;
+  border-color: rgba(255, 255, 255, 0.1) !important;
+  color: #b8b0cc !important;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.06) !important;
+}
+
+:global(html.dark) .chatboxHistoryPill:hover {
+  background: rgba(30, 31, 52, 0.7) !important;
+  border-color: rgba(255, 255, 255, 0.18) !important;
+}
+
+/* ---- Suggestion buttons — override dark text to light ---- */
+:global(html.dark) .chatboxSuggestionBtn:nth-child(1) {
+  color: #fca5a5 !important;
+  background: linear-gradient(135deg, rgba(251, 113, 133, 0.22) 0%, rgba(244, 63, 94, 0.13) 100%) !important;
+  border-color: rgba(244, 63, 94, 0.3) !important;
+}
+
+:global(html.dark) .chatboxSuggestionBtn:nth-child(2) {
+  color: #7dd3fc !important;
+  background: linear-gradient(135deg, rgba(56, 189, 248, 0.22) 0%, rgba(14, 165, 233, 0.13) 100%) !important;
+  border-color: rgba(14, 165, 233, 0.3) !important;
+}
+
+:global(html.dark) .chatboxSuggestionBtn:nth-child(3) {
+  color: #6ee7b7 !important;
+  background: linear-gradient(135deg, rgba(52, 211, 153, 0.22) 0%, rgba(16, 185, 129, 0.13) 100%) !important;
+  border-color: rgba(16, 185, 129, 0.3) !important;
+}
+
+:global(html.dark) .chatboxSuggestionBtn:nth-child(4) {
+  color: #c4b5fd !important;
+  background: linear-gradient(135deg, rgba(167, 139, 250, 0.28) 0%, rgba(139, 92, 246, 0.16) 100%) !important;
+  border-color: rgba(139, 92, 246, 0.32) !important;
+}
+
+:global(html.dark) .chatboxSuggestionBtn:nth-child(5) {
+  color: #fde68a !important;
+  background: linear-gradient(135deg, rgba(251, 191, 36, 0.22) 0%, rgba(245, 158, 11, 0.13) 100%) !important;
+  border-color: rgba(245, 158, 11, 0.3) !important;
+}
+
+:global(html.dark) .chatboxSuggestionBtn:nth-child(6) {
+  color: #f0abfc !important;
+  background: linear-gradient(135deg, rgba(232, 121, 249, 0.22) 0%, rgba(192, 38, 211, 0.13) 100%) !important;
+  border-color: rgba(192, 38, 211, 0.3) !important;
+}
+
+/* ---- Assistant message bubble ---- */
+:global(html.dark) .chatboxBubbleAssistant {
+  background: rgba(30, 32, 53, 0.85) !important;
+  border-color: rgba(255, 255, 255, 0.1) !important;
+  color: #e2d8f0 !important;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.06) !important;
+}
+
+/* ---- Typing indicator ---- */
+:global(html.dark) .chatboxTyping {
+  background: rgba(30, 32, 53, 0.85) !important;
+  border-color: rgba(255, 255, 255, 0.1) !important;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.06) !important;
+}
+
+/* ---- Empty docked state ---- */
+:global(html.dark) .chatboxDockedEmptyText {
+  color: #7d75a0 !important;
+}
+
+:global(html.dark) .chatboxDockedEmptyIcon {
+  color: #C4A052 !important;
+}
+
+/* ============================================================
+   DARK MODE — Technology item states (unselected / current / future)
+   ============================================================ */
+
+/* ---- Unselected (not clicked) ---- */
+:global(html.dark) .technologyItem:hover .technologyItemText {
+  color: #e2d8f0 !important;
+}
+
+/* ---- Current Skills (selected) — checkmark icon ---- */
+:global(html.dark) .technologyCheckmark {
+  color: #C4A052 !important;
+  filter: drop-shadow(0 2px 4px rgba(196, 160, 82, 0.4)) !important;
+}
+
+/* ---- Future Goals state — richer indigo/violet in dark ---- */
+:global(html.dark) .technologyItemFuture {
+  background: linear-gradient(135deg,
+    rgba(99, 102, 241, 0.22) 0%,
+    rgba(139, 92, 246, 0.18) 50%,
+    rgba(99, 102, 241, 0.2) 100%) !important;
+  border-color: rgba(139, 92, 246, 0.45) !important;
+  box-shadow:
+    0 4px 16px rgba(99, 102, 241, 0.15),
+    0 2px 8px rgba(0, 0, 0, 0.25) !important;
+}
+
+:global(html.dark) .technologyItemFuture .technologyItemText {
+  color: #c4b5fd !important;
+  font-weight: 700 !important;
+}
+
+:global(html.dark) .technologyItemFuture:hover {
+  border-color: rgba(167, 139, 250, 0.65) !important;
+  background: linear-gradient(135deg,
+    rgba(99, 102, 241, 0.32) 0%,
+    rgba(139, 92, 246, 0.26) 50%,
+    rgba(99, 102, 241, 0.3) 100%) !important;
+  box-shadow:
+    0 8px 24px rgba(99, 102, 241, 0.25),
+    0 4px 12px rgba(0, 0, 0, 0.3) !important;
+}
+
+:global(html.dark) .technologyDoubleCheckmark {
+  color: #a78bfa !important;
+  filter: drop-shadow(0 2px 4px rgba(139, 92, 246, 0.45)) !important;
+}

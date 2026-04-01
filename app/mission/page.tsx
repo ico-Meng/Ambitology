@@ -3,6 +3,7 @@
 import { useEffect } from "react";
 import Link from "next/link";
 import styles from "./mission.module.css";
+import ThemeToggle from "@/app/components/ThemeToggle";
 
 const globalReset = `
   html, body {
@@ -37,7 +38,10 @@ export default function MissionPage() {
             <img src="/images/atg-logo.svg" alt="Ambitology" className={styles.logoIcon} />
             Ambitology
           </Link>
-          <Link href="/" className={styles.backLink}>← Back to Home</Link>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+            <ThemeToggle />
+            <Link href="/" className={styles.backLink}>← Back to Home</Link>
+          </div>
         </div>
       </header>
 
