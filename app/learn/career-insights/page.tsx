@@ -21,6 +21,36 @@ const globalReset = `
 
 const ARTICLES = [
   {
+    slug: "lack-of-business-or-domain-context",
+    title: "Lack of Business or Domain Context: Why Pure Coding Is No Longer Enough to Stand Out",
+    excerpt:
+      "Pure coding skill used to be the ticket. It no longer is. Hiring teams increasingly look for communication, product thinking, and domain understanding. Here's how to build all three — without years of industry experience.",
+    category: "Learning & Growth",
+    date: "March 22, 2026",
+    readTime: "9 min read",
+    image: "https://images.unsplash.com/photo-1552664730-d307ca884978?w=800&auto=format&fit=crop&q=80",
+  },
+  {
+    slug: "not-knowing-how-much-ai-tool-usage-is-acceptable",
+    title: "Not Knowing How Much AI Tool Usage Is Acceptable? Here's How to Think About It.",
+    excerpt:
+      "There's real tension between using AI to ship faster and proving you have genuine engineering judgment. This is the professional guide to navigating that tension without losing credibility.",
+    category: "Engineering & AI",
+    date: "March 20, 2026",
+    readTime: "8 min read",
+    image: "https://images.unsplash.com/photo-1504639725590-34d0984388bd?w=800&auto=format&fit=crop&q=80",
+  },
+  {
+    slug: "chasing-ai-ml-or-stay-in-mainstream-swe",
+    title: "Chasing AI/ML? Or Stay in Mainstream SWE? Here's the Honest Answer.",
+    excerpt:
+      "Confused whether to pivot into AI/ML or double down on mainstream software engineering? The answer most career advice skips is that it's a false binary — and where you land on the spectrum matters less than people think.",
+    category: "Engineering & AI",
+    date: "March 18, 2026",
+    readTime: "9 min read",
+    image: "https://images.unsplash.com/photo-1620712943543-bcc4688e7485?w=800&auto=format&fit=crop&q=80",
+  },
+  {
     slug: "emotional-burnout-from-repeated-rejection",
     title: "Emotional Burnout from Repeated Rejection: How to Stay Strategic and Keep Moving",
     excerpt:
