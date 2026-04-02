@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useRef, useMemo, useCallback } from 'react';
+import { useState, useEffect, useRef, useMemo, useCallback, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Image from 'next/image';
 import { Orbitron, Comfortaa } from 'next/font/google';
@@ -371,7 +371,7 @@ type AutoFillApiResponse = {
   custom_technical_items: string[];
 };
 
-export default function DashboardPage() {
+function DashboardContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   // Authentication state
@@ -16821,3 +16821,10 @@ onClick={() => {
   );
 }
 
+export default function DashboardPage() {
+  return (
+    <Suspense>
+      <DashboardContent />
+    </Suspense>
+  );
+}
