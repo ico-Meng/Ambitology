@@ -3,6 +3,7 @@
 import { useEffect, useRef } from 'react';
 import * as d3 from 'd3';
 import styles from '../dashboard.module.css';
+import { useTheme } from '@/app/components/ThemeProvider';
 
 interface HexGraphProps {
   personalCapabilityScores?: {
@@ -33,10 +34,12 @@ export default function HexGraph({
   showPersonalDotOnly = false,
   onEndpointClick
 }: HexGraphProps) {
+  const { theme } = useTheme();
+  const isDark = theme === 'dark';
   const svgRef = useRef<SVGSVGElement>(null);
   const selectedDimensionRef = useRef<string | null>(null);
   const onEndpointClickRef = useRef(onEndpointClick);
-  const previousScoresRef = useRef<{ personal?: any; resume?: any; type?: string; showPersonalDotOnly?: boolean }>({});
+  const previousScoresRef = useRef<{ personal?: any; resume?: any; type?: string; showPersonalDotOnly?: boolean; isDark?: boolean }>({});
   
   // Update ref when callback changes (but don't trigger re-render)
   useEffect(() => {
@@ -66,9 +69,10 @@ export default function HexGraph({
     const previousScores = previousScoresRef.current[selectedType];
     const typeChanged = previousScoresRef.current.type !== selectedType;
     const dotModeChanged = previousScoresRef.current.showPersonalDotOnly !== showPersonalDotOnly;
+    const themeChanged = previousScoresRef.current.isDark !== isDark;
 
-    // Only redraw if scores changed, type changed, or dot-only mode changed
-    if (!typeChanged && !dotModeChanged && scoresEqual(currentScores, previousScores)) {
+    // Only redraw if scores changed, type changed, dot-only mode changed, or theme changed
+    if (!typeChanged && !dotModeChanged && !themeChanged && scoresEqual(currentScores, previousScores)) {
       // Scores haven't changed, don't redraw - just update selected state if needed
       return;
     }
@@ -79,6 +83,7 @@ export default function HexGraph({
       resume: resumePowerScores,
       type: selectedType,
       showPersonalDotOnly,
+      isDark,
     };
 
     const width = 400;
@@ -102,7 +107,7 @@ export default function HexGraph({
     // Create gradients
     const defs = svg.append('defs');
 
-    // Warm beige gradient for the hexagon (matching dashboard theme)
+    // Main hexagon gradient (warm beige in light, deep dark in dark mode)
     const mainHexGradient = defs.append('radialGradient')
       .attr('id', 'analysisMainHexGradient')
       .attr('cx', '50%')
@@ -111,18 +116,18 @@ export default function HexGraph({
 
     mainHexGradient.append('stop')
       .attr('offset', '0%')
-      .attr('stop-color', '#faf8f4')
-      .attr('stop-opacity', 0.95);
+      .attr('stop-color', isDark ? '#1e1a13' : '#faf8f4')
+      .attr('stop-opacity', isDark ? 0.98 : 0.95);
 
     mainHexGradient.append('stop')
       .attr('offset', '50%')
-      .attr('stop-color', '#f5f2eb')
-      .attr('stop-opacity', 0.85);
+      .attr('stop-color', isDark ? '#231e16' : '#f5f2eb')
+      .attr('stop-opacity', isDark ? 0.95 : 0.85);
 
     mainHexGradient.append('stop')
       .attr('offset', '100%')
-      .attr('stop-color', '#edece3')
-      .attr('stop-opacity', 0.7);
+      .attr('stop-color', isDark ? '#2b2519' : '#edece3')
+      .attr('stop-opacity', isDark ? 0.9 : 0.7);
 
     // Subtle accent gradient for data area
     const dataAreaGradient = defs.append('linearGradient')
@@ -135,23 +140,23 @@ export default function HexGraph({
     dataAreaGradient.append('stop')
       .attr('offset', '0%')
       .attr('stop-color', '#D6BF9A')
-      .attr('stop-opacity', 0.25);
+      .attr('stop-opacity', isDark ? 0.35 : 0.25);
 
     dataAreaGradient.append('stop')
       .attr('offset', '50%')
       .attr('stop-color', '#9B6A10')
-      .attr('stop-opacity', 0.15);
+      .attr('stop-opacity', isDark ? 0.25 : 0.15);
 
     dataAreaGradient.append('stop')
       .attr('offset', '100%')
       .attr('stop-color', '#D6BF9A')
-      .attr('stop-opacity', 0.2);
+      .attr('stop-opacity', isDark ? 0.3 : 0.2);
 
     // Create main group and translate to center with subtle 3D effect
     const g = svg.append('g')
       .attr('class', 'chart-group')
       .attr('transform', `translate(${centerX}, ${centerY})`)
-      .style('filter', 'drop-shadow(0 0 1px rgba(155, 106, 16, 0.05))');
+      .style('filter', `drop-shadow(0 0 1px rgba(155, 106, 16, ${isDark ? 0.15 : 0.05}))`);
 
     // Draw grid
     drawGrid(g);
@@ -212,10 +217,12 @@ export default function HexGraph({
         .attr('class', 'main-hexagon')
         .attr('d', line)
         .attr('fill', 'url(#analysisMainHexGradient)')
-        .attr('stroke', 'rgba(214, 191, 154, 0.6)')
+        .attr('stroke', isDark ? 'rgba(155, 106, 16, 0.55)' : 'rgba(214, 191, 154, 0.6)')
         .attr('stroke-width', 2.5)
         .attr('opacity', 1)
-        .style('filter', 'drop-shadow(0 4px 8px rgba(155, 106, 16, 0.15)) drop-shadow(0 8px 16px rgba(155, 106, 16, 0.1)) drop-shadow(0 2px 4px rgba(0, 0, 0, 0.08))')
+        .style('filter', isDark
+          ? 'drop-shadow(0 4px 12px rgba(155, 106, 16, 0.35)) drop-shadow(0 8px 20px rgba(0, 0, 0, 0.5)) drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3))'
+          : 'drop-shadow(0 4px 8px rgba(155, 106, 16, 0.15)) drop-shadow(0 8px 16px rgba(155, 106, 16, 0.1)) drop-shadow(0 2px 4px rgba(0, 0, 0, 0.08))')
         .style('cursor', 'pointer');
       
       // Make hexagon body clickable to show all results
@@ -243,11 +250,11 @@ export default function HexGraph({
           .attr('class', 'grid-level')
           .attr('d', line)
           .attr('fill', 'none')
-          .attr('stroke', 'rgba(214, 191, 154, 0.3)')
+          .attr('stroke', isDark ? 'rgba(155, 106, 16, 0.35)' : 'rgba(214, 191, 154, 0.3)')
           .attr('stroke-width', 1)
-          .attr('opacity', 0.6)
+          .attr('opacity', isDark ? 0.8 : 0.6)
           .style('stroke-dasharray', level === levels ? 'none' : '3,3')
-          .style('filter', level === levels ? 'drop-shadow(0 1px 2px rgba(155, 106, 16, 0.05))' : 'none');
+          .style('filter', level === levels ? `drop-shadow(0 1px 2px rgba(155, 106, 16, ${isDark ? 0.15 : 0.05}))` : 'none');
       }
 
       // Draw axis lines with modern styling
@@ -260,9 +267,9 @@ export default function HexGraph({
         .attr('y1', 0)
         .attr('x2', (_, i) => Math.cos(angleSlice * i - Math.PI / 2) * radius)
         .attr('y2', (_, i) => Math.sin(angleSlice * i - Math.PI / 2) * radius)
-        .attr('stroke', 'rgba(214, 191, 154, 0.4)')
+        .attr('stroke', isDark ? 'rgba(155, 106, 16, 0.45)' : 'rgba(214, 191, 154, 0.4)')
         .attr('stroke-width', 1.5)
-        .attr('opacity', 0.5);
+        .attr('opacity', isDark ? 0.7 : 0.5);
 
       // Add category labels
       g.selectAll('.radar-label')
@@ -283,9 +290,9 @@ export default function HexGraph({
         .attr('font-size', '11px')
         .attr('font-weight', '600')
         .attr('font-family', "var(--font-comfortaa), 'Comfortaa', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif")
-        .attr('fill', '#5a5248')
+        .attr('fill', isDark ? '#c8b99a' : '#5a5248')
         .attr('letter-spacing', '0.2px')
-        .style('text-shadow', '0 1px 2px rgba(255, 255, 255, 0.8)')
+        .style('text-shadow', isDark ? '0 1px 3px rgba(0, 0, 0, 0.9)' : '0 1px 2px rgba(255, 255, 255, 0.8)')
         .text(d => d);
     }
 
@@ -312,12 +319,14 @@ export default function HexGraph({
         .attr('class', 'data-area')
         .attr('d', line)
         .attr('fill', 'url(#analysisDataGradient)')
-        .attr('stroke', 'rgba(155, 106, 16, 0.3)')
+        .attr('stroke', isDark ? 'rgba(155, 106, 16, 0.5)' : 'rgba(155, 106, 16, 0.3)')
         .attr('stroke-width', 2)
         .attr('opacity', 0)
         .style('transform', 'scale(0)')
         .style('transform-origin', '0px 0px')
-        .style('filter', 'drop-shadow(0 3px 8px rgba(155, 106, 16, 0.2)) drop-shadow(0 6px 12px rgba(155, 106, 16, 0.12)) drop-shadow(0 1px 3px rgba(0, 0, 0, 0.1))');
+        .style('filter', isDark
+          ? 'drop-shadow(0 3px 10px rgba(155, 106, 16, 0.4)) drop-shadow(0 6px 16px rgba(155, 106, 16, 0.25)) drop-shadow(0 1px 4px rgba(0, 0, 0, 0.3))'
+          : 'drop-shadow(0 3px 8px rgba(155, 106, 16, 0.2)) drop-shadow(0 6px 12px rgba(155, 106, 16, 0.12)) drop-shadow(0 1px 3px rgba(0, 0, 0, 0.1))');
 
       // Animate data area appearance with smooth easing
       dataArea
@@ -638,7 +647,7 @@ export default function HexGraph({
         setTimeout(checkAndApply, 100);
       }
     }
-  }, [personalCapabilityScores, resumePowerScores, selectedType, showPersonalDotOnly]);
+  }, [personalCapabilityScores, resumePowerScores, selectedType, showPersonalDotOnly, isDark]);
 
   return (
     <div className={styles.hexGraphContainer}>
