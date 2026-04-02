@@ -567,7 +567,7 @@ export default function LandingPage() {
           <div className={styles.featureText}>
             <span className={styles.featureBadge}>AI-Powered Insights</span>
             <h2 className={styles.featureHeading}>
-            Career fit analysis 
+            Target role fit analysis 
             </h2>
             <p className={styles.featureDescription}>
               The AI-driven personalized capability analysis built from your knowledge base and aligned to your target position. Understand your strengths, identify skill gaps, and get actionable recommendations to stand out in your next job search.
