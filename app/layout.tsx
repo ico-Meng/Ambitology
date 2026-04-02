@@ -4,6 +4,7 @@ import Script from "next/script";
 import "./app.css";
 import AuthGuard from "@/app/components/AuthGuard";
 import ThemeProvider from "@/app/components/ThemeProvider";
+import GlobalChatbox from "@/app/components/GlobalChatbox";
 
 const inter = Inter({ subsets: ["latin"], weight: ["300", "400", "500", "600", "700"] });
 const comfortaa = Comfortaa({
@@ -272,6 +273,7 @@ export default function RootLayout({
         <ThemeProvider>
           <AuthGuard />
           {children}
+          <GlobalChatbox />
         </ThemeProvider>
       </body>
     </html>

@@ -242,6 +242,9 @@ interface ResumeSectionProps {
   cognitoSub?: string;
   onCraftLimitExceeded?: () => void;
   onDownloadLimitExceeded?: () => void;
+  anonCraftCount?: number;
+  onAnonCraftUse?: () => void;
+  onAnonSignupRequired?: () => void;
   careerFocus?: string;
   onInjectChatMessage?: (message: string, action?: { type: string; sanityData?: { issues: Array<{ severity: 'High' | 'Mid' | 'Low'; ordinal: string; message: string }>; currentIndex: number; matchedCount: number } }) => void;
   /** Called whenever the resume document becomes visible or its content changes.
@@ -283,6 +286,9 @@ export default function ResumeSection({
   cognitoSub,
   onCraftLimitExceeded,
   onDownloadLimitExceeded,
+  anonCraftCount = 0,
+  onAnonCraftUse,
+  onAnonSignupRequired,
   careerFocus,
   onInjectChatMessage,
   onResumeSnapshotUpdate,
@@ -2298,8 +2304,17 @@ export default function ResumeSection({
       return;
     }
 
+    // Anonymous user craft limit check
+    if (!cognitoSub) {
+      if (anonCraftCount >= 2) {
+        onAnonSignupRequired?.();
+        return;
+      }
+      onAnonCraftUse?.();
+    }
+
     // Check if we need to craft resume from knowledge base
-    const shouldCraftFromKnowledgeBase = 
+    const shouldCraftFromKnowledgeBase =
       (knowledgeScope.establishedExpertise && (selectedPersonalProjectIds.size > 0 || selectedProfessionalProjectIds.size > 0 || selectedTechnicalSkillIds.size > 0)) ||
       (knowledgeScope.expandingKnowledgeBase && (selectedFuturePersonalProjectIds.size > 0 || selectedFutureProfessionalProjectIds.size > 0 || selectedFutureTechnicalSkillIds.size > 0));
 
@@ -2795,6 +2810,15 @@ export default function ResumeSection({
 
   const handleExistingResumeNext = async () => {
     if (!resumeFile) return;
+
+    // Anonymous user craft limit check
+    if (!cognitoSub) {
+      if (anonCraftCount >= 2) {
+        onAnonSignupRequired?.();
+        return;
+      }
+      onAnonCraftUse?.();
+    }
 
     setIsExistingResumeCrafting(true);
     setExistingResumeCraftingCardIndex(0);

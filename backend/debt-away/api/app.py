@@ -4131,68 +4131,73 @@ async def overall_analysis(
     target_job_data: str = Form(...),
     knowledge_scope: str = Form(...),
     resume_file: UploadFile = File(...),
-    user_id: str = Form(...)
+    user_id: Optional[str] = Form(None)
 ):
     """
     Main endpoint for overall analysis.
     Launches two parallel analyses: personal capability and resume power.
+    Anonymous users (no user_id) get resume-power analysis only — no DynamoDB reads or writes.
     """
     try:
-        logger.info(f"Received overall_analysis request for user_id: {user_id}")
-        
+        logger.info(f"Received overall_analysis request for user_id: {user_id or 'anonymous'}")
+
         # Parse form data
         target_job_dict = json.loads(target_job_data)
         knowledge_scope_tags = json.loads(knowledge_scope)
 
-        # Check plan and usage
-        dynamodb = boto3.resource('dynamodb', region_name='us-east-1')
-        table = dynamodb.Table('ambit-dashboard-application-data')
-        timestamp = datetime.utcnow().isoformat()
+        # Only check/update DynamoDB usage for authenticated users
+        if user_id:
+            dynamodb = boto3.resource('dynamodb', region_name='us-east-1')
+            table = dynamodb.Table('ambit-dashboard-application-data')
+            timestamp = datetime.utcnow().isoformat()
 
-        sub_response = table.get_item(Key={'PK': user_id, 'SK': 'SUBSCRIPTION'})
-        plan = sub_response.get('Item', {}).get('plan', 'free')
+            sub_response = table.get_item(Key={'PK': user_id, 'SK': 'SUBSCRIPTION'})
+            plan = sub_response.get('Item', {}).get('plan', 'free')
 
-        usage_response = table.get_item(Key={'PK': user_id, 'SK': 'USAGE'})
-        usage_item = usage_response.get('Item')
+            usage_response = table.get_item(Key={'PK': user_id, 'SK': 'USAGE'})
+            usage_item = usage_response.get('Item')
 
-        if not usage_item:
-            usage_item = {
-                'PK': user_id,
-                'SK': 'USAGE',
-                'craft_count': 0,
-                'analysis_count': 0,
-                'download_count': 0,
-                'createdAt': timestamp,
-                'updatedAt': timestamp
-            }
-            table.put_item(Item=usage_item)
+            if not usage_item:
+                usage_item = {
+                    'PK': user_id,
+                    'SK': 'USAGE',
+                    'craft_count': 0,
+                    'analysis_count': 0,
+                    'download_count': 0,
+                    'createdAt': timestamp,
+                    'updatedAt': timestamp
+                }
+                table.put_item(Item=usage_item)
 
-        analysis_count = int(usage_item.get('analysis_count', 0))
+            analysis_count = int(usage_item.get('analysis_count', 0))
 
-        if plan == 'free' and analysis_count >= 3:
-            return {"status": "error", "error_code": "ANALYSIS_LIMIT_EXCEEDED", "message": "Free plan analysis limit reached."}
+            if plan == 'free' and analysis_count >= 3:
+                return {"status": "error", "error_code": "ANALYSIS_LIMIT_EXCEEDED", "message": "Free plan analysis limit reached."}
 
-        table.update_item(
-            Key={'PK': user_id, 'SK': 'USAGE'},
-            UpdateExpression='SET analysis_count = analysis_count + :inc, updatedAt = :ts',
-            ExpressionAttributeValues={':inc': 1, ':ts': timestamp}
-        )
+            table.update_item(
+                Key={'PK': user_id, 'SK': 'USAGE'},
+                UpdateExpression='SET analysis_count = analysis_count + :inc, updatedAt = :ts',
+                ExpressionAttributeValues={':inc': 1, ':ts': timestamp}
+            )
 
         # Reset file pointer for resume file (it may have been read already)
         await resume_file.seek(0)
 
-        # Launch both analyses in parallel
-        personal_task = personal_capability_analysis(user_id, target_job_dict, knowledge_scope_tags)
-        resume_task = resume_power_analysis(resume_file, target_job_dict)
-        
-        # Wait for both to complete
-        personal_result, resume_result = await asyncio.gather(personal_task, resume_task)
-        
-        logger.info(f"Overall analysis completed successfully for user_id: {user_id}")
-        
+        # Anonymous users get resume-power analysis only (no profile/knowledge data in DB)
+        if user_id:
+            personal_task = personal_capability_analysis(user_id, target_job_dict, knowledge_scope_tags)
+            resume_task = resume_power_analysis(resume_file, target_job_dict)
+            personal_result, resume_result = await asyncio.gather(personal_task, resume_task)
+            personal_capability_data = personal_result.dict()
+        else:
+            resume_result = await resume_power_analysis(resume_file, target_job_dict)
+            personal_capability_data = None
+
+        logger.info(f"Overall analysis completed successfully for user_id: {user_id or 'anonymous'}")
+
         return {
             "status": "success",
-            "personal_capability": personal_result.dict(),
+            "personal_capability": personal_capability_data,
             "resume_power": resume_result.dict()
         }
         

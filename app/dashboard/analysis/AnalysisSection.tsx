@@ -44,6 +44,9 @@ interface AnalysisSectionProps {
   onInjectChatMessage?: (message: string, action?: { type: string }) => void;
   focusJobInputTrigger?: number;
   onAnalysisDataChange?: (data: AnalysisContextData) => void;
+  anonAnalysisCount?: number;
+  onAnonAnalysisUse?: () => void;
+  onAnonSignupRequired?: () => void;
 }
 
 // Job input type detection
@@ -92,6 +95,9 @@ export default function AnalysisSection({
   onInjectChatMessage,
   focusJobInputTrigger,
   onAnalysisDataChange,
+  anonAnalysisCount = 0,
+  onAnonAnalysisUse,
+  onAnonSignupRequired,
 }: AnalysisSectionProps) {
   const [analysisKnowledgeScope, setAnalysisKnowledgeScope] = useState<{
     establishedExpertise: boolean;
@@ -911,13 +917,22 @@ export default function AnalysisSection({
 
   // Extract analysis logic into reusable function
   const runAnalysis = async () => {
-    if (!fetchedJobData || !user?.profile?.sub) {
+    if (!fetchedJobData) {
       setAnalysisError('Please ensure all required fields are filled.');
       return;
     }
     if (!analysisResumeFile) {
       setAnalysisError('Please re-upload your resume file to run the analysis.');
       return;
+    }
+
+    // Anonymous user analysis limit check
+    if (!user?.profile?.sub) {
+      if (anonAnalysisCount >= 2) {
+        onAnonSignupRequired?.();
+        return;
+      }
+      onAnonAnalysisUse?.();
     }
 
     // Clear previous analysis results with fade-out animation
@@ -942,7 +957,9 @@ export default function AnalysisSection({
       formData.append('target_job_data', JSON.stringify(fetchedJobData));
       formData.append('knowledge_scope', JSON.stringify(knowledgeScopeTags));
       formData.append('resume_file', analysisResumeFile);
-      formData.append('user_id', user.profile.sub);
+      if (user?.profile?.sub) {
+        formData.append('user_id', user.profile.sub);
+      }
 
       const response = await fetch(`${API_ENDPOINT}/overall_analysis`, {
         method: 'POST',

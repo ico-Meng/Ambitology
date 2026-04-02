@@ -513,13 +513,13 @@ export default function LandingPage() {
                 </svg>
               </a>
             ) : (
-              <button onClick={handleSignIn} className={styles.freeTrialButton}>
+              <a href="/dashboard" className={styles.freeTrialButton}>
                 Free Start
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                   <line x1="5" y1="12" x2="19" y2="12" />
                   <polyline points="12 5 19 12 12 19" />
                 </svg>
-              </button>
+              </a>
             )}
           </div>
           <div className={styles.heroMedia}>

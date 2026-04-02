@@ -566,6 +566,197 @@
   font-family: inherit;
 }
 
+/* ── Anonymous guest sign-in button ── */
+.anonSignInBtn {
+  width: 100%;
+  padding: 0.72rem 1rem;
+  background: linear-gradient(135deg, #c17900 0%, #9b6500 100%);
+  border: none !important;
+  border-radius: 10px !important;
+  color: #fff !important;
+  font-size: 0.9rem !important;
+  font-weight: 700 !important;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
+  cursor: pointer !important;
+  letter-spacing: 0.025em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  box-shadow: 0 2px 10px rgba(193, 121, 0, 0.4), 0 1px 3px rgba(0, 0, 0, 0.08);
+  transition: background 0.2s ease, box-shadow 0.2s ease, transform 0.15s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.anonSignInBtn::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 60%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.18), transparent);
+  transition: left 0.5s ease;
+  pointer-events: none;
+}
+
+.anonSignInBtn:hover {
+  background: linear-gradient(135deg, #d48a00 0%, #ae7200 100%) !important;
+  box-shadow: 0 4px 18px rgba(193, 121, 0, 0.52), 0 2px 6px rgba(0, 0, 0, 0.1) !important;
+  transform: translateY(-1px);
+}
+
+.anonSignInBtn:hover::after {
+  left: 160%;
+}
+
+.anonSignInBtn:active {
+  transform: translateY(0) !important;
+  box-shadow: 0 1px 6px rgba(193, 121, 0, 0.3) !important;
+  transition-duration: 0.08s;
+}
+
+.anonSignInBtn:focus-visible {
+  outline: 2px solid rgba(212, 175, 55, 0.7);
+  outline-offset: 2px;
+}
+
+/* Guest mode banner shown at the bottom of profile / knowledge sections */
+.guestModeBanner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  margin: 2.5rem auto 1rem;
+  padding: 1.25rem 1.75rem 1.3rem;
+  max-width: 460px;
+  width: 100%;
+  background: linear-gradient(135deg, rgba(255, 248, 230, 0.95) 0%, rgba(255, 243, 210, 0.9) 100%);
+  border: 1px solid rgba(193, 121, 0, 0.22);
+  border-radius: 16px;
+  box-shadow: 0 2px 16px rgba(193, 121, 0, 0.1), 0 1px 4px rgba(0, 0, 0, 0.04);
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.guestModeBanner::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(255, 200, 80, 0.12) 0%, transparent 60%);
+  pointer-events: none;
+}
+
+.guestModeBannerTop {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.guestModeBannerIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  background: rgba(193, 121, 0, 0.12);
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.guestModeBannerTitle {
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: #7a4f00;
+  letter-spacing: 0.01em;
+}
+
+.guestModeBannerSub {
+  font-size: 0.78rem;
+  color: #9a6600;
+  line-height: 1.45;
+  margin: 0;
+}
+
+.guestModeBannerCta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.48rem 1.2rem;
+  background: linear-gradient(135deg, #c17900 0%, #9b6500 100%);
+  border: none;
+  border-radius: 999px;
+  color: #fff;
+  font-size: 0.8rem;
+  font-weight: 700;
+  font-family: inherit;
+  cursor: pointer;
+  letter-spacing: 0.02em;
+  box-shadow: 0 2px 8px rgba(193, 121, 0, 0.38);
+  transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.2s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.guestModeBannerCta::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 60%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.45s ease;
+  pointer-events: none;
+}
+
+.guestModeBannerCta:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 14px rgba(193, 121, 0, 0.5);
+  background: linear-gradient(135deg, #d48a00 0%, #ae7200 100%);
+}
+
+.guestModeBannerCta:hover::after {
+  left: 160%;
+}
+
+.guestModeBannerCta:active {
+  transform: translateY(0);
+  box-shadow: 0 1px 5px rgba(193, 121, 0, 0.3);
+  transition-duration: 0.08s;
+}
+
+:global(html.dark) .guestModeBanner {
+  background: linear-gradient(135deg, rgba(40, 30, 8, 0.95) 0%, rgba(50, 36, 6, 0.9) 100%);
+  border-color: rgba(212, 148, 0, 0.28);
+  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.3), 0 1px 4px rgba(0, 0, 0, 0.2);
+}
+
+:global(html.dark) .guestModeBannerIcon {
+  background: rgba(212, 148, 0, 0.18);
+}
+
+:global(html.dark) .guestModeBannerTitle {
+  color: #f0c855;
+}
+
+:global(html.dark) .guestModeBannerSub {
+  color: #c89830;
+}
+
+:global(html.dark) .guestModeBannerCta {
+  background: linear-gradient(135deg, #d48a00 0%, #a86e00 100%);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
+}
+
+:global(html.dark) .guestModeBannerCta:hover {
+  background: linear-gradient(135deg, #e09500 0%, #bf7d00 100%);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.45);
+}
+
+
 .logoutButton {
   width: 100%;
   min-width: 0;
@@ -5380,11 +5571,23 @@
   width: 100%;
 }
 
+@keyframes slideInFromRight {
+  from {
+    opacity: 0;
+    transform: translateX(18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
 .improveResumeButtonWrapper {
   position: relative;
   display: flex;
   align-items: center;
   flex-shrink: 0;
+  animation: slideInFromRight 0.35s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
 .improveResumeButton {
@@ -13911,6 +14114,18 @@ textarea.resumeItemCompanyInput {
   color: #c8c0dc !important;
 }
 
+/* --- Anonymous sign-in button (dark) --- */
+:global(html.dark) .anonSignInBtn {
+  background: linear-gradient(135deg, #d48a00 0%, #a86e00 100%) !important;
+  box-shadow: 0 2px 12px rgba(212, 138, 0, 0.45), 0 1px 4px rgba(0, 0, 0, 0.3) !important;
+  color: #fff !important;
+}
+
+:global(html.dark) .anonSignInBtn:hover {
+  background: linear-gradient(135deg, #e89c00 0%, #bf7e00 100%) !important;
+  box-shadow: 0 4px 20px rgba(212, 138, 0, 0.6), 0 2px 8px rgba(0, 0, 0, 0.3) !important;
+}
+
 /* --- Settings panel --- */
 :global(html.dark) .settingsPanel {
   background: linear-gradient(180deg, #1e2035 0%, #191b29 100%) !important;
@@ -14036,7 +14251,7 @@ textarea.resumeItemCompanyInput {
 /* --- Chatbox --- */
 :global(html.dark) .chatboxContainer,
 :global(html.dark) .chatboxDocked {
-  background: #161620 !important;
+  background: transparent !important;
   border-color: rgba(255, 255, 255, 0.08) !important;
 }
 
@@ -14801,4 +15016,540 @@ textarea.resumeItemCompanyInput {
 :global(html.dark) .technologyDoubleCheckmark {
   color: #a78bfa !important;
   filter: drop-shadow(0 2px 4px rgba(139, 92, 246, 0.45)) !important;
+}
+
+/* ============================================================
+   DARK MODE — Resume document area & left display text
+   ============================================================ */
+
+:global(html.dark) .resumeDocument {
+  background: linear-gradient(135deg, #1a1c2e 0%, #1e2035 100%) !important;
+  color: #e2ddf0 !important;
+  border-color: rgba(196, 160, 82, 0.15) !important;
+  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.45) !important;
+}
+
+/* Text inside the resume document */
+:global(html.dark) .resumeName {
+  color: #e2ddf0 !important;
+}
+
+:global(html.dark) .resumeNameInput {
+  color: #e2ddf0 !important;
+}
+
+:global(html.dark) .resumeEditableInput {
+  color: #c8c0dc !important;
+}
+
+:global(html.dark) .resumeDocument .resumeSectionTitle {
+  color: #e2ddf0 !important;
+  border-bottom-color: rgba(196, 160, 82, 0.25) !important;
+}
+
+:global(html.dark) .resumeLeftDisplayText {
+  background: linear-gradient(135deg, #1a1c2e 0%, #1e2035 100%) !important;
+  border-color: rgba(196, 160, 82, 0.3) !important;
+  color: #e2ddf0 !important;
+  box-shadow:
+    0 4px 12px rgba(0, 0, 0, 0.3),
+    0 2px 4px rgba(0, 0, 0, 0.2),
+    inset 0 2px 4px rgba(255, 255, 255, 0.04),
+    inset 0 -1px 2px rgba(196, 160, 82, 0.1) !important;
+}
+
+:global(html.dark) .resumeLeftField .resumeLeftDisplayText {
+  background: linear-gradient(135deg, #1a1c2e 0%, #1e2035 100%) !important;
+  border-color: rgba(196, 160, 82, 0.3) !important;
+  box-shadow:
+    0 4px 12px rgba(0, 0, 0, 0.3),
+    0 2px 4px rgba(0, 0, 0, 0.2),
+    inset 0 2px 4px rgba(255, 255, 255, 0.04),
+    inset 0 -1px 2px rgba(196, 160, 82, 0.1) !important;
+}
+
+:global(html.dark) .resumeLeftJobTitle {
+  background: linear-gradient(135deg, #e2ddf0 0%, #c8c0dc 50%, #b0a8cc 100%) !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  background-clip: text !important;
+}
+
+:global(html.dark) .resumeLeftJobCompany {
+  color: #C4A052 !important;
+}
+
+:global(html.dark) .resumeLeftJobCompany::before {
+  background: linear-gradient(135deg, #C4A052 0%, #d4b062 100%) !important;
+}
+
+/* ============================================================
+   DARK MODE — Chatbox trigger button (fancy)
+   ============================================================ */
+
+:global(html.dark) .chatboxTrigger {
+  background: linear-gradient(
+    135deg,
+    rgba(30, 24, 48, 0.85) 0%,
+    rgba(26, 20, 42, 0.80) 50%,
+    rgba(22, 16, 36, 0.82) 100%
+  ) !important;
+  backdrop-filter: blur(28px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(28px) saturate(180%) !important;
+  border: 1px solid rgba(196, 160, 82, 0.35) !important;
+  border-bottom-color: rgba(139, 92, 246, 0.4) !important;
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.45),
+    0 3px 12px rgba(139, 92, 246, 0.2),
+    0 1px 4px rgba(196, 160, 82, 0.15),
+    inset 0 1.5px 0 rgba(196, 160, 82, 0.18),
+    inset 0 -1px 0 rgba(139, 92, 246, 0.12) !important;
+}
+
+:global(html.dark) .chatboxTrigger::after {
+  background: linear-gradient(105deg, transparent 0%, rgba(196, 160, 82, 0.18) 50%, transparent 100%) !important;
+}
+
+:global(html.dark) .chatboxTrigger:hover {
+  background: linear-gradient(
+    135deg,
+    rgba(40, 30, 65, 0.92) 0%,
+    rgba(34, 24, 56, 0.88) 50%,
+    rgba(28, 18, 48, 0.90) 100%
+  ) !important;
+  border-color: rgba(196, 160, 82, 0.55) !important;
+  border-bottom-color: rgba(167, 139, 250, 0.55) !important;
+  box-shadow:
+    0 14px 48px rgba(0, 0, 0, 0.55),
+    0 6px 20px rgba(139, 92, 246, 0.3),
+    0 2px 8px rgba(196, 160, 82, 0.2),
+    inset 0 1.5px 0 rgba(196, 160, 82, 0.28),
+    inset 0 -1px 0 rgba(139, 92, 246, 0.2) !important;
+  transform: translateY(-2px) !important;
+}
+
+:global(html.dark) .chatboxTriggerLabel {
+  color: #e2ddf0 !important;
+  background: linear-gradient(135deg, #e2ddf0 0%, #C4A052 120%);
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  background-clip: text !important;
+}
+
+:global(html.dark) .chatboxTriggerArrow {
+  background: linear-gradient(145deg, #a78bfa 0%, #7c3aed 60%, #C4A052 130%) !important;
+  box-shadow: 0 2px 8px rgba(139, 92, 246, 0.45) !important;
+}
+
+/* ============================================================
+   DARK MODE — All button text colors (light & readable)
+   ============================================================ */
+
+/* Next / Back / Craft / Modal Done / LookUp / Construct / Save buttons */
+:global(html.dark) .nextButton,
+:global(html.dark) .backButton,
+:global(html.dark) .modalDoneButton,
+:global(html.dark) .lookUpButton,
+:global(html.dark) .constructResumeButton,
+:global(html.dark) .resumeSaveButton,
+:global(html.dark) .resumeSaveButton:disabled,
+:global(html.dark) .resumeSaveButton:not(:disabled) {
+  color: #e2ddf0 !important;
+  border-color: rgba(196, 160, 82, 0.3) !important;
+  background: linear-gradient(135deg, rgba(196, 160, 82, 0.12) 0%, rgba(196, 160, 82, 0.08) 50%, rgba(139, 92, 246, 0.06) 100%) !important;
+}
+
+:global(html.dark) .nextButton:hover,
+:global(html.dark) .backButton:hover,
+:global(html.dark) .modalDoneButton:hover,
+:global(html.dark) .lookUpButton:hover:not(:disabled),
+:global(html.dark) .constructResumeButton:hover {
+  color: #ffffff !important;
+  border-color: rgba(196, 160, 82, 0.55) !important;
+  background: linear-gradient(135deg, rgba(196, 160, 82, 0.22) 0%, rgba(196, 160, 82, 0.16) 50%, rgba(139, 92, 246, 0.12) 100%) !important;
+}
+
+/* constructResumeButton active/focus states */
+:global(html.dark) .constructResumeButton:active,
+:global(html.dark) .constructResumeButton:focus,
+:global(html.dark) .constructResumeButton:focus-visible {
+  color: #e2ddf0 !important;
+}
+
+/* constructResumeButton disabled */
+:global(html.dark) .constructResumeButton:disabled {
+  color: rgba(226, 221, 240, 0.35) !important;
+}
+
+/* Add Job button */
+:global(html.dark) .resumeAddJobButton {
+  color: #e2ddf0 !important;
+  border-color: rgba(196, 160, 82, 0.4) !important;
+  background: linear-gradient(135deg, rgba(196, 160, 82, 0.18) 0%, rgba(196, 160, 82, 0.12) 50%, rgba(196, 160, 82, 0.18) 100%) !important;
+}
+
+:global(html.dark) .resumeAddJobButton .addButtonIcon,
+:global(html.dark) .resumeAddJobButton .addButtonText {
+  color: #e2ddf0 !important;
+}
+
+:global(html.dark) .resumeAddJobButton:hover {
+  color: #ffffff !important;
+}
+
+:global(html.dark) .resumeAddJobButton:hover .addButtonIcon,
+:global(html.dark) .resumeAddJobButton:hover .addButtonText {
+  color: #ffffff !important;
+}
+
+/* Description mode toggle buttons */
+:global(html.dark) .descriptionModeBtn {
+  color: #b0a8cc !important;
+}
+
+:global(html.dark) .descriptionModeBtn:hover {
+  color: #e2ddf0 !important;
+  background: rgba(196, 160, 82, 0.08) !important;
+}
+
+:global(html.dark) .descriptionModeBtnActive {
+  color: #e2ddf0 !important;
+  background: rgba(196, 160, 82, 0.15) !important;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(196, 160, 82, 0.25) !important;
+}
+
+/* Bullet add / remove buttons */
+:global(html.dark) .bulletPointAddBtn {
+  color: #C4A052 !important;
+  background: rgba(196, 160, 82, 0.06) !important;
+  border-color: rgba(196, 160, 82, 0.3) !important;
+}
+
+:global(html.dark) .bulletPointAddBtn:hover {
+  color: #d4b062 !important;
+  background: rgba(196, 160, 82, 0.12) !important;
+  border-color: rgba(196, 160, 82, 0.5) !important;
+}
+
+:global(html.dark) .bulletPointRemoveBtn {
+  color: rgba(196, 160, 82, 0.45) !important;
+}
+
+:global(html.dark) .bulletPointRemoveBtn:hover {
+  color: #f87171 !important;
+  background: rgba(248, 113, 113, 0.1) !important;
+  border-color: rgba(248, 113, 113, 0.25) !important;
+}
+
+/* Resume top-bar icon buttons (download, analysis, sanity) */
+:global(html.dark) .resumeDownloadButton,
+:global(html.dark) .resumeAnalysisButton,
+:global(html.dark) .resumeSanityButton {
+  color: #c8c0dc !important;
+}
+
+:global(html.dark) .resumeDownloadButton:hover,
+:global(html.dark) .resumeAnalysisButton:hover,
+:global(html.dark) .resumeSanityButton:hover {
+  color: #e2ddf0 !important;
+}
+
+:global(html.dark) .resumeAnalysisIcon {
+  filter: brightness(0) saturate(100%) invert(85%) sepia(10%) saturate(400%) hue-rotate(220deg) brightness(1.1) !important;
+}
+
+/* Resume delete field button */
+:global(html.dark) .resumeDeleteFieldButton {
+  color: rgba(196, 160, 82, 0.5) !important;
+}
+
+:global(html.dark) .resumeDeleteFieldButton:hover {
+  color: #f87171 !important;
+}
+
+/* Add project choice buttons */
+:global(html.dark) .addProjectChoiceBtn {
+  color: #c8c0dc !important;
+  background: linear-gradient(145deg, rgba(196, 160, 82, 0.08) 0%, rgba(196, 160, 82, 0.06) 100%) !important;
+  border-color: rgba(196, 160, 82, 0.2) !important;
+}
+
+:global(html.dark) .addProjectChoiceBtn:hover {
+  color: #e2ddf0 !important;
+  background: linear-gradient(145deg, rgba(196, 160, 82, 0.16) 0%, rgba(196, 160, 82, 0.12) 100%) !important;
+  border-color: rgba(196, 160, 82, 0.4) !important;
+}
+
+/* Job recommend panel buttons */
+:global(html.dark) .jobRecommendPositionName {
+  color: #e2ddf0 !important;
+}
+
+:global(html.dark) .jobRecommendHeaderTitle {
+  color: #c8c0dc !important;
+}
+
+:global(html.dark) .jobRecommendBackBtn {
+  color: #a78bfa !important;
+}
+
+/* ============================================================
+   DARK MODE — Job URL fetch tooltip (lookup result popup)
+   ============================================================ */
+
+:global(html.dark) .jobUrlFetchTooltip {
+  background: linear-gradient(135deg, #1a1c2e 0%, #1e2035 100%) !important;
+  border-color: rgba(196, 160, 82, 0.25) !important;
+  box-shadow:
+    0 12px 40px rgba(0, 0, 0, 0.55),
+    0 6px 16px rgba(0, 0, 0, 0.35) !important;
+}
+
+:global(html.dark) .jobUrlFetchTooltip::after {
+  border-right-color: #1a1c2e !important;
+}
+
+:global(html.dark) .analysisLayout .jobUrlFetchTooltip::after {
+  border-right-color: #1a1c2e !important;
+  border-left-color: transparent !important;
+}
+
+:global(html.dark) .jobUrlFetchTooltipHeader {
+  border-bottom-color: rgba(196, 160, 82, 0.2) !important;
+}
+
+:global(html.dark) .jobUrlFetchTooltipTitle {
+  color: #e2ddf0 !important;
+}
+
+:global(html.dark) .jobUrlFetchTooltipCompany {
+  color: #C4A052 !important;
+}
+
+:global(html.dark) .jobUrlFetchTooltipDescription {
+  color: #b0a8cc !important;
+}
+
+:global(html.dark) .jobUrlFetchTooltipSkillTag {
+  background: linear-gradient(135deg, rgba(196, 160, 82, 0.15) 0%, rgba(196, 160, 82, 0.1) 100%) !important;
+  color: #c8c0dc !important;
+}
+
+:global(html.dark) .jobUrlFetchTooltipSkillMore {
+  color: #C4A052 !important;
+}
+
+:global(html.dark) .jobUrlFetchTooltipUrlRow {
+  border-top-color: rgba(196, 160, 82, 0.2) !important;
+}
+
+:global(html.dark) .jobUrlFetchTooltipUrlLink {
+  color: #C4A052 !important;
+  background: rgba(196, 160, 82, 0.08) !important;
+  border-color: rgba(196, 160, 82, 0.2) !important;
+}
+
+:global(html.dark) .jobUrlFetchTooltipUrlLink:hover {
+  background: rgba(196, 160, 82, 0.16) !important;
+  color: #d4b062 !important;
+  border-color: rgba(196, 160, 82, 0.4) !important;
+}
+
+:global(html.dark) .jobUrlFetchButton:hover:not(:disabled) {
+  background: rgba(196, 160, 82, 0.1) !important;
+}
+
+:global(html.dark) .jobUrlFetchButton:active:not(:disabled) {
+  background: rgba(196, 160, 82, 0.16) !important;
+}
+
+/* ============================================================
+   DARK MODE — Pricing / Upgrade modal
+   ============================================================ */
+
+:global(html.dark) .upgradeModalOverlay {
+  background: rgba(0, 0, 0, 0.75) !important;
+}
+
+:global(html.dark) .upgradeModalContent {
+  background: linear-gradient(135deg, #1a1c2e 0%, #1e2035 100%) !important;
+  border-color: rgba(196, 160, 82, 0.15) !important;
+  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.6) !important;
+}
+
+:global(html.dark) .planCard {
+  background: linear-gradient(135deg, rgba(30, 32, 53, 0.95) 0%, rgba(26, 28, 46, 0.85) 100%) !important;
+  border-color: rgba(196, 160, 82, 0.2) !important;
+  box-shadow:
+    0 10px 30px rgba(0, 0, 0, 0.35),
+    0 0 0 1px rgba(196, 160, 82, 0.1) !important;
+}
+
+:global(html.dark) .planCardPro {
+  background: linear-gradient(135deg, rgba(40, 32, 18, 0.95) 0%, rgba(36, 28, 14, 0.9) 40%, rgba(30, 24, 10, 0.92) 100%) !important;
+  border-color: rgba(196, 160, 82, 0.5) !important;
+  box-shadow:
+    0 14px 40px rgba(196, 160, 82, 0.15),
+    0 0 0 1px rgba(196, 160, 82, 0.25) !important;
+}
+
+:global(html.dark) .planName {
+  color: #e2ddf0 !important;
+}
+
+:global(html.dark) .planSubtitle {
+  color: rgba(176, 168, 204, 0.85) !important;
+}
+
+:global(html.dark) .planFeatures {
+  color: #c8c0dc !important;
+}
+
+:global(html.dark) .planCardFree .planFeatures li::before {
+  background: rgba(99, 102, 241, 0.2) !important;
+  color: #a5b4fc !important;
+}
+
+:global(html.dark) .planCardPro .planFeatures li::before {
+  background: rgba(196, 160, 82, 0.2) !important;
+  color: #C4A052 !important;
+}
+
+:global(html.dark) .pricingOption {
+  background: linear-gradient(135deg, rgba(30, 32, 53, 0.95) 0%, rgba(26, 28, 46, 0.85) 100%) !important;
+  border-color: rgba(196, 160, 82, 0.2) !important;
+}
+
+:global(html.dark) .pricingOption:hover {
+  border-color: rgba(196, 160, 82, 0.5) !important;
+  box-shadow:
+    0 10px 24px rgba(196, 160, 82, 0.12),
+    0 0 0 1px rgba(196, 160, 82, 0.25) !important;
+}
+
+:global(html.dark) .pricingOptionSelected {
+  border-color: rgba(196, 160, 82, 0.9) !important;
+  box-shadow:
+    0 14px 40px rgba(196, 160, 82, 0.2),
+    0 0 0 1px rgba(196, 160, 82, 0.4) !important;
+}
+
+:global(html.dark) .pricingHighlight {
+  color: #C4A052 !important;
+}
+
+:global(html.dark) .pricingAmount {
+  color: #c8c0dc !important;
+}
+
+:global(html.dark) .pricingDescription {
+  color: rgba(176, 168, 204, 0.85) !important;
+}
+
+:global(html.dark) .pricingDuration {
+  color: rgba(176, 168, 204, 0.9) !important;
+}
+
+:global(html.dark) .upgradeModalContent .modalTitle {
+  color: #e2ddf0 !important;
+}
+
+:global(html.dark) .modalTitleHighlight {
+  color: #C4A052 !important;
+}
+
+:global(html.dark) .upgradeModalContent .modalBody {
+  color: #b0a8cc !important;
+}
+
+:global(html.dark) .upgradeModalFooter {
+  border-top-color: rgba(196, 160, 82, 0.2) !important;
+}
+
+:global(html.dark) .communityMessage {
+  color: #c8c0dc !important;
+}
+
+:global(html.dark) .pricingModalRoot .modalCloseButton {
+  background: rgba(196, 160, 82, 0.12) !important;
+  color: #c8c0dc !important;
+}
+
+:global(html.dark) .pricingModalRoot .modalCloseButton:hover {
+  background: rgba(196, 160, 82, 0.22) !important;
+  color: #e2ddf0 !important;
+}
+
+/* ============================================================
+   DARK MODE — Resume left upload area
+   ============================================================ */
+
+:global(html.dark) .resumeLeftUploadLabel {
+  background: linear-gradient(135deg, #1a1c2e 0%, #1e2035 100%) !important;
+  border-color: rgba(196, 160, 82, 0.3) !important;
+  box-shadow:
+    0 2px 8px rgba(0, 0, 0, 0.3),
+    inset 0 1px 2px rgba(255, 255, 255, 0.03) !important;
+}
+
+:global(html.dark) .resumeLeftUploadLabel:hover {
+  background: linear-gradient(135deg, #1e2035 0%, #252840 100%) !important;
+  border-color: rgba(196, 160, 82, 0.55) !important;
+  box-shadow:
+    0 4px 14px rgba(0, 0, 0, 0.4),
+    inset 0 2px 4px rgba(255, 255, 255, 0.04) !important;
+}
+
+:global(html.dark) .resumeLeftUploadIcon {
+  background: linear-gradient(135deg, rgba(196, 160, 82, 0.15) 0%, rgba(196, 160, 82, 0.1) 100%) !important;
+  color: #C4A052 !important;
+}
+
+:global(html.dark) .resumeLeftUploadLabel:hover .resumeLeftUploadIcon {
+  background: linear-gradient(135deg, rgba(196, 160, 82, 0.25) 0%, rgba(196, 160, 82, 0.18) 100%) !important;
+}
+
+:global(html.dark) .resumeLeftUploadTitle {
+  color: #e2ddf0 !important;
+}
+
+:global(html.dark) .resumeLeftUploadSubtitle {
+  color: #9a90b8 !important;
+}
+
+/* ============================================================
+   DARK MODE — Dropdown option hover & keyboard-highlighted state
+   ============================================================ */
+
+/* Override the faint existing hover with a more visible dark highlight */
+:global(html.dark) .dropdownOption:hover:not(.dropdownOptionDisabled) {
+  background: linear-gradient(135deg, rgba(196, 160, 82, 0.22) 0%, rgba(196, 160, 82, 0.14) 100%) !important;
+  color: #e2ddf0 !important;
+  box-shadow: inset 4px 0 0 rgba(196, 160, 82, 0.6) !important;
+}
+
+:global(html.dark) .dropdownOptionHighlighted {
+  background: linear-gradient(135deg, rgba(196, 160, 82, 0.22) 0%, rgba(196, 160, 82, 0.14) 100%) !important;
+  color: #e2ddf0 !important;
+  box-shadow: inset 4px 0 0 rgba(196, 160, 82, 0.6) !important;
+}
+
+:global(html.dark) .dropdownOptionHighlighted:hover:not(.dropdownOptionDisabled) {
+  background: linear-gradient(135deg, rgba(196, 160, 82, 0.3) 0%, rgba(196, 160, 82, 0.2) 100%) !important;
+  color: #ffffff !important;
+  box-shadow: inset 4px 0 0 rgba(196, 160, 82, 0.8) !important;
+}
+
+:global(html.dark) .dropdownOptionSelected {
+  background: linear-gradient(135deg, rgba(196, 160, 82, 0.4) 0%, rgba(196, 160, 82, 0.28) 50%, rgba(196, 160, 82, 0.35) 100%) !important;
+  color: #e2ddf0 !important;
+  box-shadow:
+    inset 0 2px 4px rgba(255, 255, 255, 0.06),
+    inset 4px 0 0 rgba(196, 160, 82, 0.9),
+    0 2px 8px rgba(0, 0, 0, 0.3) !important;
+}
+
+/* Separator lines between options */
+:global(html.dark) .dropdownOption {
+  border-bottom-color: rgba(255, 255, 255, 0.05) !important;
 }

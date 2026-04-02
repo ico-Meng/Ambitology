@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef, useMemo, useCallback } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import Image from 'next/image';
 import { Orbitron, Comfortaa } from 'next/font/google';
 import styles from './dashboard.module.css';
@@ -15,6 +15,9 @@ import PricingModal from '@/app/components/PricingModal';
 import AIChatbox from './AIChatbox';
 import ThemeToggle from '@/app/components/ThemeToggle';
 import AccountSection from './account/AccountSection';
+import SignupPromptModal from '@/app/components/SignupPromptModal';
+import { getOrCreateAnonData, saveAnonData } from '@/app/lib/anonUser';
+import type { AnonData } from '@/app/lib/anonUser';
 
 const orbitron = Orbitron({
   subsets: ['latin'],
@@ -370,6 +373,7 @@ type AutoFillApiResponse = {
 
 export default function DashboardPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   // Authentication state
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -382,6 +386,11 @@ export default function DashboardPage() {
   const [showAnalysisLimitToast, setShowAnalysisLimitToast] = useState(false);
   const [showDownloadLimitToast, setShowDownloadLimitToast] = useState(false);
   const settingsContainerRef = useRef<HTMLDivElement>(null);
+
+  // Anonymous user state (when not logged in)
+  const [anonData, setAnonData] = useState<AnonData | null>(null);
+  const [showSignupPrompt, setShowSignupPrompt] = useState(false);
+  const anonSavePromptShownRef = useRef(false);
 
   const [activeSection, setActiveSection] = useState<'profile' | 'knowledge' | 'resume' | 'analyzer' | 'account'>('profile');
   const [analysisFocusTrigger, setAnalysisFocusTrigger] = useState(0);
@@ -440,6 +449,24 @@ export default function DashboardPage() {
   const [activeExpandingKnowledgeStep, setActiveExpandingKnowledgeStep] = useState<(typeof expandingKnowledgeSteps)[number]>('Planned Personal Project');
   
   const getPlanLabel = (plan: string) => plan === 'free' ? 'Free plan' : 'Pro plan';
+
+  const incrementAnonCraft = () => {
+    setAnonData((prev) => {
+      if (!prev) return prev;
+      const updated = { ...prev, craftCount: prev.craftCount + 1 };
+      saveAnonData(updated);
+      return updated;
+    });
+  };
+
+  const incrementAnonAnalysis = () => {
+    setAnonData((prev) => {
+      if (!prev) return prev;
+      const updated = { ...prev, analysisCount: prev.analysisCount + 1 };
+      saveAnonData(updated);
+      return updated;
+    });
+  };
 
   const fetchUserPlan = async (cognitoSub: string) => {
     try {
@@ -596,6 +623,10 @@ export default function DashboardPage() {
   // Call backend to extract structured data from the uploaded resume
   const handleAutoFill = async () => {
     if (!resumeFile) return;
+    if (!user) {
+      setShowSignupPrompt(true);
+      return;
+    }
 
     setIsAutoFillLoading(true);
     try {
@@ -627,7 +658,10 @@ export default function DashboardPage() {
   // Helper function to submit profile data to backend
   const handleProfileSubmit = async () => {
     if (!user?.profile?.sub) {
-      console.error('Cannot submit profile: user not authenticated');
+      if (!anonSavePromptShownRef.current) {
+        anonSavePromptShownRef.current = true;
+        setShowSignupPrompt(true);
+      }
       return;
     }
 
@@ -708,7 +742,10 @@ export default function DashboardPage() {
   // Helper function to submit knowledge data to backend
   const handleKnowledgeSubmit = async () => {
     if (!user?.profile?.sub) {
-      console.error('Cannot submit knowledge: user not authenticated');
+      if (!anonSavePromptShownRef.current) {
+        anonSavePromptShownRef.current = true;
+        setShowSignupPrompt(true);
+      }
       return;
     }
 
@@ -1274,6 +1311,7 @@ export default function DashboardPage() {
           await registerUserInBackend(existingUser);
           await fetchUserPlan(existingUser.profile.sub);
         }
+        // If no user, allow anonymous access — do not redirect
       } catch (getUserError) {
         console.error("Get user error:", getUserError);
       } finally {
@@ -1304,12 +1342,62 @@ export default function DashboardPage() {
     };
   }, []);
 
-  // Redirect to Cognito login if not authenticated
+  // Initialize anonymous user data when not authenticated
   useEffect(() => {
     if (!isLoading && !user) {
-      userManager.signinRedirect();
+      setAnonData(getOrCreateAnonData());
+      anonSavePromptShownRef.current = false;
     }
   }, [isLoading, user]);
+
+  // Handle ?nav= deep-link from GlobalChatbox on external pages
+  useEffect(() => {
+    if (isLoading) return;
+    const nav = searchParams.get('nav');
+    if (!nav) return;
+    switch (nav) {
+      case 'resume-existing':
+        setActiveSection('resume');
+        setResumeShowExistingResumePage(true);
+        break;
+      case 'resume-existing-focus-job':
+        setActiveSection('resume');
+        setResumeShowExistingResumePage(true);
+        setResumeExistingJobFocusTrigger(prev => prev + 1);
+        break;
+      case 'resume-kb':
+        setActiveSection('resume');
+        setResumeShowCompanyTypePage(true);
+        break;
+      case 'knowledge-established':
+        setActiveSection('knowledge');
+        setShowEstablishedExpertise(true);
+        break;
+      case 'knowledge-expanding':
+        setActiveSection('knowledge');
+        setShowExpandingKnowledgeBase(true);
+        break;
+      case 'profile-professional':
+        setActiveSection('profile');
+        setShowProfileIntro(false);
+        setActiveProfileStep('Professional');
+        break;
+      case 'profile-career-focus':
+        setActiveSection('profile');
+        setShowProfileIntro(false);
+        setActiveProfileStep('Career Focus');
+        break;
+      case 'analysis':
+        setActiveSection('analyzer');
+        setAnalysisFocusTrigger(prev => prev + 1);
+        break;
+      case 'pricing':
+        setIsUpgradeModalOpen(true);
+        break;
+    }
+    // Clean the URL so refreshing doesn't re-trigger the navigation
+    window.history.replaceState(null, '', '/dashboard');
+  }, [isLoading, searchParams]);
 
   // Normalize project descriptions on mount (migrate old format)
   useEffect(() => {
@@ -4671,11 +4759,6 @@ export default function DashboardPage() {
     );
   }
 
-  // Don't render dashboard if user is not authenticated (redirect will happen via useEffect)
-  if (!user) {
-    return null;
-  }
-
   return (
     <div className={`${styles.dashboardContainer} ${orbitron.variable} ${comfortaa.variable}`}>
       <aside className={`${styles.sidebar} ${sidebarCollapsed ? styles.sidebarCollapsed : ''}`}>
@@ -4799,79 +4882,99 @@ export default function DashboardPage() {
                 />
               </svg>
               <span className={styles.settingsButtonText}>Settings</span>
+              {!user && !sidebarCollapsed && (
+                <span style={{
+                  fontSize: '0.68rem',
+                  fontWeight: 700,
+                  letterSpacing: '0.05em',
+                  textTransform: 'uppercase',
+                  color: '#b36b00',
+                  background: 'rgba(212, 175, 55, 0.15)',
+                  border: '1px solid rgba(212, 175, 55, 0.55)',
+                  borderRadius: '5px',
+                  padding: '0.15rem 0.4rem',
+                  lineHeight: 1.5,
+                  whiteSpace: 'nowrap',
+                  boxShadow: '0 0 0 2px rgba(212, 175, 55, 0.2), 0 0 8px rgba(212, 175, 55, 0.3)',
+                  flexShrink: 0,
+                }}>
+                  Guest
+                </span>
+              )}
             </button>
             {isSettingsOpen && (
               <div className={styles.settingsPanel}>
                 <div className={styles.settingsPanelContent}>
-                  <div className={styles.userEmailSection}>
-                    <div className={styles.planBadge} onClick={() => setIsUpgradeModalOpen(true)} style={{ cursor: 'pointer' }}>{getPlanLabel(userPlan)}</div>
-                    <div className={styles.userEmail}>{user?.profile?.email}</div>
-                  </div>
-                  <div className={styles.themeToggleRow}>
-                    <span className={styles.themeToggleLabel}>Appearance</span>
-                    <ThemeToggle />
-                  </div>
-                  <button
-                    className={styles.upgradePlanButton}
-                    onClick={() => {
-                      setIsUpgradeModalOpen(true);
-                    }}
-                  >
-                    <span>Upgrade Plan</span>
-                  </button>
-                  <button
-                    className={styles.upgradePlanButton}
-                    onClick={() => {
-                      setActiveSection('account');
-                      setIsSettingsOpen(false);
-                    }}
-                  >
-                    <span>Account</span>
-                  </button>
-                  <button
-                    className={styles.logoutButton}
-                    onClick={async () => {
-                      try {
-                        await signOutRedirect();
-                      } catch (error) {
-                        console.error("Logout error:", error);
-                      }
-                      // Hard redirect to landing page — runs if signOutRedirect
-                      // didn't navigate away (e.g. Cognito logout_uri misconfigured)
-                      window.location.href = '/';
-                    }}
-                  >
-                    <svg
-                      width="18"
-                      height="18"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        d="M9 21H5C4.46957 21 3.96086 20.7893 3.58579 20.4142C3.21071 20.0391 3 19.5304 3 19V5C3 4.46957 3.21071 3.96086 3.58579 3.58579C3.96086 3.21071 4.46957 3 5 3H9"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                      <path
-                        d="M16 17L21 12L16 7"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                      <path
-                        d="M21 12H9"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                    </svg>
-                    <span>Log Out</span>
-                  </button>
+                  {user ? (
+                    /* ── Authenticated user ── */
+                    <>
+                      <div className={styles.userEmailSection}>
+                        <div className={styles.planBadge} onClick={() => setIsUpgradeModalOpen(true)} style={{ cursor: 'pointer' }}>{getPlanLabel(userPlan)}</div>
+                        <div className={styles.userEmail}>{user.profile.email as string}</div>
+                      </div>
+                      <div className={styles.themeToggleRow}>
+                        <span className={styles.themeToggleLabel}>Appearance</span>
+                        <ThemeToggle />
+                      </div>
+                      <button className={styles.upgradePlanButton} onClick={() => setIsUpgradeModalOpen(true)}>
+                        <span>Upgrade Plan</span>
+                      </button>
+                      <button className={styles.upgradePlanButton} onClick={() => { setActiveSection('account'); setIsSettingsOpen(false); }}>
+                        <span>Account</span>
+                      </button>
+                      <button
+                        className={styles.logoutButton}
+                        onClick={async () => {
+                          try { await signOutRedirect(); } catch (error) { console.error('Logout error:', error); }
+                          window.location.href = '/';
+                        }}
+                      >
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <path d="M9 21H5C4.46957 21 3.96086 20.7893 3.58579 20.4142C3.21071 20.0391 3 19.5304 3 19V5C3 4.46957 3.21071 3.96086 3.58579 3.58579C3.96086 3.21071 4.46957 3 5 3H9" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                          <path d="M16 17L21 12L16 7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                          <path d="M21 12H9" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                        </svg>
+                        <span>Log Out</span>
+                      </button>
+                    </>
+                  ) : (
+                    /* ── Anonymous / guest user ── */
+                    <>
+                      <div className={styles.userEmailSection}>
+                        {/* Guest status row */}
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', marginBottom: '0.85rem' }}>
+                          <div style={{
+                            width: 34, height: 34, borderRadius: '50%', flexShrink: 0,
+                            background: 'rgba(212,175,55,0.14)',
+                            border: '1.5px solid rgba(212,175,55,0.4)',
+                            display: 'flex', alignItems: 'center', justifyContent: 'center',
+                          }}>
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" stroke="#b36b00" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                              <circle cx="12" cy="7" r="4" stroke="#b36b00" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                            </svg>
+                          </div>
+                          <div>
+                            <div style={{ fontSize: '0.82rem', fontWeight: 700, color: '#7a5c1e', lineHeight: 1.25, fontFamily: 'inherit' }}>Guest Mode</div>
+                            <div style={{ fontSize: '0.72rem', color: '#a08060', lineHeight: 1.3, fontFamily: 'inherit' }}>Your data isn&apos;t being saved</div>
+                          </div>
+                        </div>
+                        {/* CTA button */}
+                        <button className={styles.anonSignInBtn} onClick={() => userManager.signinRedirect()}>
+                          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ flexShrink: 0 }}>
+                            <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"/>
+                            <polyline points="10 17 15 12 10 7" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"/>
+                            <line x1="15" y1="12" x2="3" y2="12" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"/>
+                          </svg>
+                          Sign Up / Log In
+                        </button>
+                      </div>
+                      <div className={styles.themeToggleRow}>
+                        <span className={styles.themeToggleLabel}>Appearance</span>
+                        <ThemeToggle />
+                      </div>
+                    </>
+                  )}
                 </div>
               </div>
             )}
@@ -16255,6 +16358,9 @@ onClick={() => {
                     setShowCraftLimitToast(true);
                     setTimeout(() => setShowCraftLimitToast(false), 9000);
                   }}
+                  anonCraftCount={anonData?.craftCount ?? 0}
+                  onAnonCraftUse={incrementAnonCraft}
+                  onAnonSignupRequired={() => setShowSignupPrompt(true)}
                   onDownloadLimitExceeded={() => {
                     setIsUpgradeModalOpen(true);
                     setShowDownloadLimitToast(true);
@@ -16293,6 +16399,9 @@ onClick={() => {
                     setShowAnalysisLimitToast(true);
                     setTimeout(() => setShowAnalysisLimitToast(false), 9000);
                   }}
+                  anonAnalysisCount={anonData?.analysisCount ?? 0}
+                  onAnonAnalysisUse={incrementAnonAnalysis}
+                  onAnonSignupRequired={() => setShowSignupPrompt(true)}
                   careerFocus={careerFocus}
                   onInjectChatMessage={(message, action) => setChatboxInject(prev => ({ text: message, seq: (prev?.seq ?? 0) + 1, ...(action ? { action: action as Record<string, unknown> } : {}) }))}
                   focusJobInputTrigger={analysisFocusTrigger}
@@ -16305,10 +16414,42 @@ onClick={() => {
                   })}
                 />
               )}
+              {/* Guest mode banner — profile & knowledge sections only */}
+              {!user && anonData && (activeSection === 'profile' || activeSection === 'knowledge') && (
+                <div className={styles.guestModeBanner}>
+                  <div className={styles.guestModeBannerTop}>
+                    <div className={styles.guestModeBannerIcon}>
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#c17900" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
+                        <circle cx="12" cy="12" r="10"/>
+                        <path d="M12 8v4M12 16h.01"/>
+                      </svg>
+                    </div>
+                    <span className={styles.guestModeBannerTitle}>You&apos;re browsing as a Guest</span>
+                  </div>
+                  <p className={styles.guestModeBannerSub}>
+                    Your data won&apos;t be saved in this mode.
+                  </p>
+                  <button
+                    className={styles.guestModeBannerCta}
+                    onClick={() => userManager.signinRedirect()}
+                  >
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/>
+                      <polyline points="10 17 15 12 10 7"/>
+                      <line x1="15" y1="12" x2="3" y2="12"/>
+                    </svg>
+                    Sign up or log in to keep your progress
+                  </button>
+                </div>
+              )}
             </div>
           </div>
         </div>
       </main>
+      <SignupPromptModal
+        isOpen={showSignupPrompt}
+        onClose={() => setShowSignupPrompt(false)}
+      />
       <PricingModal
         isOpen={isUpgradeModalOpen}
         onClose={() => setIsUpgradeModalOpen(false)}

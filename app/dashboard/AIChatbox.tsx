@@ -97,6 +97,8 @@ interface AIChatboxProps {
     data?: Record<string, unknown>;
   };
   onDockedChange?: (isDocked: boolean) => void;
+  /** Left offset to account for a sidebar. Defaults to 320 (dashboard sidebar width). Pass 0 on pages without a sidebar. */
+  sidebarWidth?: number;
 }
 
 export default function AIChatbox({
@@ -124,6 +126,7 @@ export default function AIChatbox({
   cognitoSub,
   pageContext,
   onDockedChange,
+  sidebarWidth = 320,
 }: AIChatboxProps) {
   const [isBarOpen, setIsBarOpen] = useState(false);
   const [isDocked, setIsDocked] = useState(false);
@@ -481,7 +484,10 @@ export default function AIChatbox({
   );
 
   return (
-    <div className={`${styles.chatboxWrapper} ${isDocked ? styles.chatboxWrapperDocked : ''}`}>
+    <div
+      className={`${styles.chatboxWrapper} ${isDocked ? styles.chatboxWrapperDocked : ''}`}
+      style={!isDocked ? { left: sidebarWidth } : undefined}
+    >
       <div className={`${styles.chatboxContainer} ${isDocked ? styles.chatboxContainerDocked : ''}`} ref={containerRef}>
 
         {/* Message history panel */}
