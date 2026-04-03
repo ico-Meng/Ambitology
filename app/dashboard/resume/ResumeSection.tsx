@@ -2312,13 +2312,12 @@ export default function ResumeSection({
       return;
     }
 
-    // Anonymous user craft limit check
+    // Anonymous user craft limit check (only gate — don't increment until success)
     if (!cognitoSub) {
       if (anonCraftCount >= 2) {
         onAnonSignupRequired?.();
         return;
       }
-      onAnonCraftUse?.();
     }
 
     // Check if we need to craft resume from knowledge base
@@ -2401,7 +2400,7 @@ export default function ResumeSection({
         }
         
         const requestPayload = {
-          cognito_sub: cognitoSub,
+          cognito_sub: cognitoSub || '',
           basic_info: {
             firstName: basicInfo.firstName,
             middleName: basicInfo.middleName || '',
@@ -2448,12 +2447,22 @@ export default function ResumeSection({
           body: JSON.stringify(requestPayload)
         });
         
+        if (!response.ok) {
+          const errorText = await response.text().catch(() => '');
+          console.error('Craft resume API error:', response.status, errorText);
+          alert(`Failed to craft resume: Server error (${response.status}). Please try again.`);
+          return;
+        }
+
         const result = await response.json();
         
         if (result.success && result.data) {
           // Process the crafted resume data and populate the resume document
           // Pass the original links from Profile/Basic Info to preserve exact user input
           await processCraftedResumeData(result.data, allLinks);
+
+          // Increment anon craft count only after successful craft
+          if (!cognitoSub) onAnonCraftUse?.();
 
           // Signal to save kb cache after state updates settle
           pendingCacheSaveRef.current = 'kb';
@@ -2477,7 +2486,7 @@ export default function ResumeSection({
         }
       } catch (error) {
         console.error('Error crafting resume:', error);
-        alert('Failed to craft resume. Please try again.');
+        alert(`Failed to craft resume: ${error instanceof Error ? error.message : 'Please try again.'}`);
       } finally {
         setIsCraftingResume(false);
         setCraftingCardIndex(0); // Reset card index
@@ -2857,13 +2866,12 @@ export default function ResumeSection({
   const handleExistingResumeNext = async () => {
     if (!resumeFile) return;
 
-    // Anonymous user craft limit check
+    // Anonymous user craft limit check (only gate — don't increment until success)
     if (!cognitoSub) {
       if (anonCraftCount >= 2) {
         onAnonSignupRequired?.();
         return;
       }
-      onAnonCraftUse?.();
     }
 
     setIsExistingResumeCrafting(true);
@@ -2891,7 +2899,7 @@ export default function ResumeSection({
       }
 
       const metaPayload = {
-        cognito_sub: cognitoSub,
+        cognito_sub: cognitoSub || '',
         target_job_position: targetJobPositionData,
         target_company_type: interestedCompanyType || null,
       };
@@ -2905,10 +2913,20 @@ export default function ResumeSection({
         body: formData,
       });
 
+      if (!response.ok) {
+        const errorText = await response.text().catch(() => '');
+        console.error('Craft resume API error:', response.status, errorText);
+        alert(`Failed to craft resume: Server error (${response.status}). Please try again.`);
+        return;
+      }
+
       const result = await response.json();
 
       if (result.success && result.data) {
         await processCraftedResumeData(result.data);
+
+        // Increment anon craft count only after successful craft
+        if (!cognitoSub) onAnonCraftUse?.();
 
         // Signal to save existing cache after state updates settle
         pendingCacheSaveRef.current = 'existing';
@@ -2931,7 +2949,7 @@ export default function ResumeSection({
       }
     } catch (error) {
       console.error('Error crafting resume from existing file:', error);
-      alert('Failed to craft resume. Please try again.');
+      alert(`Failed to craft resume: ${error instanceof Error ? error.message : 'Please try again.'}`);
     } finally {
       setIsExistingResumeCrafting(false);
       setExistingResumeCraftingCardIndex(0);

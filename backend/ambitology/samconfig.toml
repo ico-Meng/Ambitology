@@ -3,7 +3,7 @@
 version = 0.1
 
 [default.global.parameters]
-stack_name = "ambitology"
+stack_name = "debt-away"
 
 [default.build.parameters]
 cached = true
