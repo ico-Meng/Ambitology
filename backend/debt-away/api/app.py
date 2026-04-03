@@ -393,7 +393,8 @@ app.add_middleware(
     allow_origins=["http://localhost:3000",
                    "https://ambitology.com",
                    "https://www.ambitology.com",
-                   "https://main.d3a19hn400g7xw.amplifyapp.com"],
+                   "https://main.d3a19hn400g7xw.amplifyapp.com",
+                   "https://main.dwsobohqa85r6.amplifyapp.com"],
     allow_credentials=True,
     allow_methods=["OPTIONS", "POST", "GET"],  # Ensure OPTIONS is included
     # Include necessary headers
