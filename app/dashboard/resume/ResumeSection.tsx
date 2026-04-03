@@ -2594,8 +2594,8 @@ export default function ResumeSection({
       }
       setSavedContactFields(contactFields);
       
-      // Update education
-      if (data.education_history && Array.isArray(data.education_history)) {
+      // Update education — clear if empty so the section is removed from the resume
+      if (data.education_history && Array.isArray(data.education_history) && data.education_history.length > 0) {
         const educationData: Education[] = data.education_history.map((edu: any, index: number) => {
           const start = formatDate(edu.start_date);
           const rawEnd = edu.end_date;
@@ -2621,49 +2621,66 @@ export default function ResumeSection({
           };
         });
         setSavedEducation(educationData);
+      } else {
+        setSavedEducation([]);
       }
       
-      // Update professional experiences - merge with professional projects
-      if (data.professional_history && Array.isArray(data.professional_history)) {
-        // Group professional projects by work_experience
-        const projectsByWorkExp: Record<string, any[]> = {};
-        if (data.professional_projects && Array.isArray(data.professional_projects)) {
-          data.professional_projects.forEach((proj: any) => {
-            const workExp = proj.work_experience || '';
-            if (!projectsByWorkExp[workExp]) {
-              projectsByWorkExp[workExp] = [];
-            }
-            projectsByWorkExp[workExp].push(proj);
-          });
-        }
+      // Update professional experiences — clear if empty so the section is removed from the resume
+      // Track which professional projects were matched so unmatched ones fall through to personal
+      const matchedProfProjectIndices = new Set<number>();
+
+      if (data.professional_history && Array.isArray(data.professional_history) && data.professional_history.length > 0) {
+        // Group professional projects by work_experience (normalized key for matching)
+        const normalize = (s: string) => s.toLowerCase().replace(/\s+/g, ' ').trim();
+
+        const profProjectsList: any[] = (data.professional_projects && Array.isArray(data.professional_projects))
+          ? data.professional_projects
+          : [];
+
+        // Build a lookup: normalized work_experience → list of { originalIndex, proj }
+        const projectsByWorkExp: Record<string, { idx: number; proj: any }[]> = {};
+        profProjectsList.forEach((proj: any, idx: number) => {
+          const key = normalize(proj.work_experience || '');
+          if (!projectsByWorkExp[key]) projectsByWorkExp[key] = [];
+          projectsByWorkExp[key].push({ idx, proj });
+        });
         
         const professionalData: ProfessionalExperience[] = data.professional_history.map((prof: any, index: number) => {
-          // Find matching projects for this company/job
-          // Try multiple matching strategies
           const companyName = prof.company_name || '';
           const jobTitle = prof.job_title || '';
-          const companyKey = `${companyName} - ${jobTitle}`;
-          
-          // Try exact match first
-          let matchingProjects = projectsByWorkExp[companyKey] || [];
-          
-          // If no exact match, try matching by company name only
-          if (matchingProjects.length === 0) {
+          const exactKey = normalize(`${companyName} - ${jobTitle}`);
+
+          // Strategy 1: exact normalized match "CompanyName - JobTitle"
+          let matched = projectsByWorkExp[exactKey] || [];
+
+          // Strategy 2: try matching by normalized company name only
+          if (matched.length === 0) {
+            const normCompany = normalize(companyName);
             Object.keys(projectsByWorkExp).forEach((key) => {
-              if (key.includes(companyName)) {
-                matchingProjects = projectsByWorkExp[key];
+              if (matched.length === 0 && key.includes(normCompany) && normCompany.length > 0) {
+                matched = projectsByWorkExp[key];
               }
             });
           }
+
+          // Strategy 3: try partial match — either side contains the other
+          if (matched.length === 0) {
+            Object.keys(projectsByWorkExp).forEach((key) => {
+              if (matched.length === 0 && (exactKey.includes(key) || key.includes(exactKey)) && key.length > 0) {
+                matched = projectsByWorkExp[key];
+              }
+            });
+          }
+
+          // Record which projects were matched
+          matched.forEach(m => matchedProfProjectIndices.add(m.idx));
           
-          // Build bullets from projects and store technologies
+          // Build bullets from matched projects and store technologies
           const bullets: string[] = [];
           const projectTechnologies: Record<string, string[]> = {};
-          matchingProjects.forEach((proj: any) => {
-            // Add a synthetic header marker so the UI can group bullets per project
+          matched.forEach(({ proj }: { proj: any }) => {
             if (proj.project_name) {
               bullets.push(`${PROJECT_HEADER_PREFIX}${proj.project_name}`);
-              // Store technologies for this project
               if (proj.technologies && Array.isArray(proj.technologies) && proj.technologies.length > 0) {
                 projectTechnologies[proj.project_name] = proj.technologies;
               }
@@ -2697,39 +2714,55 @@ export default function ResumeSection({
           };
         });
         setSavedProfessionalExperiences(professionalData);
+      } else {
+        setSavedProfessionalExperiences([]);
       }
       
-          // Update projects (combine personal and professional)
+          // Update projects (combine personal projects + unmatched professional projects)
           const allProjects: Project[] = [];
+
+          // Helper to build a Project object from a craft project payload
+          const buildProject = (proj: any, idPrefix: string, index: number): (Project & { technologies?: string[] }) => {
+            const bullets: string[] = [];
+            if (proj.overview_content) bullets.push(proj.overview_content);
+            if (proj.tech_content && Array.isArray(proj.tech_content)) {
+              proj.tech_content.forEach((tech: any) => {
+                if (tech.content) bullets.push(tech.content);
+              });
+            }
+            if (proj.achievement_content) bullets.push(proj.achievement_content);
+
+            const location = proj.location ? `${proj.location}, ` : '';
+            const dateWithLocation = `${location}${formatDate(proj.start_date || '')} - ${
+              !proj.end_date || proj.end_date.toString().trim() === ''
+                ? 'Present'
+                : formatDate(proj.end_date)
+            }`;
+
+            return {
+              id: `${idPrefix}-${index + 1}`,
+              name: proj.project_name || '',
+              date: dateWithLocation,
+              description: proj.overview_content || '',
+              bullets,
+              technologies: Array.isArray(proj.technologies) ? proj.technologies : []
+            } as Project & { technologies?: string[] };
+          };
           
           // Add personal projects
           if (data.personal_projects && Array.isArray(data.personal_projects)) {
             data.personal_projects.forEach((proj: any, index: number) => {
-              const bullets: string[] = [];
-              if (proj.overview_content) bullets.push(proj.overview_content);
-              if (proj.tech_content && Array.isArray(proj.tech_content)) {
-                proj.tech_content.forEach((tech: any) => {
-                  if (tech.content) bullets.push(tech.content);
-                });
+              allProjects.push(buildProject(proj, 'personal', index));
+            });
+          }
+
+          // Any professional projects that could NOT be matched to a job title
+          // are treated as personal projects so they still appear in the resume
+          if (data.professional_projects && Array.isArray(data.professional_projects)) {
+            data.professional_projects.forEach((proj: any, idx: number) => {
+              if (!matchedProfProjectIndices.has(idx)) {
+                allProjects.push(buildProject(proj, 'unmatched-prof', idx));
               }
-              if (proj.achievement_content) bullets.push(proj.achievement_content);
-              
-              const location = proj.location ? `${proj.location}, ` : '';
-              const dateWithLocation = `${location}${formatDate(proj.start_date)} - ${
-                !proj.end_date || proj.end_date.toString().trim() === ''
-                  ? 'Present'
-                  : formatDate(proj.end_date)
-              }`;
-              
-              allProjects.push({
-                id: `personal-${index + 1}`,
-                name: proj.project_name || '',
-                date: dateWithLocation,
-                description: proj.overview_content || '',
-                bullets: bullets,
-                // Keep technologies list on the project itself so the UI can render it separately
-                technologies: Array.isArray(proj.technologies) ? proj.technologies : []
-              } as Project & { technologies?: string[] });
             });
           }
       
@@ -2748,6 +2781,9 @@ export default function ResumeSection({
         const midPoint = Math.ceil(allProjects.length / 2);
         setSavedProjectsEstablished(allProjects.slice(0, midPoint));
         setSavedProjectsExpanding(allProjects.slice(midPoint));
+      } else {
+        setSavedProjectsEstablished(allProjects);
+        setSavedProjectsExpanding([]);
       }
       
       // Update technical skills
@@ -2788,6 +2824,8 @@ export default function ResumeSection({
         });
         
         setSavedSkills(skillsData);
+      } else {
+        setSavedSkills([]);
       }
       
       // Handle achievements if present

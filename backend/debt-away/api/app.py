@@ -176,11 +176,11 @@ class CraftResumeResponse(BaseModel):
     phone_number: Optional[str] = None
     home_address: Optional[str] = None
     links: Optional[List[str]] = []
-    education_history: List[CraftResumeEducation]
-    professional_history: List[CraftResumeProfessionalHistory]
+    education_history: List[CraftResumeEducation] = []
+    professional_history: List[CraftResumeProfessionalHistory] = []
     professional_achievement: Optional[List[CraftResumeProfessionalAchievement]] = []
-    personal_projects: List[CraftResumeProject]
-    professional_projects: List[CraftResumeProfessionalProject]
+    personal_projects: List[CraftResumeProject] = []
+    professional_projects: List[CraftResumeProfessionalProject] = []
     technical_skills: CraftResumeTechnicalSkills
 
 class JobMatchAnalysis(BaseModel):
@@ -2571,9 +2571,18 @@ async def craft_resume_from_existing_resume(
                 "message": "Could not extract meaningful text from the uploaded resume. Please ensure the file is not scanned/image-only.",
             }
 
-        # Truncate to avoid hitting token limits (keep first 6000 chars)
-        if len(resume_text) > 6000:
-            resume_text = resume_text[:6000] + "\n... [resume content truncated]"
+        logger.info(
+            f"Resume text extracted: {len(resume_text)} chars from {filename}. "
+            f"First 200 chars: {resume_text[:200]!r}"
+        )
+
+        # gpt-4o-mini supports 128k tokens; allow up to ~60k chars to avoid losing projects
+        if len(resume_text) > 60000:
+            logger.warning(
+                f"Resume text exceeds 60k chars ({len(resume_text)}), truncating. "
+                f"Some content at the end may be lost."
+            )
+            resume_text = resume_text[:60000] + "\n... [resume content truncated]"
 
         # ── Build job / industry context ──────────────────────────────────────
         job_context = ""
@@ -2595,37 +2604,95 @@ async def craft_resume_from_existing_resume(
             job_context += f"TARGET INDUSTRY SECTOR: {target_company_type}\n"
 
         # ── Build OpenAI prompt ───────────────────────────────────────────────
-        prompt = f"""You are an expert resume writer and career coach. Your goal is to:
-1. Parse the candidate's existing resume to extract all structured information.
-2. Enrich and enhance every section — especially projects, technical skills, and domain expertise — to better align with the target job position and/or industry sector described below.
+        prompt = f"""You are an expert resume writer, career coach, and technical recruiter. Your goal is to:
+1. Parse the candidate's existing resume to extract ALL structured information — every single work experience, every project, every achievement, every skill.
+2. Evaluate and enrich each project description following the three-part bullet point rule: (a) Project Overview, (b) Technology & Tools Implementation, (c) Performance Measurement Outcome.
 3. Return the enriched data in the exact structured format specified.
+
+CRITICAL RULE — COMPLETENESS: You MUST extract and return EVERY project from the original resume without exception. Count the total number of projects in the resume BEFORE generating output, and verify the output contains the same count. Do NOT omit, merge, or skip any project even if the crafted resume content becomes very long. Every project the candidate listed matters.
 
 {job_context}
 
 EXISTING RESUME CONTENT:
 {resume_text}
 
-INSTRUCTIONS:
-1. Extract full_name, email_address, phone_number, home_address, and any profile links (LinkedIn, GitHub, personal site, etc.) from the resume. Return links as a list of strings.
-2. Extract education_history: all education entries ordered most-recent first. Each entry needs college_name, degree, major (if available), coursework (list, if mentioned), location (if available), start_date, end_date.
-3. Extract professional_history: all work experience ordered most-recent first. Each entry needs company_name, job_title, location (if available), start_date, end_date.
-4. Extract professional_achievement: any awards, certifications, publications, or notable achievements. Each item has a "type" (e.g. "Award", "Certification") and "value" (the description).
-5. Process personal_projects: Extract all personal/side projects from the resume. For each project:
-   - Keep project_name, location (if available), start_date, end_date.
-   - Create overview_content: a high-level professional description ENHANCED to highlight relevance to the target job/industry (max 250 characters).
-   - Create tech_content: 1–2 items (each max 250 characters) showcasing the most impactful technologies and methodologies used. Prioritize skills that match the target job's requirements. Split into two items if content exceeds 250 characters.
-   - Create achievement_content: quantified or impact-focused achievement statement, ENHANCED toward the target job/industry expectations (max 250 characters).
-   - Create technologies: remaining relevant tech keywords not already covered in tech_content, prioritizing those matching target job skills.
-6. Process professional_projects: Extract all work-related projects from the professional experience section. Follow the same enrichment rules as personal_projects, and additionally set work_experience to "CompanyName - JobTitle" so it maps back to the correct professional history entry.
-7. Process technical_skills: Organize ALL technical skills from the resume into categories: "Languages", "Frameworks", "Tools", and any other relevant topic groupings. Enrich with skills that are closely related to the target job description or industry sector (only include skills the candidate demonstrably has or has used — do not fabricate). If a TARGET INDUSTRY SECTOR is provided, reorder within each category to lead with the most sector-relevant skills.
-8. IMPORTANT RULES:
-   - All content fields (overview_content, tech_content items, achievement_content) must be ≤ 250 characters including spaces.
-   - Use active, professional resume-style language.
-   - No duplicate technical keywords across personal_projects, professional_projects, and technical_skills.
-   - Prioritize keywords from the target job description throughout.
-   - If a TARGET INDUSTRY SECTOR is specified, surface and prioritize technical keywords, tools, and project descriptions most relevant to that industry throughout all sections — this overrides generic keyword selection.
-   - If the resume does not have personal projects or professional projects, return empty lists.
-   - If a date is unknown or not mentioned, use an empty string.
+═══════════════════════════════════════════════════════════════
+STEP-BY-STEP EXTRACTION AND ENRICHMENT INSTRUCTIONS:
+═══════════════════════════════════════════════════════════════
+
+STEP 1 — CONTACT INFORMATION:
+Extract full_name, email_address, phone_number, home_address, and any profile links (LinkedIn, GitHub, personal site, etc.). Return links as a list of URL strings.
+
+STEP 2 — EDUCATION:
+Extract education_history: all education entries ordered most-recent first. Each entry needs college_name, degree, major (if available), coursework (list, if mentioned), location (if available), start_date, end_date.
+
+STEP 3 — PROFESSIONAL WORK HISTORY:
+Extract professional_history: all work experience entries ordered most-recent first. Each entry needs company_name, job_title, location (if available), start_date, end_date.
+- If the resume has NO professional/work experience at all, return an EMPTY list []. Do NOT fabricate entries.
+
+STEP 4 — PROFESSIONAL PROJECTS (projects that belong under a work experience):
+Carefully read through EVERY professional/work experience entry. For each work experience, identify ALL projects mentioned (they may appear as bullet points, sub-sections, or project headings under that role). Each project will be placed directly under its parent job title in the "Professional Experience" section of the generated resume.
+
+For EACH project found under a work experience:
+  a) Set work_experience — this is the KEY field that maps the project to its parent job title. It MUST exactly match the format: "{{company_name}} - {{job_title}}" using the EXACT same company_name and job_title strings you used in professional_history for that entry. For example, if professional_history has company_name="Google LLC" and job_title="Senior Software Engineer", then work_experience MUST be "Google LLC - Senior Software Engineer". Do NOT abbreviate, rephrase, or reformat these values.
+  b) Set project_name to the project name or a descriptive identifier.
+  c) Set location if mentioned.
+  d) Create overview_content (max 250 chars): A high-level professional description of what the project accomplished and its business purpose. ENHANCE to highlight relevance to the target job/industry.
+  e) Create tech_content (1–2 items, each max 250 chars): Detail the specific technologies, tools, frameworks, and technical implementation approach used in the project. Describe HOW the technologies were applied to build the solution. Prioritize technologies matching the target job requirements. Split into two items if content exceeds 250 characters.
+  f) Create achievement_content (max 250 chars): Quantified performance measurement outcome — metrics like latency reduction, throughput improvement, uptime percentage, cost savings, user growth, revenue impact, or efficiency gains. If the original resume has metrics, preserve and enhance them. If not, infer reasonable performance-oriented outcomes based on the project description.
+  g) Create technologies list: remaining relevant tech keywords not already fully covered in tech_content, prioritizing those matching target job skills.
+- If there are NO projects identifiable under any work experience, return an EMPTY list [].
+- If a work experience lists general responsibilities but no distinct projects, treat each distinct responsibility area or achievement cluster as a separate project with a descriptive project_name.
+
+STEP 5 — PERSONAL PROJECTS (projects NOT under any work experience):
+Extract ALL projects that are NOT listed under a specific work experience / job title. These include: personal projects, side projects, independent projects, academic projects, freelance projects, or any project that does not have a clear parent employer/job title.
+- CLASSIFICATION RULE: If you cannot clearly determine which work experience a project belongs to, classify it as a personal project. When in doubt, it is a personal project.
+
+Apply the EXACT same three-part enrichment as professional projects:
+  a) Set project_name, location (if available), start_date, end_date.
+  b) Create overview_content (max 250 chars): High-level professional description of the project scope and purpose, ENHANCED for target job/industry relevance.
+  c) Create tech_content (1–2 items, each max 250 chars): Technologies, tools, and technical implementation details — what was built and HOW. Prioritize technologies matching target job requirements.
+  d) Create achievement_content (max 250 chars): Performance measurement outcome — quantified results, impact metrics, or measurable improvements the project delivered.
+  e) Create technologies list: remaining relevant tech keywords not covered in tech_content.
+- If the resume has NO personal/side projects at all, return an EMPTY list [].
+
+STEP 6 — PROFESSIONAL ACHIEVEMENTS:
+Extract any awards, certifications, publications, or notable achievements. Each item has a "type" (e.g. "Award", "Certification") and "value" (the description).
+
+STEP 7 — TECHNICAL SKILLS:
+Organize ALL technical skills from the resume into categories: "Languages", "Frameworks", "Tools", and any other relevant topic groupings. Enrich with closely related skills the candidate demonstrably has (do NOT fabricate). If a TARGET INDUSTRY SECTOR is provided, reorder within each category to lead with the most sector-relevant skills.
+
+═══════════════════════════════════════════════════════════════
+IMPORTANT RULES:
+═══════════════════════════════════════════════════════════════
+- COMPLETENESS IS MANDATORY: Every project in the original resume MUST appear in the output. Do NOT skip any project regardless of output length.
+- EMPTY SECTIONS: Check each section carefully against the original resume:
+  * If the resume has NO professional/work experience → return professional_history: [] AND professional_projects: [].
+  * If the resume has NO personal/side projects → return personal_projects: [].
+  * If the resume has NO education → return education_history: [].
+  * If the resume has NO awards/certifications → return professional_achievement: [].
+  * If the resume has NO identifiable technical skills → return technical_skills with all empty lists.
+  * Do NOT invent or fabricate data for any section that is absent from the original resume.
+- CHARACTER LIMITS: All content fields (overview_content, each tech_content item, achievement_content) must be ≤ 250 characters including spaces.
+- THREE-PART BULLET STRUCTURE: Every project MUST have all three parts filled: overview_content (what), tech_content (how/with what tools), achievement_content (measurable outcome).
+- LANGUAGE: Use active, professional resume-style language with strong action verbs.
+- NO DUPLICATES: No duplicate technical keywords across personal_projects, professional_projects, and technical_skills.
+- JOB TARGETING: Prioritize keywords from the target job description throughout all sections.
+- INDUSTRY TARGETING: If a TARGET INDUSTRY SECTOR is specified, surface and prioritize technical keywords, tools, and project descriptions most relevant to that industry — this overrides generic keyword selection.
+- DATES: If a date is unknown or not mentioned, use an empty string.
+
+═══════════════════════════════════════════════════════════════
+PRE-OUTPUT VERIFICATION CHECKLIST (follow before returning):
+═══════════════════════════════════════════════════════════════
+Before generating the final output, mentally verify each of the following:
+1. Count the number of professional work experiences in the original resume. Does your professional_history list have the same count?
+2. Count the number of projects under each work experience. Does your professional_projects list contain ALL of them, each mapped to the correct work_experience?
+3. CRITICAL — For every item in professional_projects, verify that the work_experience field exactly matches "{{company_name}} - {{job_title}}" using the EXACT same strings from the corresponding professional_history entry. This mapping is how the frontend places each project under its parent job title.
+4. Count the number of personal/side projects. Does your personal_projects list match?
+5. Verify NO project exists that could not be classified — any ambiguous project should be in personal_projects.
+6. Does every project have all three bullet parts filled (overview_content, tech_content, achievement_content)?
+7. Are there any sections in the original resume that have no content? If so, confirm you are returning empty lists for those sections.
+8. Read through the entire original resume one more time — is there any project, experience, or section you missed?
 
 Generate structured resume data ready for direct template population.
 """
@@ -2641,6 +2708,13 @@ Generate structured resume data ready for direct template population.
                         "content": (
                             "You are an expert resume writer specialising in creating ATS-friendly, "
                             "professional resumes that highlight technical skills and project achievements. "
+                            "CRITICAL: You must extract and return EVERY single project from the resume — "
+                            "never skip, merge, or omit any project. Each project must have three enriched bullet points: "
+                            "(1) overview_content describing the project scope, "
+                            "(2) tech_content detailing technologies and implementation approach, "
+                            "(3) achievement_content with quantified performance outcomes. "
+                            "If a section (professional experience or personal projects) does not exist in the resume, "
+                            "return an empty list for that section. "
                             "Always follow the instructions precisely and ensure all character limits are respected."
                         ),
                     },
@@ -2650,7 +2724,15 @@ Generate structured resume data ready for direct template population.
             )
 
             crafted_resume = response.output_parsed
-            logger.info(f"Successfully crafted resume from existing file for: {crafted_resume.full_name}")
+            logger.info(
+                f"Successfully crafted resume from existing file for: {crafted_resume.full_name} | "
+                f"professional_history={len(crafted_resume.professional_history)}, "
+                f"professional_projects={len(crafted_resume.professional_projects)}, "
+                f"personal_projects={len(crafted_resume.personal_projects)}, "
+                f"education={len(crafted_resume.education_history)}, "
+                f"achievements={len(crafted_resume.professional_achievement or [])}, "
+                f"skill_categories={len([k for k, v in crafted_resume.technical_skills.model_dump().items() if v])}"
+            )
 
             return {"success": True, "data": crafted_resume.model_dump()}
 
@@ -3098,62 +3180,120 @@ Job listings:
 
 async def extract_text_from_pdf(file_content: bytes) -> str:
     """
-    Extract text content from PDF file bytes
+    Extract text content from PDF file bytes.
+    Uses layout-aware extraction to preserve section headers, bullet points,
+    and structural formatting so no content is lost.
     """
     try:
-        # Create a BytesIO object from the file content
         pdf_file = io.BytesIO(file_content)
-        
-        # Create PDF reader object
         pdf_reader = PyPDF2.PdfReader(pdf_file)
-        
-        # Extract text from all pages
-        text_content = ""
-        for page_num in range(len(pdf_reader.pages)):
+
+        text_parts: list[str] = []
+        total_pages = len(pdf_reader.pages)
+
+        for page_num in range(total_pages):
             page = pdf_reader.pages[page_num]
-            text_content += page.extract_text() + "\n"
-        
-        logger.info(f"Successfully extracted text from PDF with {len(pdf_reader.pages)} pages")
-        return text_content.strip()
-        
+
+            # Try layout-mode extraction first (preserves columns/bullets/headers).
+            # PyPDF2 ≥ 3.x supports extraction_mode and layout_mode_space_vertically.
+            page_text = ""
+            try:
+                page_text = page.extract_text(extraction_mode="layout") or ""
+            except (TypeError, Exception):
+                # Older PyPDF2 or unsupported mode — fall back to default
+                page_text = page.extract_text() or ""
+
+            if page_text.strip():
+                text_parts.append(f"--- Page {page_num + 1} of {total_pages} ---")
+                text_parts.append(page_text)
+
+        extracted = "\n".join(text_parts).strip()
+        logger.info(
+            f"Successfully extracted text from PDF: {total_pages} pages, "
+            f"{len(extracted)} characters"
+        )
+        return extracted
+
     except Exception as e:
         logger.error(f"Error extracting text from PDF: {str(e)}")
-        # Fallback: try to decode as text if it's not a PDF
         try:
             return file_content.decode('utf-8')
-        except:
+        except Exception:
             raise Exception(f"Failed to extract text from PDF: {str(e)}")
 
 
 async def extract_text_from_docx(file_content: bytes) -> str:
     """
-    Extract text content from DOCX file bytes
+    Extract text content from DOCX file bytes.
+    Captures paragraphs (including list items with bullet markers),
+    tables, headers, and footers so no resume content is lost.
     """
     try:
         if Document is None:
             raise Exception("python-docx library is not installed")
-        
-        # Create a BytesIO object from the file content
+
         docx_file = io.BytesIO(file_content)
-        
-        # Create Document object
         doc = Document(docx_file)
-        
-        # Extract text from all paragraphs
-        text_content = ""
-        for paragraph in doc.paragraphs:
-            text_content += paragraph.text + "\n"
-        
-        # Extract text from tables
+
+        text_parts: list[str] = []
+
+        # Helper: detect list paragraphs and prepend a bullet marker
+        def _para_text(para) -> str:
+            raw = para.text.strip()
+            if not raw:
+                return ""
+            # python-docx exposes numbering via the paragraph's XML
+            try:
+                numPr = para._element.find(
+                    './/{http://schemas.openxmlformats.org/wordprocessingml/2006/main}numPr'
+                )
+                if numPr is not None:
+                    return f"• {raw}"
+            except Exception:
+                pass
+            return raw
+
+        # 1. Extract headers (some resumes put name/contact in the header)
+        try:
+            for section in doc.sections:
+                header = section.header
+                if header and not header.is_linked_to_previous:
+                    for para in header.paragraphs:
+                        t = para.text.strip()
+                        if t:
+                            text_parts.append(t)
+        except Exception:
+            pass
+
+        # 2. Extract body paragraphs (preserving list bullets)
+        for para in doc.paragraphs:
+            line = _para_text(para)
+            if line:
+                text_parts.append(line)
+
+        # 3. Extract tables (some resumes use table-based layouts)
         for table in doc.tables:
             for row in table.rows:
-                for cell in row.cells:
-                    text_content += cell.text + " "
-                text_content += "\n"
-        
-        logger.info(f"Successfully extracted text from DOCX")
-        return text_content.strip()
-        
+                row_cells = [cell.text.strip() for cell in row.cells if cell.text.strip()]
+                if row_cells:
+                    text_parts.append(" | ".join(row_cells))
+
+        # 4. Extract footers
+        try:
+            for section in doc.sections:
+                footer = section.footer
+                if footer and not footer.is_linked_to_previous:
+                    for para in footer.paragraphs:
+                        t = para.text.strip()
+                        if t:
+                            text_parts.append(t)
+        except Exception:
+            pass
+
+        extracted = "\n".join(text_parts).strip()
+        logger.info(f"Successfully extracted text from DOCX: {len(extracted)} characters")
+        return extracted
+
     except Exception as e:
         logger.error(f"Error extracting text from DOCX: {str(e)}")
         raise Exception(f"Failed to extract text from DOCX: {str(e)}")
@@ -4719,7 +4859,7 @@ def build_section_professional_experience(experiences: List[ResumeProfessionalEx
     if not experiences:
         return ""
 
-    latex = r"""\section*{Professional}
+    latex = r"""\section*{Professional Experience}
 \vspace{1pt}
 \hrule
 \vspace{3pt}
@@ -5016,6 +5156,10 @@ def generate_latex_content(resume_data: GenerateResumePDFRequest) -> str:
     # Start building the LaTeX document
     latex = f"""\\documentclass[10pt,a4paper]{{article}}
 
+% Use Latin Modern fonts (Type1) to avoid bitmap font generation on read-only filesystems
+\\usepackage{{lmodern}}
+\\usepackage[T1]{{fontenc}}
+
 % ATS-Optimized packages
 \\usepackage[margin={margin}, top=0.3in, bottom=0.3in]{{geometry}}
 \\usepackage{{enumitem}}
@@ -5111,12 +5255,18 @@ def compile_latex_to_pdf(latex_content: str, output_dir: str) -> str:
         tex_file
     ]
 
+    # Redirect writable TeX directories to /tmp (Lambda filesystem is read-only)
+    env = os.environ.copy()
+    env['TEXMFVAR'] = '/tmp/texmf-var'
+    env['TEXMFHOME'] = '/tmp/texmf-home'
+
     # First compilation
     result = subprocess.run(
         pdflatex_cmd,
         capture_output=True,
         timeout=30,
-        text=True
+        text=True,
+        env=env
     )
 
     # Second compilation for cross-references
@@ -5124,7 +5274,8 @@ def compile_latex_to_pdf(latex_content: str, output_dir: str) -> str:
         pdflatex_cmd,
         capture_output=True,
         timeout=30,
-        text=True
+        text=True,
+        env=env
     )
 
     # Check if PDF was generated
