@@ -213,7 +213,7 @@ npm run type-check
 npm run lint
 
 # Backend (Python/SAM)
-cd backend/debt-away
+cd backend/ambitology
 sam build
 sam local start-api
 ```

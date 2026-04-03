@@ -243,7 +243,11 @@ interface ResumeSectionProps {
   onCraftLimitExceeded?: () => void;
   onDownloadLimitExceeded?: () => void;
   anonCraftCount?: number;
+  anonDownloadCount?: number;
+  anonAnalysisCount?: number;
   onAnonCraftUse?: () => void;
+  onAnonDownloadUse?: () => void;
+  onAnonAnalysisUse?: () => void;
   onAnonSignupRequired?: () => void;
   careerFocus?: string;
   onInjectChatMessage?: (message: string, action?: { type: string; sanityData?: { issues: Array<{ severity: 'High' | 'Mid' | 'Low'; ordinal: string; message: string }>; currentIndex: number; matchedCount: number } }) => void;
@@ -287,7 +291,11 @@ export default function ResumeSection({
   onCraftLimitExceeded,
   onDownloadLimitExceeded,
   anonCraftCount = 0,
+  anonDownloadCount = 0,
+  anonAnalysisCount = 0,
   onAnonCraftUse,
+  onAnonDownloadUse,
+  onAnonAnalysisUse,
   onAnonSignupRequired,
   careerFocus,
   onInjectChatMessage,
@@ -4217,9 +4225,11 @@ export default function ResumeSection({
 
   const handleDownloadPdf = async () => {
     setShowDownloadFormatPopup(false);
+    if (!cognitoSub && anonDownloadCount >= 2) { onAnonSignupRequired?.(); return; }
     const result = await generateResumePDF();
     if (result === 'DOWNLOAD_LIMIT_EXCEEDED') { onDownloadLimitExceeded?.(); return; }
     if (!result) { alert('Failed to generate resume PDF. Please try again.'); return; }
+    if (!cognitoSub) onAnonDownloadUse?.();
     const { blob, filename } = result;
     const url = window.URL.createObjectURL(blob);
     const a = document.createElement('a');
@@ -4230,9 +4240,11 @@ export default function ResumeSection({
 
   const handleDownloadTex = async () => {
     setShowDownloadFormatPopup(false);
+    if (!cognitoSub && anonDownloadCount >= 2) { onAnonSignupRequired?.(); return; }
     const result = await generateResumeTex();
     if (result === 'DOWNLOAD_LIMIT_EXCEEDED') { onDownloadLimitExceeded?.(); return; }
     if (!result) { alert('Failed to generate resume .tex file. Please try again.'); return; }
+    if (!cognitoSub) onAnonDownloadUse?.();
     const { blob, filename } = result;
     const url = window.URL.createObjectURL(blob);
     const a = document.createElement('a');
@@ -4597,7 +4609,11 @@ export default function ResumeSection({
   // Handle navigation to Analysis page with auto-populated data
   const handleNavigateToAnalysisWithData = async () => {
     if (!onNavigateToAnalysis) {
-      // Fallback to simple navigation if handler not provided
+      return;
+    }
+
+    if (!cognitoSub && anonAnalysisCount >= 2) {
+      onAnonSignupRequired?.();
       return;
     }
 
@@ -4660,7 +4676,7 @@ export default function ResumeSection({
         return;
       }
       if (!pdfResult) {
-        // Still navigate with job data but without PDF - user can upload manually
+        if (!cognitoSub) onAnonAnalysisUse?.();
         onNavigateToAnalysis({
           resumeFile: undefined,
           resumeFileName: undefined,
@@ -4676,6 +4692,8 @@ export default function ResumeSection({
       const { blob, filename } = pdfResult;
       const resumeFile = new File([blob], filename, { type: 'application/pdf' });
 
+      if (!cognitoSub) onAnonAnalysisUse?.();
+
       // Call navigation handler with all data
       onNavigateToAnalysis({
         resumeFile,
@@ -4689,6 +4707,7 @@ export default function ResumeSection({
       console.error('Error preparing data for analysis:', error);
       // Still navigate with job data even if there's an error
       if (onNavigateToAnalysis) {
+        if (!cognitoSub) onAnonAnalysisUse?.();
         onNavigateToAnalysis({
           resumeFile: undefined,
           resumeFileName: undefined,

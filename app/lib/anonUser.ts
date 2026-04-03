@@ -2,6 +2,8 @@ export interface AnonData {
   id: string;
   craftCount: number;
   analysisCount: number;
+  downloadCount: number;
+  autoFillCount: number;
   fingerprint: string;
 }
 
@@ -27,6 +29,8 @@ export function getOrCreateAnonData(): AnonData {
     if (stored) {
       const parsed = JSON.parse(stored) as AnonData;
       if (parsed && typeof parsed.id === 'string') {
+        if (parsed.downloadCount === undefined) parsed.downloadCount = 0;
+        if (parsed.autoFillCount === undefined) parsed.autoFillCount = 0;
         return parsed;
       }
     }
@@ -36,6 +40,8 @@ export function getOrCreateAnonData(): AnonData {
     id: crypto.randomUUID(),
     craftCount: 0,
     analysisCount: 0,
+    downloadCount: 0,
+    autoFillCount: 0,
     fingerprint: getAnonFingerprint(),
   };
   try {

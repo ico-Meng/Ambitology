@@ -14,7 +14,7 @@ Ambitology is a dual-architecture application with separate frontend and backend
 - **Key Integrations**: Plaid SDK for banking, Stripe for payments
 
 ### Backend (AWS SAM + Python)
-- **Location**: `backend/debt-away/`
+- **Location**: `backend/ambitology/`
 - **Framework**: FastAPI with AWS Lambda (using Mangum adapter)
 - **Infrastructure**: AWS SAM templates (`template.yaml`)
 - **Database**: DynamoDB (local development supported)
@@ -44,7 +44,7 @@ npx ampx pipeline-deploy --branch $AWS_BRANCH --app-id $AWS_APP_ID
 
 ### Backend Development
 ```bash
-cd backend/debt-away
+cd backend/ambitology
 
 # Local development with SAM
 ./sam_build_run.sh    # Builds and starts local API on port 3000
@@ -58,7 +58,7 @@ sam deploy --parameter-overrides "..."
 # Testing
 pip install -r tests/requirements.txt
 python -m pytest tests/unit -v
-AWS_SAM_STACK_NAME="debt-away" python -m pytest tests/integration -v
+AWS_SAM_STACK_NAME="ambitology" python -m pytest tests/integration -v
 ```
 
 ### Local DynamoDB Setup

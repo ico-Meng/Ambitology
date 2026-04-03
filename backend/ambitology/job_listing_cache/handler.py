@@ -18,7 +18,7 @@ logger.setLevel(logging.INFO)
 
 JSEARCH_API_KEY = os.environ.get("JSEARCH_API_KEY", "")
 JSEARCH_APP_NAME = os.environ.get("JSEARCH_APP_NAME", "")
-OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY", "")
+OPENAI_API_KEY = os.environ.get("OPENAI_APIKEY", "")
 TABLE_NAME = "jobCache"
 JSEARCH_BASE_URL = "https://jsearch.p.rapidapi.com/search"
 

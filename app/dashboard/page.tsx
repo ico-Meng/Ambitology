@@ -468,6 +468,24 @@ function DashboardContent() {
     });
   };
 
+  const incrementAnonDownload = () => {
+    setAnonData((prev) => {
+      if (!prev) return prev;
+      const updated = { ...prev, downloadCount: prev.downloadCount + 1 };
+      saveAnonData(updated);
+      return updated;
+    });
+  };
+
+  const incrementAnonAutoFill = () => {
+    setAnonData((prev) => {
+      if (!prev) return prev;
+      const updated = { ...prev, autoFillCount: prev.autoFillCount + 1 };
+      saveAnonData(updated);
+      return updated;
+    });
+  };
+
   const fetchUserPlan = async (cognitoSub: string) => {
     try {
       const res = await fetch(`${API_ENDPOINT}/get_subscription/${cognitoSub}`);
@@ -623,9 +641,13 @@ function DashboardContent() {
   // Call backend to extract structured data from the uploaded resume
   const handleAutoFill = async () => {
     if (!resumeFile) return;
+
+    // Guest user auto-fill limit: 2 uses
     if (!user) {
-      setShowSignupPrompt(true);
-      return;
+      if ((anonData?.autoFillCount ?? 0) >= 2) {
+        setShowSignupPrompt(true);
+        return;
+      }
     }
 
     setIsAutoFillLoading(true);
@@ -641,6 +663,8 @@ function DashboardContent() {
 
       const json = await res.json();
       if (!json.success) throw new Error('Auto fill failed');
+
+      if (!user) incrementAnonAutoFill();
 
       if (hasExistingData()) {
         setPendingAutoFillData(json.data);
@@ -16359,7 +16383,11 @@ onClick={() => {
                     setTimeout(() => setShowCraftLimitToast(false), 9000);
                   }}
                   anonCraftCount={anonData?.craftCount ?? 0}
+                  anonDownloadCount={anonData?.downloadCount ?? 0}
+                  anonAnalysisCount={anonData?.analysisCount ?? 0}
                   onAnonCraftUse={incrementAnonCraft}
+                  onAnonDownloadUse={incrementAnonDownload}
+                  onAnonAnalysisUse={incrementAnonAnalysis}
                   onAnonSignupRequired={() => setShowSignupPrompt(true)}
                   onDownloadLimitExceeded={() => {
                     setIsUpgradeModalOpen(true);

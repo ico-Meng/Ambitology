@@ -154,6 +154,7 @@ Resources:
         Variables:
           JSEARCH_API_KEY:  !Ref JsearchApiKey
           JSEARCH_APP_NAME: !Ref JsearchAppName
+          OPENAI_APIKEY:    !Ref OpenaiApiKey
       Events:
         # 1st of every month at 03:00 UTC
         ScheduleFirstOfMonth:
