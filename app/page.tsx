@@ -55,6 +55,7 @@ export default function LandingPage() {
     "/images/slide-8.png",
     "/images/slide-10.png",
     "/images/slide-11.png",
+    "/images/slide-ai-prompts.png",
   ];
   const slideCount = heroSlides.length;
 
@@ -559,7 +560,7 @@ export default function LandingPage() {
         <div className={styles.featureInner}>
           <div className={styles.featureImage}>
             <img
-              src="/images/capability-analysis.png"
+              src="/images/resume-analysis.png"
               alt="Personal capability and resume power analysis"
               className={styles.featureImg}
             />
@@ -572,117 +573,6 @@ export default function LandingPage() {
             <p className={styles.featureDescription}>
               The AI-driven personalized capability analysis built from your knowledge base and aligned to your target position. Understand your strengths, identify skill gaps, and get actionable recommendations to stand out in your next job search.
             </p>
-          </div>
-        </div>
-      </section>
-
-      {/* Feature Section — Resume Analysis */}
-      <section className={styles.featureSectionAlt}>
-        <div className={styles.featureInnerReversed}>
-          <div className={styles.featureText}>
-            <span className={styles.featureBadge}>Six-Dimension Scoring</span>
-            <h2 className={styles.featureHeading}>
-              Target job role fit analysis and scores your resume
-            </h2>
-            <p className={styles.featureDescription}>
-              From background and education to technical skills and job match — get a comprehensive breakdown that pinpoints exactly where to improve.
-            </p>
-          </div>
-          <div className={styles.featureImage}>
-            <img
-              src="/images/resume-analysis.png"
-              alt="Resume power analysis across six dimensions"
-              className={styles.featureImg}
-            />
-          </div>
-        </div>
-      </section>
-
-      {/* Feature Section — Resume Crafting */}
-      <section className={styles.featureSection}>
-        <div className={styles.featureInner}>
-          <div className={styles.featureImage}>
-            <img
-              src="/images/resume-crafting.png"
-              alt="AI-driven resume crafting interface"
-              className={styles.featureImg}
-            />
-          </div>
-          <div className={styles.featureText}>
-            <span className={styles.featureBadge}>Smart Resume Builder</span>
-            <h2 className={styles.featureHeading}>
-              Tailor your resume for target roles in seconds
-            </h2>
-            <p className={styles.featureDescription}>
-              Tailor your resume that leverages your present and planned knowledge base to match your target position and industry focus.
-            </p>
-          </div>
-        </div>
-      </section>
-
-      {/* Feature Section — Knowledge Base */}
-      <section className={styles.featureSectionAlt}>
-        <div className={styles.featureInnerReversed}>
-          <div className={styles.featureText}>
-            <span className={styles.featureBadge}>Future-Ready Skills</span>
-            <h2 className={styles.featureHeading}>
-              Plan ahead your future skills.
-            </h2>
-            <p className={styles.featureDescription}>
-              Map out your current expertise and future learning goals to create a living skills portfolio that evolves with your career.
-            </p>
-          </div>
-          <div className={styles.featureImage}>
-            <img
-              src="/images/knowledge-base.png"
-              alt="Knowledge base and skills selection interface"
-              className={styles.featureImg}
-            />
-          </div>
-        </div>
-      </section>
-
-      {/* Showcase Section — AI Agent in Action */}
-      <section className={styles.showcaseSection}>
-        <div className={styles.showcaseInner}>
-          <div className={styles.showcaseImage}>
-            <img
-              src="/images/ai-chat-showcase.png"
-              alt="AI Career Coach in action"
-              className={styles.showcaseImg}
-            />
-          </div>
-          <div className={styles.showcaseText}>
-            <span className={styles.featureBadge}>AI Agent in Action</span>
-            <h2 className={styles.featureHeading}>
-              Build your career with few simple clicks.
-            </h2>
-            <div className={styles.showcaseList}>
-              <div className={styles.showcaseItem}>
-                <span className={styles.showcaseItemIcon}>
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                    <polyline points="20 6 9 17 4 12" />
-                  </svg>
-                </span>
-                <span>Build your complete knowledge base — profile, projects, skills, and future goals — in minutes, under your review, with guided AI agenti cconversations</span>
-              </div>
-              <div className={styles.showcaseItem}>
-                <span className={styles.showcaseItemIcon}>
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                    <polyline points="20 6 9 17 4 12" />
-                  </svg>
-                </span>
-                <span>Get personalized six-dimension career fit analysis instantly — no manual input required</span>
-              </div>
-              <div className={styles.showcaseItem}>
-                <span className={styles.showcaseItemIcon}>
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                    <polyline points="20 6 9 17 4 12" />
-                  </svg>
-                </span>
-                <span>One intelligent AI agent handles the entire pipeline — from knowledge capture to interview readiness</span>
-              </div>
-            </div>
           </div>
         </div>
       </section>
@@ -735,6 +625,117 @@ export default function LandingPage() {
             >
               <source src="/videos/JobMatch.mov" type="video/mp4" />
             </video>
+          </div>
+        </div>
+      </section>
+
+      {/* Feature Section — Resume Crafting */}
+      <section className={styles.featureSection}>
+        <div className={styles.featureInner}>
+          <div className={styles.featureImage}>
+            <img
+              src="/images/resume-crafting.png"
+              alt="AI-driven resume crafting interface"
+              className={styles.featureImg}
+            />
+          </div>
+          <div className={styles.featureText}>
+            <span className={styles.featureBadge}>Smart Resume Builder</span>
+            <h2 className={styles.featureHeading}>
+              Tailor your resume for target roles in seconds
+            </h2>
+            <p className={styles.featureDescription}>
+              Tailor your resume that leverages your present and planned knowledge base to match your target position and industry focus.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* Feature Section — Resume Analysis */}
+      <section className={styles.featureSectionAlt}>
+        <div className={styles.featureInnerReversed}>
+          <div className={styles.featureText}>
+            <span className={styles.featureBadge}>Six-Dimension Scoring</span>
+            <h2 className={styles.featureHeading}>
+              Target job role fit analysis and scores your resume
+            </h2>
+            <p className={styles.featureDescription}>
+              From background and education to technical skills and job match — get a comprehensive breakdown that pinpoints exactly where to improve.
+            </p>
+          </div>
+          <div className={styles.featureImage}>
+            <img
+              src="/images/capability-analysis.png"
+              alt="Resume power analysis across six dimensions"
+              className={styles.featureImg}
+            />
+          </div>
+        </div>
+      </section>
+
+      {/* Showcase Section — AI Agent in Action */}
+      <section className={styles.showcaseSection}>
+        <div className={styles.showcaseInner}>
+          <div className={styles.showcaseImage}>
+            <img
+              src="/images/ai-chat-showcase.png"
+              alt="AI Career Coach in action"
+              className={styles.showcaseImg}
+            />
+          </div>
+          <div className={styles.showcaseText}>
+            <span className={styles.featureBadge}>AI Agent in Action</span>
+            <h2 className={styles.featureHeading}>
+              Build your career with few simple clicks.
+            </h2>
+            <div className={styles.showcaseList}>
+              <div className={styles.showcaseItem}>
+                <span className={styles.showcaseItemIcon}>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                    <polyline points="20 6 9 17 4 12" />
+                  </svg>
+                </span>
+                <span>Build your complete knowledge base — profile, projects, skills, and future goals — in minutes, under your review, with guided AI agenti cconversations</span>
+              </div>
+              <div className={styles.showcaseItem}>
+                <span className={styles.showcaseItemIcon}>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                    <polyline points="20 6 9 17 4 12" />
+                  </svg>
+                </span>
+                <span>Get personalized six-dimension career fit analysis instantly — no manual input required</span>
+              </div>
+              <div className={styles.showcaseItem}>
+                <span className={styles.showcaseItemIcon}>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                    <polyline points="20 6 9 17 4 12" />
+                  </svg>
+                </span>
+                <span>One intelligent AI agent handles the entire pipeline — from knowledge capture to interview readiness</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Feature Section — Knowledge Base */}
+      <section className={styles.featureSectionAlt}>
+        <div className={styles.featureInnerReversed}>
+          <div className={styles.featureText}>
+            <span className={styles.featureBadge}>Future-Ready Skills</span>
+            <h2 className={styles.featureHeading}>
+              Plan ahead your future skills.
+            </h2>
+            <p className={styles.featureDescription}>
+              Map out your current expertise and future learning goals to create a living skills portfolio that evolves with your career.
+            </p>
+          </div>
+          <div className={styles.featureImage}>
+            <img
+              src="/images/knowledge-base.png"
+              alt="Knowledge base and skills selection interface"
+              className={styles.featureImg}
+            />
           </div>
         </div>
       </section>
