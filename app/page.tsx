@@ -567,7 +567,7 @@ export default function LandingPage() {
           <div className={styles.featureText}>
             <span className={styles.featureBadge}>AI-Powered Insights</span>
             <h2 className={styles.featureHeading}>
-            Target role fit analysis 
+            Career fit analysis for your potential
             </h2>
             <p className={styles.featureDescription}>
               The AI-driven personalized capability analysis built from your knowledge base and aligned to your target position. Understand your strengths, identify skill gaps, and get actionable recommendations to stand out in your next job search.
@@ -582,7 +582,7 @@ export default function LandingPage() {
           <div className={styles.featureText}>
             <span className={styles.featureBadge}>Six-Dimension Scoring</span>
             <h2 className={styles.featureHeading}>
-              LLM-powered agentic analysis that scores your resume
+              Target job role fit analysis and scores your resume
             </h2>
             <p className={styles.featureDescription}>
               From background and education to technical skills and job match — get a comprehensive breakdown that pinpoints exactly where to improve.
@@ -611,7 +611,7 @@ export default function LandingPage() {
           <div className={styles.featureText}>
             <span className={styles.featureBadge}>Smart Resume Builder</span>
             <h2 className={styles.featureHeading}>
-              AI-driven resume crafting for target roles
+              Tailor your resume for target roles in seconds
             </h2>
             <p className={styles.featureDescription}>
               Tailor your resume that leverages your present and planned knowledge base to match your target position and industry focus.
@@ -626,7 +626,7 @@ export default function LandingPage() {
           <div className={styles.featureText}>
             <span className={styles.featureBadge}>Future-Ready Skills</span>
             <h2 className={styles.featureHeading}>
-              Unlock your growing technical potential by building your knowledge base around planned projects and the skills you aim to develop.
+              Plan ahead your future skills.
             </h2>
             <p className={styles.featureDescription}>
               Map out your current expertise and future learning goals to create a living skills portfolio that evolves with your career.
@@ -655,7 +655,7 @@ export default function LandingPage() {
           <div className={styles.showcaseText}>
             <span className={styles.featureBadge}>AI Agent in Action</span>
             <h2 className={styles.featureHeading}>
-              End-to-end agentic solution — powered by flows of smart conversation
+              Build your career with few simple clicks.
             </h2>
             <div className={styles.showcaseList}>
               <div className={styles.showcaseItem}>
@@ -681,6 +681,110 @@ export default function LandingPage() {
                   </svg>
                 </span>
                 <span>One intelligent AI agent handles the entire pipeline — from knowledge capture to interview readiness</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Job Match Section */}
+      <section className={styles.jobMatchSection}>
+        <div className={styles.jobMatchInner}>
+          <div className={styles.jobMatchText}>
+            <span className={styles.featureBadge}>Precision Matching</span>
+            <h2 className={styles.featureHeading}>
+              AI job matching tailored to your unique background.
+            </h2>
+            <p className={styles.jobMatchDesc}>
+              Stop applying blindly. Our AI deeply analyzes your skills, experience, and career trajectory to surface roles where you will genuinely stand out — ranked by fit, not just keywords.
+            </p>
+            <div className={styles.showcaseList}>
+              <div className={styles.showcaseItem}>
+                <span className={styles.showcaseItemIcon}>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                    <polyline points="20 6 9 17 4 12" />
+                  </svg>
+                </span>
+                <span>Matches positions across thousands of listings based on your real capability</span>
+              </div>
+              <div className={styles.showcaseItem}>
+                <span className={styles.showcaseItemIcon}>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                    <polyline points="20 6 9 17 4 12" />
+                  </svg>
+                </span>
+                <span>Six-dimension fit score reveals exactly where you align — and where to close the gap</span>
+              </div>
+              <div className={styles.showcaseItem}>
+                <span className={styles.showcaseItemIcon}>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                    <polyline points="20 6 9 17 4 12" />
+                  </svg>
+                </span>
+                <span>Continuously learns from your knowledge base as your skills and projects evolve</span>
+              </div>
+            </div>
+          </div>
+          <div className={styles.jobMatchVideo}>
+            <video
+              className={styles.jobMatchVideoEl}
+              autoPlay
+              loop
+              muted
+              playsInline
+            >
+              <source src="/videos/JobMatch.mov" type="video/mp4" />
+            </video>
+          </div>
+        </div>
+      </section>
+
+      {/* Career Analysis Section */}
+      <section className={styles.analysisSection}>
+        <div className={styles.analysisInner}>
+          <div className={styles.analysisVideo}>
+            <video
+              className={styles.analysisVideoEl}
+              autoPlay
+              loop
+              muted
+              playsInline
+            >
+              <source src="/videos/ClickThroughAnalysis.mov" type="video/mp4" />
+            </video>
+          </div>
+          <div className={styles.analysisText}>
+            <span className={styles.featureBadge}>Deep Career Intelligence</span>
+            <h2 className={styles.featureHeading}>
+              Instant click-through analysis powered by AI agents.
+            </h2>
+            <p className={styles.analysisDesc}>
+              Paste any job listing and our AI agent dissects it in seconds — mapping every requirement to your background and surfacing exactly where you lead, where you compete, and where to grow.
+            </p>
+            <div className={styles.showcaseList}>
+              <div className={styles.showcaseItem}>
+                <span className={styles.showcaseItemIcon}>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                    <polyline points="20 6 9 17 4 12" />
+                  </svg>
+                </span>
+                <span>Six-dimension fit breakdown — technical depth, leadership, culture, and more — in one click</span>
+              </div>
+              <div className={styles.showcaseItem}>
+                <span className={styles.showcaseItemIcon}>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                    <polyline points="20 6 9 17 4 12" />
+                  </svg>
+                </span>
+                <span>Identifies hidden strengths your resume may be underselling for that specific role</span>
+              </div>
+              <div className={styles.showcaseItem}>
+                <span className={styles.showcaseItemIcon}>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                    <polyline points="20 6 9 17 4 12" />
+                  </svg>
+                </span>
+                <span>Actionable gap analysis with targeted recommendations to maximize your candidacy</span>
               </div>
             </div>
           </div>

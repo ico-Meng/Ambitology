@@ -1074,6 +1074,124 @@
   margin-top: 0.3rem;
 }
 
+/* ========== JOB MATCH SECTION ========== */
+
+.jobMatchSection {
+  padding: 6rem 3rem;
+  background: linear-gradient(
+    180deg,
+    #faf9f6 0%,
+    #f5f0e8 100%
+  );
+}
+
+.jobMatchInner {
+  max-width: 84rem;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 5rem;
+}
+
+.jobMatchText {
+  flex: 1;
+  min-width: 0;
+}
+
+.jobMatchDesc {
+  margin-top: 1.25rem;
+  font-size: 1.125rem;
+  color: #6b7280;
+  line-height: 1.8;
+  font-weight: 400;
+  letter-spacing: -0.01em;
+}
+
+.jobMatchVideo {
+  flex: 0 0 460px;
+  min-width: 0;
+}
+
+.jobMatchVideoEl {
+  width: 100%;
+  height: auto;
+  border-radius: 20px;
+  box-shadow:
+    0 20px 60px rgba(0, 0, 0, 0.10),
+    0 8px 24px rgba(0, 0, 0, 0.06);
+  display: block;
+  transition: filter 0.3s ease, box-shadow 0.3s ease;
+}
+
+@media (max-width: 900px) {
+  .jobMatchInner {
+    flex-direction: column;
+    gap: 2.5rem;
+  }
+
+  .jobMatchVideo {
+    flex: unset;
+    width: 100%;
+  }
+}
+
+/* ========== CAREER ANALYSIS SECTION ========== */
+
+.analysisSection {
+  padding: 6rem 3rem;
+  background: #fff;
+}
+
+.analysisInner {
+  max-width: 84rem;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 5rem;
+}
+
+.analysisVideo {
+  flex: 0 0 460px;
+  min-width: 0;
+}
+
+.analysisVideoEl {
+  width: 100%;
+  height: auto;
+  border-radius: 20px;
+  box-shadow:
+    0 20px 60px rgba(0, 0, 0, 0.10),
+    0 8px 24px rgba(0, 0, 0, 0.06);
+  display: block;
+  transition: filter 0.3s ease, box-shadow 0.3s ease;
+}
+
+.analysisText {
+  flex: 1;
+  min-width: 0;
+}
+
+.analysisDesc {
+  margin-top: 1.25rem;
+  font-size: 1.125rem;
+  color: #6b7280;
+  line-height: 1.8;
+  font-weight: 400;
+  letter-spacing: -0.01em;
+}
+
+@media (max-width: 900px) {
+  .analysisInner {
+    flex-direction: column;
+    gap: 2.5rem;
+  }
+
+  .analysisVideo {
+    flex: unset;
+    width: 100%;
+  }
+}
+
 /* ========== MAIN ========== */
 
 .main {
@@ -2324,4 +2442,38 @@
 
 :global(html.dark) .pricingDesc {
   color: #9a90b8 !important;
+}
+
+/* Job Match Section */
+:global(html.dark) .jobMatchSection {
+  background: linear-gradient(180deg, #0e0f18 0%, #13141f 100%) !important;
+}
+
+:global(html.dark) .jobMatchDesc {
+  color: #9a90b8 !important;
+}
+
+:global(html.dark) .jobMatchVideoEl {
+  box-shadow:
+    0 20px 60px rgba(0, 0, 0, 0.5),
+    0 8px 24px rgba(0, 0, 0, 0.3) !important;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  filter: brightness(0.55) contrast(1.05);
+}
+
+/* Career Analysis Section */
+:global(html.dark) .analysisSection {
+  background: #0e0f18 !important;
+}
+
+:global(html.dark) .analysisDesc {
+  color: #9a90b8 !important;
+}
+
+:global(html.dark) .analysisVideoEl {
+  box-shadow:
+    0 20px 60px rgba(0, 0, 0, 0.5),
+    0 8px 24px rgba(0, 0, 0, 0.3) !important;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  filter: brightness(0.55) contrast(1.05);
 }

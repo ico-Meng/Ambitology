@@ -15553,3 +15553,80 @@ textarea.resumeItemCompanyInput {
 :global(html.dark) .dropdownOption {
   border-bottom-color: rgba(255, 255, 255, 0.05) !important;
 }
+
+/* ============================================================
+   DARK MODE — Account Header, Usage Cards, Account Switch Group
+   ============================================================ */
+
+/* Account Header */
+:global(html.dark) .accountHeader {
+  background: linear-gradient(135deg, #1e2035 0%, #181a2d 100%) !important;
+  border-color: rgba(196, 160, 82, 0.15) !important;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.35) !important;
+}
+
+:global(html.dark) .accountEmail {
+  color: #e2d8f0 !important;
+}
+
+:global(html.dark) .accountPlanBadgePro {
+  background: linear-gradient(135deg, rgba(196, 160, 82, 0.18), rgba(155, 106, 16, 0.1)) !important;
+  color: #c4a052 !important;
+  border-color: rgba(196, 160, 82, 0.3) !important;
+}
+
+:global(html.dark) .accountPlanBadgeFree {
+  background: rgba(255, 255, 255, 0.06) !important;
+  color: #9a90b8 !important;
+  border-color: rgba(255, 255, 255, 0.12) !important;
+}
+
+/* Account Switch Group (tab pill) */
+:global(html.dark) .accountSwitchGroup {
+  background: rgba(30, 32, 53, 0.85) !important;
+  border-color: rgba(196, 160, 82, 0.2) !important;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.35), inset 0 1px 2px rgba(255, 255, 255, 0.04) !important;
+}
+
+:global(html.dark) .accountSwitchBtn {
+  color: #9a90b8 !important;
+}
+
+:global(html.dark) .accountSwitchBtn:hover:not(.accountSwitchBtnActive) {
+  color: #c8c0dc !important;
+  background: rgba(196, 160, 82, 0.1) !important;
+}
+
+/* Usage Cards */
+:global(html.dark) .usageCard {
+  background: linear-gradient(135deg, #1e2035 0%, #181a2d 100%) !important;
+  border-color: rgba(196, 160, 82, 0.15) !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3) !important;
+}
+
+:global(html.dark) .usageCard:hover {
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.45) !important;
+  border-color: rgba(196, 160, 82, 0.3) !important;
+}
+
+:global(html.dark) .usageCardAtLimit {
+  border-color: rgba(220, 100, 50, 0.4) !important;
+  background: linear-gradient(135deg, #221a1a 0%, #1e1515 100%) !important;
+}
+
+:global(html.dark) .usageCardIcon {
+  color: #c4a052 !important;
+}
+
+:global(html.dark) .usageCardLabel {
+  color: #c8c0dc !important;
+}
+
+:global(html.dark) .usageCountNumber {
+  color: #e2d8f0 !important;
+}
+
+:global(html.dark) .usageCountLimit,
+:global(html.dark) .usageCountUnlimited {
+  color: #9a90b8 !important;
+}
