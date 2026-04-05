@@ -1742,67 +1742,126 @@ export default function AnalysisSection({
               )}
               {selectedAnalysisType === 'personal' && personalCapabilityAnalysis && (
                 <>
-                  {[
-                    { name: 'Background', score: personalCapabilityAnalysis.background_score, advice: personalCapabilityAnalysis.background_advice },
-                    { name: 'Education', score: personalCapabilityAnalysis.education_score, advice: personalCapabilityAnalysis.education_advice },
-                    { name: 'Professional', score: personalCapabilityAnalysis.professional_score, advice: personalCapabilityAnalysis.professional_advice },
-                    { name: 'Tech Skills', score: personalCapabilityAnalysis.tech_skills_score, advice: personalCapabilityAnalysis.tech_skills_advice },
-                    { name: 'Teamwork', score: personalCapabilityAnalysis.teamwork_score, advice: personalCapabilityAnalysis.teamwork_advice },
-                  ]
-                    .filter((dimension) => !selectedDimension || dimension.name === selectedDimension)
-                    .flatMap((dimension) => 
-                      dimension.advice && dimension.advice.length > 0
-                        ? dimension.advice.map((adviceItem: string, idx: number) => (
-                            <div key={`${dimension.name}-${idx}`} className={`${styles.analysisInfoCard} ${styles.personalCapabilityCard}`}>
-                              <p className={styles.analysisInfoText}>
-                                <span className={styles.analysisTypeLabel}>{dimension.name}:</span> {adviceItem}
-                              </p>
+                  {(() => {
+                    const allCards = [
+                      { name: 'Background', score: personalCapabilityAnalysis.background_score, advice: personalCapabilityAnalysis.background_advice },
+                      { name: 'Education', score: personalCapabilityAnalysis.education_score, advice: personalCapabilityAnalysis.education_advice },
+                      { name: 'Professional', score: personalCapabilityAnalysis.professional_score, advice: personalCapabilityAnalysis.professional_advice },
+                      { name: 'Tech Skills', score: personalCapabilityAnalysis.tech_skills_score, advice: personalCapabilityAnalysis.tech_skills_advice },
+                      { name: 'Teamwork', score: personalCapabilityAnalysis.teamwork_score, advice: personalCapabilityAnalysis.teamwork_advice },
+                    ]
+                      .filter((dimension) => !selectedDimension || dimension.name === selectedDimension)
+                      .flatMap((dimension) =>
+                        dimension.advice && dimension.advice.length > 0
+                          ? dimension.advice.map((adviceItem: string, idx: number) => ({
+                              key: `${dimension.name}-${idx}`,
+                              dimensionName: dimension.name,
+                              adviceItem,
+                            }))
+                          : []
+                      );
+
+                    const isGuest = !user?.profile?.sub;
+                    return allCards.map((card, cardIdx) => {
+                      const cardEl = (
+                        <div key={card.key} className={`${styles.analysisInfoCard} ${styles.personalCapabilityCard}`}>
+                          <p className={styles.analysisInfoText}>
+                            <span className={styles.analysisTypeLabel}>{card.dimensionName}:</span> {card.adviceItem}
+                          </p>
+                        </div>
+                      );
+                      if (isGuest && cardIdx >= 3) {
+                        return (
+                          <div key={card.key} className={styles.guestBlurredCardWrapper}>
+                            <div className={styles.guestBlurredCardContent}>{cardEl}</div>
+                            <div className={styles.guestBlurredCardOverlay} onClick={() => onAnonSignupRequired?.()}>
+                              <button type="button" className={styles.guestSignupCardBtn} onClick={(e) => { e.stopPropagation(); onAnonSignupRequired?.(); }}>
+                                <svg className={styles.guestSignupCardBtnIcon} viewBox="0 0 24 24" fill="none"><path d="M16.5 10.5V6.75a4.5 4.5 0 1 0-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 0 0 2.25-2.25v-6.75a2.25 2.25 0 0 0-2.25-2.25H6.75a2.25 2.25 0 0 0-2.25 2.25v6.75a2.25 2.25 0 0 0 2.25 2.25Z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                                Display the analysis result
+                              </button>
                             </div>
-                          ))
-                        : []
-                    )}
+                          </div>
+                        );
+                      }
+                      return cardEl;
+                    });
+                  })()}
                 </>
               )}
               {selectedAnalysisType === 'resume' && resumePowerAnalysis && (
                 <>
-                  {/* ATS Compatibility Card */}
-                  {resumePowerAnalysis.ats_compatibility_score !== undefined && (
-                    <div className={`${styles.analysisInfoCard} ${styles.resumePowerCard}`}>
-                      <p className={styles.analysisInfoText}>
-                        <span className={styles.analysisTypeLabel}>ATS:</span> Compatibility: {resumePowerAnalysis.ats_compatibility_score}/100
-                        {resumePowerAnalysis.ats_issues && resumePowerAnalysis.ats_issues.length > 0 && (
-                          <>
-                            {' '}
-                            {resumePowerAnalysis.ats_issues.map((issue: string, idx: number) => (
-                              <span key={idx}>
-                                {idx > 0 ? ' ' : ''}{issue}
-                              </span>
-                            ))}
-                          </>
-                        )}
-                      </p>
-                    </div>
-                  )}
-                  {/* All advice cards */}
-                  {[
-                    { name: 'Background', score: resumePowerAnalysis.background_score, advice: resumePowerAnalysis.background_advice },
-                    { name: 'Education', score: resumePowerAnalysis.education_score, advice: resumePowerAnalysis.education_advice },
-                    { name: 'Professional', score: resumePowerAnalysis.professional_score, advice: resumePowerAnalysis.professional_advice },
-                    { name: 'Tech Skills', score: resumePowerAnalysis.tech_skills_score, advice: resumePowerAnalysis.tech_skills_advice },
-                    { name: 'Teamwork', score: resumePowerAnalysis.teamwork_score, advice: resumePowerAnalysis.teamwork_advice },
-                  ]
-                    .filter((dimension) => !selectedDimension || dimension.name === selectedDimension)
-                    .flatMap((dimension) => 
-                      dimension.advice && dimension.advice.length > 0
-                        ? dimension.advice.map((adviceItem: string, idx: number) => (
-                            <div key={`${dimension.name}-${idx}`} className={`${styles.analysisInfoCard} ${styles.resumePowerCard}`}>
+                  {(() => {
+                    const isGuest = !user?.profile?.sub;
+                    const hasAts = resumePowerAnalysis.ats_compatibility_score !== undefined;
+
+                    const atsCard = hasAts ? (
+                      <div key="ats" className={`${styles.analysisInfoCard} ${styles.resumePowerCard}`}>
+                        <p className={styles.analysisInfoText}>
+                          <span className={styles.analysisTypeLabel}>ATS:</span> Compatibility: {resumePowerAnalysis.ats_compatibility_score}/100
+                          {resumePowerAnalysis.ats_issues && resumePowerAnalysis.ats_issues.length > 0 && (
+                            <>
+                              {' '}
+                              {resumePowerAnalysis.ats_issues.map((issue: string, idx: number) => (
+                                <span key={idx}>
+                                  {idx > 0 ? ' ' : ''}{issue}
+                                </span>
+                              ))}
+                            </>
+                          )}
+                        </p>
+                      </div>
+                    ) : null;
+
+                    const adviceCards = [
+                      { name: 'Background', score: resumePowerAnalysis.background_score, advice: resumePowerAnalysis.background_advice },
+                      { name: 'Education', score: resumePowerAnalysis.education_score, advice: resumePowerAnalysis.education_advice },
+                      { name: 'Professional', score: resumePowerAnalysis.professional_score, advice: resumePowerAnalysis.professional_advice },
+                      { name: 'Tech Skills', score: resumePowerAnalysis.tech_skills_score, advice: resumePowerAnalysis.tech_skills_advice },
+                      { name: 'Teamwork', score: resumePowerAnalysis.teamwork_score, advice: resumePowerAnalysis.teamwork_advice },
+                    ]
+                      .filter((dimension) => !selectedDimension || dimension.name === selectedDimension)
+                      .flatMap((dimension) =>
+                        dimension.advice && dimension.advice.length > 0
+                          ? dimension.advice.map((adviceItem: string, idx: number) => ({
+                              key: `${dimension.name}-${idx}`,
+                              dimensionName: dimension.name,
+                              adviceItem,
+                            }))
+                          : []
+                      );
+
+                    const atsOffset = hasAts ? 1 : 0;
+
+                    return (
+                      <>
+                        {atsCard}
+                        {adviceCards.map((card, cardIdx) => {
+                          const globalIdx = cardIdx + atsOffset;
+                          const cardEl = (
+                            <div key={card.key} className={`${styles.analysisInfoCard} ${styles.resumePowerCard}`}>
                               <p className={styles.analysisInfoText}>
-                                <span className={styles.analysisTypeLabel}>{dimension.name}:</span> {adviceItem}
+                                <span className={styles.analysisTypeLabel}>{card.dimensionName}:</span> {card.adviceItem}
                               </p>
                             </div>
-                          ))
-                        : []
-                    )}
+                          );
+                          if (isGuest && globalIdx >= 3) {
+                            return (
+                              <div key={card.key} className={styles.guestBlurredCardWrapper}>
+                                <div className={styles.guestBlurredCardContent}>{cardEl}</div>
+                                <div className={styles.guestBlurredCardOverlay} onClick={() => onAnonSignupRequired?.()}>
+                                  <button type="button" className={styles.guestSignupCardBtn} onClick={(e) => { e.stopPropagation(); onAnonSignupRequired?.(); }}>
+                                    <svg className={styles.guestSignupCardBtnIcon} viewBox="0 0 24 24" fill="none"><path d="M16.5 10.5V6.75a4.5 4.5 0 1 0-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 0 0 2.25-2.25v-6.75a2.25 2.25 0 0 0-2.25-2.25H6.75a2.25 2.25 0 0 0-2.25 2.25v6.75a2.25 2.25 0 0 0 2.25 2.25Z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                                    Display the analysis result
+                                  </button>
+                                </div>
+                              </div>
+                            );
+                          }
+                          return cardEl;
+                        })}
+                      </>
+                    );
+                  })()}
                 </>
               )}
             </div>

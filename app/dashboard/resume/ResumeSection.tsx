@@ -6523,7 +6523,13 @@ export default function ResumeSection({
               
               {/* Editing panel for resume sections - show on hover, persist when clicked */}
               {getDisplayedSection() === 'name' && (
-                <div className={styles.resumeEditingPanel}>
+                <div className={styles.resumeEditingPanel} style={{ position: 'relative' }}>
+                  {!cognitoSub && (
+                    <div className={styles.guestEditingOverlay} onClick={(e) => { e.stopPropagation(); onAnonSignupRequired?.(); }}>
+                      <svg className={styles.guestEditingOverlayIcon} viewBox="0 0 24 24" fill="none"><path d="M16.5 10.5V6.75a4.5 4.5 0 1 0-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 0 0 2.25-2.25v-6.75a2.25 2.25 0 0 0-2.25-2.25H6.75a2.25 2.25 0 0 0-2.25 2.25v6.75a2.25 2.25 0 0 0 2.25 2.25Z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                      <span className={styles.guestEditingOverlayText}>Sign up to edit your resume</span>
+                    </div>
+                  )}
                   <h3 className={styles.resumeEditingPanelTitle}>Edit Name</h3>
                   <div className={styles.resumeLeftField}>
                     <label className={styles.resumeLeftLabel}>Name</label>
@@ -6539,7 +6545,13 @@ export default function ResumeSection({
               )}
               
               {getDisplayedSection() === 'contact' && (
-                <div className={styles.resumeEditingPanel}>
+                <div className={styles.resumeEditingPanel} style={{ position: 'relative' }}>
+                  {!cognitoSub && (
+                    <div className={styles.guestEditingOverlay} onClick={(e) => { e.stopPropagation(); onAnonSignupRequired?.(); }}>
+                      <svg className={styles.guestEditingOverlayIcon} viewBox="0 0 24 24" fill="none"><path d="M16.5 10.5V6.75a4.5 4.5 0 1 0-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 0 0 2.25-2.25v-6.75a2.25 2.25 0 0 0-2.25-2.25H6.75a2.25 2.25 0 0 0-2.25 2.25v6.75a2.25 2.25 0 0 0 2.25 2.25Z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                      <span className={styles.guestEditingOverlayText}>Sign up to edit your resume</span>
+                    </div>
+                  )}
                   <div className={styles.resumeEditingPanelTitleContainer}>
                     <h3 className={styles.resumeEditingPanelTitle}>Edit Contact Information</h3>
                     <button
@@ -6700,7 +6712,13 @@ export default function ResumeSection({
               
               {/* Editing panel for Professional section */}
               {getDisplayedSection() === 'professional' && (
-                <div className={styles.resumeEditingPanel}>
+                <div className={styles.resumeEditingPanel} style={{ position: 'relative' }}>
+                  {!cognitoSub && (
+                    <div className={styles.guestEditingOverlay} onClick={(e) => { e.stopPropagation(); onAnonSignupRequired?.(); }}>
+                      <svg className={styles.guestEditingOverlayIcon} viewBox="0 0 24 24" fill="none"><path d="M16.5 10.5V6.75a4.5 4.5 0 1 0-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 0 0 2.25-2.25v-6.75a2.25 2.25 0 0 0-2.25-2.25H6.75a2.25 2.25 0 0 0-2.25 2.25v6.75a2.25 2.25 0 0 0 2.25 2.25Z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                      <span className={styles.guestEditingOverlayText}>Sign up to edit your resume</span>
+                    </div>
+                  )}
                   <div className={styles.resumeEditingPanelTitleContainer}>
                     <h3 className={styles.resumeEditingPanelTitle}>Edit Professional Experience</h3>
                     <button
@@ -7351,7 +7369,13 @@ export default function ResumeSection({
               
               {/* Editing panel for Education section */}
               {getDisplayedSection() === 'education' && (
-                <div className={styles.resumeEditingPanel}>
+                <div className={styles.resumeEditingPanel} style={{ position: 'relative' }}>
+                  {!cognitoSub && (
+                    <div className={styles.guestEditingOverlay} onClick={(e) => { e.stopPropagation(); onAnonSignupRequired?.(); }}>
+                      <svg className={styles.guestEditingOverlayIcon} viewBox="0 0 24 24" fill="none"><path d="M16.5 10.5V6.75a4.5 4.5 0 1 0-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 0 0 2.25-2.25v-6.75a2.25 2.25 0 0 0-2.25-2.25H6.75a2.25 2.25 0 0 0-2.25 2.25v6.75a2.25 2.25 0 0 0 2.25 2.25Z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                      <span className={styles.guestEditingOverlayText}>Sign up to edit your resume</span>
+                    </div>
+                  )}
                   <div className={styles.resumeEditingPanelTitleContainer}>
                     <h3 className={styles.resumeEditingPanelTitle}>Edit Education</h3>
                     <button
@@ -7693,7 +7717,13 @@ export default function ResumeSection({
               
               {/* Editing panel for Project Experience section */}
               {getDisplayedSection() === 'project' && (
-                <div className={styles.resumeEditingPanel}>
+                <div className={styles.resumeEditingPanel} style={{ position: 'relative' }}>
+                  {!cognitoSub && (
+                    <div className={styles.guestEditingOverlay} onClick={(e) => { e.stopPropagation(); onAnonSignupRequired?.(); }}>
+                      <svg className={styles.guestEditingOverlayIcon} viewBox="0 0 24 24" fill="none"><path d="M16.5 10.5V6.75a4.5 4.5 0 1 0-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 0 0 2.25-2.25v-6.75a2.25 2.25 0 0 0-2.25-2.25H6.75a2.25 2.25 0 0 0-2.25 2.25v6.75a2.25 2.25 0 0 0 2.25 2.25Z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                      <span className={styles.guestEditingOverlayText}>Sign up to edit your resume</span>
+                    </div>
+                  )}
                   <div className={styles.resumeEditingPanelTitleContainer}>
                     <h3 className={styles.resumeEditingPanelTitle}>Edit Project Experience</h3>
                     <button
@@ -8001,7 +8031,13 @@ export default function ResumeSection({
               
               {/* Editing panel for Technical Skills section */}
               {getDisplayedSection() === 'technical' && (
-                <div className={styles.resumeEditingPanel}>
+                <div className={styles.resumeEditingPanel} style={{ position: 'relative' }}>
+                  {!cognitoSub && (
+                    <div className={styles.guestEditingOverlay} onClick={(e) => { e.stopPropagation(); onAnonSignupRequired?.(); }}>
+                      <svg className={styles.guestEditingOverlayIcon} viewBox="0 0 24 24" fill="none"><path d="M16.5 10.5V6.75a4.5 4.5 0 1 0-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 0 0 2.25-2.25v-6.75a2.25 2.25 0 0 0-2.25-2.25H6.75a2.25 2.25 0 0 0-2.25 2.25v6.75a2.25 2.25 0 0 0 2.25 2.25Z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                      <span className={styles.guestEditingOverlayText}>Sign up to edit your resume</span>
+                    </div>
+                  )}
                   <div className={styles.resumeEditingPanelTitleContainer}>
                     <h3 className={styles.resumeEditingPanelTitle}>Edit Technical Skills</h3>
                     <button
@@ -8324,7 +8360,9 @@ export default function ResumeSection({
           >
             <h2 className={styles.resumeSectionTitle}>Professional</h2>
             <div className={styles.resumeSectionContent}>
-              {(editingSection === 'professional' ? professionalExperiences : savedProfessionalExperiences).map((exp) => (
+              {(() => {
+                let profProjectCounter = 0;
+                return (editingSection === 'professional' ? professionalExperiences : savedProfessionalExperiences).map((exp) => (
                 <div key={exp.id} className={styles.resumeItem}>
                   <div className={styles.resumeItemHeader}>
                     <input
@@ -8394,8 +8432,10 @@ export default function ResumeSection({
                           const technologies = jobTitle.projectTechnologies && group.name 
                             ? jobTitle.projectTechnologies[group.name] 
                             : undefined;
+                          const isGuestBlurred = !cognitoSub && profProjectCounter > 0;
+                          profProjectCounter++;
                           
-                          return (
+                          const projectContent = (
                             <div key={gIdx} className={styles.resumeProjectGroup}>
                               {group.name && (
                                 <div className={styles.resumeProjectName}>{group.name}</div>
@@ -8440,12 +8480,29 @@ export default function ResumeSection({
                               )}
                             </div>
                           );
+
+                          if (isGuestBlurred) {
+                            return (
+                              <div key={gIdx} className={styles.guestBlurredProjectWrapper}>
+                                <div className={styles.guestBlurredProjectContent}>{projectContent}</div>
+                                <div className={styles.guestBlurredProjectOverlay} onClick={(e) => { e.stopPropagation(); onAnonSignupRequired?.(); }}>
+                                  <button type="button" className={styles.guestShowProjectBtn} onClick={(e) => { e.stopPropagation(); onAnonSignupRequired?.(); }}>
+                                    <svg className={styles.guestShowProjectBtnIcon} viewBox="0 0 24 24" fill="none"><path d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/><path d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                                    Show project bullet details
+                                  </button>
+                                </div>
+                              </div>
+                            );
+                          }
+
+                          return projectContent;
                         });
                       })()}
                     </div>
                   ))}
                 </div>
-              ))}
+              ));
+              })()}
             </div>
           </div>
 
@@ -8612,11 +8669,12 @@ export default function ResumeSection({
                 : 'Project Experience'}
             </h2>
             <div className={styles.resumeSectionContent}>
-              {(editingSection === 'project' ? getCurrentProjects() : getCurrentSavedProjects()).map((proj: any) => {
+              {(editingSection === 'project' ? getCurrentProjects() : getCurrentSavedProjects()).map((proj: any, projIdx: number) => {
                 const bullets = proj.bullets || [];
                 const technologies: string[] = Array.isArray(proj.technologies) ? proj.technologies : [];
+                const isGuestBlurred = !cognitoSub && projIdx > 0;
                 
-                return (
+                const projectContent = (
                   <div key={proj.id} className={styles.resumeItem}>
                     <div className={styles.resumeItemHeader}>
                       <input
@@ -8672,6 +8730,22 @@ export default function ResumeSection({
                     )}
                   </div>
                 );
+
+                if (isGuestBlurred) {
+                  return (
+                    <div key={proj.id} className={styles.guestBlurredProjectWrapper}>
+                      <div className={styles.guestBlurredProjectContent}>{projectContent}</div>
+                      <div className={styles.guestBlurredProjectOverlay} onClick={(e) => { e.stopPropagation(); onAnonSignupRequired?.(); }}>
+                        <button type="button" className={styles.guestShowProjectBtn} onClick={(e) => { e.stopPropagation(); onAnonSignupRequired?.(); }}>
+                          <svg className={styles.guestShowProjectBtnIcon} viewBox="0 0 24 24" fill="none"><path d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/><path d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                          Show project bullet details
+                        </button>
+                      </div>
+                    </div>
+                  );
+                }
+
+                return projectContent;
               })}
             </div>
           </div>

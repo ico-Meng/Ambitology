@@ -99,6 +99,8 @@ interface AIChatboxProps {
   onDockedChange?: (isDocked: boolean) => void;
   /** Left offset to account for a sidebar. Defaults to 320 (dashboard sidebar width). Pass 0 on pages without a sidebar. */
   sidebarWidth?: number;
+  /** When true, automatically opens the bar to show suggestion buttons. */
+  autoShowSuggestions?: boolean;
 }
 
 export default function AIChatbox({
@@ -127,6 +129,7 @@ export default function AIChatbox({
   pageContext,
   onDockedChange,
   sidebarWidth = 320,
+  autoShowSuggestions = false,
 }: AIChatboxProps) {
   const [isBarOpen, setIsBarOpen] = useState(false);
   const [isDocked, setIsDocked] = useState(false);
@@ -140,6 +143,13 @@ export default function AIChatbox({
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
+
+  // Auto-open bar to show suggestions when triggered by parent
+  useEffect(() => {
+    if (autoShowSuggestions && !isBarOpen) {
+      setIsBarOpen(true);
+    }
+  }, [autoShowSuggestions]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Auto-focus textarea when bar opens; also show history and scroll to bottom if messages exist
   useEffect(() => {
