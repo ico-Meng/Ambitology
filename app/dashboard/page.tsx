@@ -4788,7 +4788,7 @@ function DashboardContent() {
       <aside className={`${styles.sidebar} ${sidebarCollapsed ? styles.sidebarCollapsed : ''}`}>
         <div className={styles.sidebarHeader}>
           <div className={`${styles.logoContainer} ${sidebarCollapsed ? styles.logoContainerCollapsed : ''}`}>
-            <h2 className={styles.sidebarTitle} onClick={() => router.push('/')} style={{ cursor: 'pointer' }}>Ambitology</h2>
+            <h2 className={styles.sidebarTitle} onClick={() => { window.location.href = '/'; }} style={{ cursor: 'pointer' }}>Ambitology</h2>
             <button
               className={styles.sidebarToggleBtn}
               onClick={() => setSidebarCollapsed(c => !c)}

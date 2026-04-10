@@ -22,6 +22,16 @@ const globalReset = `
 
 const ARTICLES = [
   {
+    slug: "how-to-get-more-callbacks-fewer-wasted-applications",
+    title: "How to Get More Callbacks with Fewer Wasted Applications",
+    excerpt:
+      "Sending dozens of applications and hearing nothing? The problem usually isn't effort — it's targeting, resume positioning, and experience signals. Here's the strategic fix for your callback rate.",
+    category: "Job Search Strategy",
+    date: "March 24, 2026",
+    readTime: "9 min read",
+    image: "https://images.unsplash.com/photo-1485827404703-89b55fcc595e?w=800&auto=format&fit=crop&q=80",
+  },
+  {
     slug: "lack-of-business-or-domain-context",
     title: "Lack of Business or Domain Context: Why Pure Coding Is No Longer Enough to Stand Out",
     excerpt:

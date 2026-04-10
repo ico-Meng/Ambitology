@@ -136,7 +136,7 @@ Resources:
       CodeUri: job_listing_cache/
       Handler: handler.lambda_handler
       Runtime: python3.11
-      Timeout: 600       # 10 min — covers 51 position queries + DynamoDB writes
+      Timeout: 900       # 15 min (max) — orchestrator fans out worker invocations
       MemorySize: 256
       Policies:
         - AWSLambdaBasicExecutionRole
@@ -150,6 +150,13 @@ Resources:
               Resource:
                 - !Sub "arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/jobCache"
                 - !Sub "arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/jobCache/*"
+        # Self-invocation: orchestrator fans out async worker invocations
+        - Statement:
+            - Effect: Allow
+              Action:
+                - lambda:InvokeFunction
+              Resource:
+                - !Sub "arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:job_listing_cache"
       Environment:
         Variables:
           JSEARCH_API_KEY:  !Ref JsearchApiKey
